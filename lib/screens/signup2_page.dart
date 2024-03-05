@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/custom_appbar.dart';
 
 class SignupScreen_2 extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _SignupScreenState_2 extends State<SignupScreen_2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

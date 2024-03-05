@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/custom_appbar.dart';
 
 class SwitchAccountScreen extends StatefulWidget {
   @override
@@ -9,48 +10,34 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Main content
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                CrossAxisAlignment.center, // Align buttons in the center
-            children: <Widget>[
-              SizedBox(height: 24), // Add space at the top
-              // DropdownButton for 'Company'
-              _buildDropdownButton(
-                  Icons.arrow_back_ios, _handleCompanySelection),
-              SizedBox(height: 16), // Add space between buttons
+      appBar: CustomAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment:
+              CrossAxisAlignment.center, // Align buttons in the center
+          children: <Widget>[
+            SizedBox(height: 24), // Add space at the top
+            // DropdownButton for 'Company'
+            _buildDropdownButton(Icons.arrow_back_ios, _handleCompanySelection),
+            SizedBox(height: 16), // Add space between buttons
 
-              // ElevatedButton for 'Profiles'
-              _buildElevatedButton(
-                  Icons.school, 'Profiles', _handleProfilesButtonPress),
-              SizedBox(height: 16), // Add space between buttons
+            // ElevatedButton for 'Profiles'
+            _buildElevatedButton(
+                Icons.school, 'Profiles', _handleProfilesButtonPress),
+            SizedBox(height: 16), // Add space between buttons
 
-              // ElevatedButton for 'Settings'
-              _buildElevatedButton(
-                  Icons.settings, 'Settings', _handleSettingsButtonPress),
-              SizedBox(height: 16), // Add space between buttons
+            // ElevatedButton for 'Settings'
+            _buildElevatedButton(
+                Icons.settings, 'Settings', _handleSettingsButtonPress),
+            SizedBox(height: 16), // Add space between buttons
 
-              // ElevatedButton for 'Logout'
-              _buildElevatedButton(
-                  Icons.logout, 'Logout', _handleLogoutButtonPress),
-            ],
-          ),
-
-          // Divider line
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Divider(
-              height: 1, // Adjust the height of the line as needed
-              thickness: 1, // Adjust the thickness of the line as needed
-              color: Colors.black,
-            ),
-          ),
-        ],
+            // ElevatedButton for 'Logout'
+            _buildElevatedButton(
+                Icons.logout, 'Logout', _handleLogoutButtonPress),
+          ],
+        ),
       ),
     );
   }
