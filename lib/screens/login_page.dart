@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'signup1_page.dart';
 import '../components/custom_appbar.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -44,18 +45,20 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                // Add your sign in logic here
               },
               child: Text('Sign In'),
             ),
-            SizedBox(height: 300.0), // Đã thêm khoảng trống ở đây
+            SizedBox(height: 300.0), 
             Text(
               "Don't have an Student Hub account?",
               textAlign: TextAlign.center,
             ),
             ElevatedButton(
               onPressed: () {
-                // Add your sign up navigation logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignUpScreen()),
+                );
               },
               child: Text('Sign Up'),
             ),
