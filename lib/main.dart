@@ -1,28 +1,72 @@
 import 'package:flutter/material.dart';
-import 'screens/homepage.dart';
-import '../components/project.dart';
-void main() {
 
-  Project.addProject('Project 1', ProjectDuration.oneToThreeMonths, 'Description 1', 'Working');
-  Project.addProject('Project 2', ProjectDuration.threeToSixMonths, 'Description 2', 'Achieved');
-  Project.addProject('Project 3', ProjectDuration.oneToThreeMonths, 'Description 3', 'Working');
-  Project.addProject('Project 4', ProjectDuration.threeToSixMonths, 'Description 4', 'Achieved');
-  Project.addProject('Project 5', ProjectDuration.oneToThreeMonths, 'Description 5', 'Working');
-  Project.addProject('Project 6', ProjectDuration.threeToSixMonths, 'Description 6', 'Achieved');
-
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'StudentHub',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: HomePage(),
+      home: HomeScreen(),
     );
   }
 }
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('StudentHub'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to Company section
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => CompanyScreen() 
+                )); 
+              },
+              child: Text('Company'),
+            ),
+            SizedBox(height: 20), 
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to Student section
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => StudentScreen() 
+                )); 
+              },
+              child: Text('Student'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Placeholder screens for navigation
+class CompanyScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Company')),
+      body: Center(child: Text('Company Section')),
+    );
+  }
+}
+
+class StudentScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Student')),
+      body: Center(child: Text('Student Section')),
+    );
+  }
+}
+

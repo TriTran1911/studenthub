@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "studenthub" "\0"
+            VALUE "FileDescription", "homescreen" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "studenthub" "\0"
+            VALUE "InternalName", "homescreen" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "studenthub.exe" "\0"
-            VALUE "ProductName", "studenthub" "\0"
+            VALUE "OriginalFilename", "homescreen.exe" "\0"
+            VALUE "ProductName", "homescreen" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
