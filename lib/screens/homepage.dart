@@ -3,6 +3,7 @@ import '../screens/projects_page.dart';
 import '../screens/dashboard_page.dart';
 import '../screens/message_page.dart';
 import '../screens/alerts_page.dart';
+import '../components/custom_appbar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,20 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('StudentHub'),
-            IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                // Add your onPressed logic here
-              },
-            ),
-          ],
-        ),
-      ),
+      appBar: CustomAppBar(),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [

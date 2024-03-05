@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../components/custom_appbar.dart';
+import 'welcome_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,9 +27,7 @@ class _StudentHubPageState extends State<StudentHubPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Hub'),
-      ),
+      appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
@@ -130,9 +130,14 @@ class _StudentHubPageState extends State<StudentHubPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     // Add functionality for the button here
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => WelcomePage()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, foregroundColor: Colors.blueGrey, // Text color
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.blueGrey, // Text color
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(20.0), // Border radius

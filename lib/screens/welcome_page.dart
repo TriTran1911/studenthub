@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/homepage.dart';
+import '../components/custom_appbar.dart';
+import 'homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,9 +21,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome Page'),
-      ),
+      appBar: CustomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,6 +44,10 @@ class WelcomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Add functionality for the button here
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
               child: Text('Get started!'),
             ),
