@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components/custom_appbar.dart';
+import '../screens/signup2_page.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -92,7 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                // Add your create account logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupScreen_2()),
+                );
               },
               child: Text('Create account'),
             ),
