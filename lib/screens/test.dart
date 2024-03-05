@@ -26,7 +26,7 @@ class WelcomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
-              Icons.account_circle, // Replace 'welcome' with your desired icon
+              Icons.assignment_ind, // Replace 'welcome' with your desired icon
               size: 50,
             ),
             SizedBox(height: 20),
