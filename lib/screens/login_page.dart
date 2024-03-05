@@ -22,24 +22,18 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.0),
-            Text(
-              'Username or Email',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Enter your username or email',
+                labelText: 'Username or Email',
+                border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 20.0),
-            Text(
-              'Password',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
             TextField(
               obscureText: true,
               decoration: InputDecoration(
-                hintText: 'Enter your password',
+                labelText: 'Password',
+                border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 20.0),
