@@ -59,78 +59,73 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   }
 
   Widget _buildDropdownButton(IconData icon, Function(String?)? onChanged) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-              ),
-              labelStyle: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            icon: Icon(icon),
-            items: [
-              DropdownMenuItem(
-                value: 'Company1',
-                child: Row(
-                  children: [
-                    Icon(Icons.account_circle), // Add the icon here
-                    SizedBox(
-                        width: 10), // Adjust the spacing between icon and text
-                    Container(
-                      child: Column(
-                        children: [
-                          Text('Hai Pham',
-                              style: TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.bold)),
-                          Text('Company',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              DropdownMenuItem(
-                value: 'Company2',
-                child: Row(
-                  children: [
-                    Icon(Icons.account_circle), // Add the icon here
-                    SizedBox(
-                        width: 10), // Adjust the spacing between icon and text
-                    Container(
-                      child: Column(
-                        children: [
-                          Text('Hai Pham Student',
-                              style: TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.bold)),
-                          Text('Student',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Add more items as needed
-            ],
-            onChanged: onChanged,
+    return Container(
+      height: 60.0, // Adjust the height as needed
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
           ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+          labelStyle: TextStyle(
+            color: Colors.grey,
+          ),
+        ),
+        icon: Icon(icon),
+        items: [
+          DropdownMenuItem(
+            value: 'Company1',
+            child: Row(
+              children: [
+                Icon(Icons.account_circle),
+                SizedBox(width: 10),
+                Container(
+                  child: Column(
+                    children: [
+                      Text('Hai Pham',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold)),
+                      Text('Company',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'Company2',
+            child: Row(
+              children: [
+                Icon(Icons.account_circle),
+                SizedBox(width: 10),
+                Container(
+                  child: Column(
+                    children: [
+                      Text('Hai Pham Student',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold)),
+                      Text('Student',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Add more items as needed
         ],
+        onChanged: onChanged,
+        itemHeight: 80.0,
       ),
     );
   }
