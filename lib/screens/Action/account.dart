@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 import '/screens/Profile/CprofileInputWithoutProfile.dart';
+import '../Profile/SprofileInput.dart';
+import '/components/controller.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -57,9 +59,10 @@ class _AccountControllerState extends State<AccountController> {
 
   void _handleProfilesButtonPress(BuildContext context) {
     Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => CWithoutProfile())
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                User.isCompany ? CWithoutProfile() : StudentProfile()));
   }
 
   void _handleSettingsButtonPress() {

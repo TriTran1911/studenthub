@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import '/components/custom_appbar.dart';
+import '../HomePage/tabs.dart';
 
 class StudentProfile extends StatefulWidget {
   @override
@@ -66,7 +67,10 @@ class _StudentProfileState extends State<StudentProfile> {
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                // Add your logic to handle the 'Continue' button click
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => TabsPage()),
+                );
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
