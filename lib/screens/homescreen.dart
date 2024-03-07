@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Import màn hình đăng ký
+import 'login_page.dart';
 import '../components/custom_appbar.dart';
 
 class HomeScreen extends StatelessWidget {
