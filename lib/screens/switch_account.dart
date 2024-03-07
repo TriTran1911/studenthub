@@ -9,6 +9,8 @@ class SwitchAccountScreen extends StatefulWidget {
 class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   String? selectedAccount;
   bool isExpanded = false;
+  IconData selectedAccountIcon =
+      Icons.business; // Added variable for selected account icon
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +22,38 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 24),
-            _buildDropdownButton(Icons.arrow_back_ios, _handleCompanySelection),
             SizedBox(height: 16),
-            _buildElevatedButton(Icons.school, 'Profiles', _handleProfilesButtonPress),
-            SizedBox(height: 16),
-            _buildElevatedButton(Icons.settings, 'Settings', _handleSettingsButtonPress),
-            SizedBox(height: 16),
-            _buildElevatedButton(Icons.logout, 'Logout', _handleLogoutButtonPress),
+            Divider(height: 1, color: Colors.grey), // Divider
+            _buildDropdownButton(_handleCompanySelection),
+            Divider(height: 1, color: Colors.grey), // Divider
+
+            SizedBox(height: 8),
+            _buildElevatedButton(Icons.account_circle_outlined, 'Profiles',
+                _handleProfilesButtonPress),
+            SizedBox(height: 8),
+            Divider(height: 1, color: Colors.grey), // Divider
+            SizedBox(height: 8),
+            _buildElevatedButton(
+                Icons.settings, 'Settings', _handleSettingsButtonPress),
+            SizedBox(height: 8),
+            Divider(height: 1, color: Colors.grey), // Divider
+            SizedBox(height: 8),
+            _buildElevatedButton(
+                Icons.logout, 'Logout', _handleLogoutButtonPress),
+            SizedBox(height: 8),
+            Divider(height: 1, color: Colors.grey), // Divider
           ],
         ),
       ),
     );
   }
 
-  void _handleCompanySelection(String? selectedCompany) {
-    // Handle the selected company
+  void _handleCompanySelection(String? selectedCompany, IconData companyIcon) {
+    setState(() {
+      selectedAccount = selectedCompany;
+      selectedAccountIcon = companyIcon;
+      isExpanded = false; // Collapse the ExpansionTile
+    });
   }
 
   void _handleProfilesButtonPress() {
@@ -50,49 +68,45 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     // Handle 'Logout' button press
   }
 
-  Widget _buildDropdownButton(IconData icon, void Function(String? selectedCompany) handleCompanySelection,) {
-  return ExpansionTile(
-      leading: Icon(icon),
-      title: Text(
-        selectedAccount ?? 'Select an account',
-        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)
-      ),
+  Widget _buildDropdownButton(
+    void Function(String? selectedCompany, IconData companyIcon)
+        handleCompanySelection,
+  ) {
+    return ExpansionTile(
+      leading: Icon(selectedAccountIcon), // Use the selected account icon
+      title: Text(selectedAccount ?? 'Select an account',
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       onExpansionChanged: (value) {
         setState(() {
           isExpanded = value;
         });
       },
+
       initiallyExpanded: isExpanded,
       children: [
         ListView(
           shrinkWrap: true,
           children: [
             ListTile(
-              leading: Icon(Icons.account_circle),
+              leading: Icon(Icons.business),
               title: Text(
                 'Hai Pham',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               subtitle: Text('Company'),
               onTap: () {
-                setState(() {
-                  selectedAccount = 'Hai Pham';
-                  isExpanded = false; // Collapse the ExpansionTile
-                });
+                handleCompanySelection('Hai Pham', Icons.business);
               },
             ),
             ListTile(
-              leading: Icon(Icons.account_circle),
+              leading: Icon(Icons.school),
               title: Text(
                 'Hai Pham Student',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               subtitle: Text('Student'),
               onTap: () {
-                setState(() {
-                  selectedAccount = 'Hai Pham Student';
-                  isExpanded = false; // Collapse the ExpansionTile
-                });
+                handleCompanySelection('Hai Pham Student', Icons.school);
               },
             ),
             // Add more list tiles for additional accounts
@@ -102,57 +116,36 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     );
   }
 
-
   Widget _buildElevatedButton(IconData icon, String text, Function onPressed) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
           onPressed: onPressed as void Function()?,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors
+                .transparent, // Set the button background color to transparent
+            elevation: 0, // Set elevation to 0 to remove the shadow
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                  8.0), // Adjust the border radius as needed
+            ),
+          ),
           child: Row(
             children: [
-              Icon(icon),
+              Icon(icon, color: Colors.black),
               SizedBox(width: 8), // Adjust spacing between icon and text
-              Text(text),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Set the text color to black
+                ),
+              ),
             ],
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _buildDropdownItemContent extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const _buildDropdownItemContent(this.title, this.subtitle);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(Icons.account_circle, size: 30.0),
-        SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 5.0,
-              ),
-            ),
-            Text(
-              subtitle,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 5.0,
-              ),
-            ),
-          ],
-        )
       ],
     );
   }
