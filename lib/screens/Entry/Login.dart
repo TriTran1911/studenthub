@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'signUp1.dart';
 import '/components/custom_appbar.dart';
+import '/components/controller.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print(User.isCompany);
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
