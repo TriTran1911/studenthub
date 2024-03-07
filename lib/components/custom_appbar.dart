@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '/screens/action/switchAccount.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar();
@@ -8,22 +9,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Color.fromARGB(255, 92, 92, 92),
       title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('StudentHub', 
-            style: 
-              TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-            IconButton(
-              icon: Icon(Icons.account_circle, color: Colors.white, size: 30,),
-              onPressed: () {
-                // Add your onPressed logic here
-              },
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('StudentHub',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+          IconButton(
+            icon: Icon(
+              Icons.account_circle,
+              color: Colors.white,
+              size: 30,
             ),
-          ],
-        ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => SwitchAccount()),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
