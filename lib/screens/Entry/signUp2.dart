@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import 'package:studenthub/screens/action/account.dart';
 import '/components/custom_appbar.dart';
 import '/components/controller.dart';
@@ -65,7 +66,7 @@ class _Signup2State extends State<SignUp2> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AccountController(),
+                          builder: (context) => TabsPage(),
                         ),
                       );
                     }
@@ -107,7 +108,7 @@ class _Signup2State extends State<SignUp2> {
                       );
                     },
                     child: Text(
-                      User.isCompany ? "Apply as a user" : "Apply as a company",
+                      User.isCompany ? "Apply as a student" : "Apply as a company",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.blue,

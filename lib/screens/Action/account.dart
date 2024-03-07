@@ -3,6 +3,7 @@ import '/components/custom_appbar.dart';
 import '/screens/Profile/CprofileInputWithoutProfile.dart';
 import '../Profile/SprofileInput.dart';
 import '/components/controller.dart';
+import '/screens/Entry/Login.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -69,8 +70,11 @@ class _AccountControllerState extends State<AccountController> {
     // Handle 'Settings' button press
   }
 
-  void _handleLogoutButtonPress() {
-    // Handle 'Logout' button press
+  void _handleLogoutButtonPress(BuildContext context) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Login()));
   }
 
   Widget _buildListView(

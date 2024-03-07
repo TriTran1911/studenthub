@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signUp1.dart';
 import '/components/custom_appbar.dart';
+import '/screens/homepage/tabs.dart';
 import '/components/controller.dart';
 
 class Login extends StatelessWidget {
@@ -49,7 +50,10 @@ class Login extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   if (_isInputValid()) {
-                    print('Sign In Successful!');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => TabsPage()),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
