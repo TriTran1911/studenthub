@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 import '/screens/entry/Login.dart';
+import '/components/controller.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -68,7 +69,7 @@ class Home extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Navigate to SignUp1Page when Student button is pressed
+                User.isCompany = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),

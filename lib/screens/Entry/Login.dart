@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signUp1.dart';
 import '/components/custom_appbar.dart';
+import '/components/controller.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -8,6 +9,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(User.isCompany);
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset:
