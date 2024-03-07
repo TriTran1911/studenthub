@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/switch_account.dart';
 import '../components/custom_appbar.dart';
 
 class SignupScreen_2 extends StatefulWidget {
@@ -60,7 +61,9 @@ class _SignupScreenState_2 extends State<SignupScreen_2> {
             ),
             SizedBox(height: 10.0),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                
+              },
               child: Text('Looking for a project? Apply as a user'),
             ),
           ],

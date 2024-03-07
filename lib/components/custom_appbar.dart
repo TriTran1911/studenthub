@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Color.fromARGB(255, 92, 92, 92),
       title: Row(
+<<<<<<< Updated upstream
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('StudentHub'),
@@ -23,6 +24,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
+=======
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('StudentHub', 
+            style: 
+              TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+            IconButton(
+              icon: Icon(Icons.account_circle, color: Colors.white, size: 30,),
+              onPressed: () {
+                // Add your onPressed logic here
+              },
+            ),
+          ],
+        ),
+>>>>>>> Stashed changes
     );
   }
 
