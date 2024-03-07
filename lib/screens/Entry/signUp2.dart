@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/screens/action/account.dart';
 import '/components/custom_appbar.dart';
+import '/components/controller.dart';
 
 class SignUp2 extends StatefulWidget {
   @override
@@ -8,8 +9,7 @@ class SignUp2 extends StatefulWidget {
 }
 
 class _Signup2State extends State<SignUp2> {
-  bool _isCompany = true; // Track the user type
-  final _fullNameController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
@@ -27,14 +27,14 @@ class _Signup2State extends State<SignUp2> {
             children: [
               Center(
                 child: Text(
-                  _isCompany ? 'Sign up as Company' : 'Sign up as Student',
+                  User.isCompany ? 'Sign up as Company' : 'Sign up as Student',
                   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 20.0),
               ChatBubble(
-                textEditingController: _fullNameController,
-                label: 'Fullname',
+                textEditingController: _userNameController,
+                label: 'Username',
               ),
               ChatBubble(
                 textEditingController: _emailController,
@@ -93,23 +93,21 @@ class _Signup2State extends State<SignUp2> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    _isCompany
+                    User.isCompany
                         ? "Looking for a project?  "
                         : "Want to offer projects?  ",
                     textAlign: TextAlign.center,
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _isCompany = !_isCompany; // Toggle user type
-                      });
-                      Navigator.push(
+                      User.isCompany = !User.isCompany; // Toggle user type
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => SignUp2()),
                       );
                     },
                     child: Text(
-                      _isCompany ? "Apply as a user" : "Apply as a company",
+                      User.isCompany ? "Apply as a user" : "Apply as a company",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.blue,
@@ -126,14 +124,13 @@ class _Signup2State extends State<SignUp2> {
   }
 
   void _handleSignup() {
-    print('Signup with:');
-    print('Fullname: ${_fullNameController.text}');
-    print('Email: ${_emailController.text}');
-    print('Password: ${_passwordController.text}');
+    User.username = _userNameController.text;
+    User.email = _emailController.text;
+    User.password = _passwordController.text;
   }
 
   bool _checkSignup() {
-    if (_fullNameController.text.isEmpty ||
+    if (_userNameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

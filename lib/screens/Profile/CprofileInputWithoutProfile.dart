@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 import '/screens/action/welcome.dart';
+import '/components/controller.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class CWithoutProfile extends StatefulWidget {
 
 class _CWithoutProfileState extends State<CWithoutProfile> {
   String _selectedCompanySize = '';
+  TextEditingController _companyNameController = TextEditingController();
+  TextEditingController _websiteController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +95,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
               ),
               SizedBox(height: 15),
               TextField(
+                controller: _companyNameController,
                 decoration: InputDecoration(
                   labelText: 'Company name',
                   border: OutlineInputBorder(),
@@ -98,6 +103,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
               ),
               SizedBox(height: 15),
               TextField(
+                controller: _websiteController,
                 decoration: InputDecoration(
                   labelText: 'Website',
                   border: OutlineInputBorder(),
@@ -105,8 +111,9 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
               ),
               SizedBox(height: 15),
               TextField(
+                controller: _descriptionController,
                 decoration: InputDecoration(
-                  labelText: 'Discription',
+                  labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -115,11 +122,23 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add functionality for the button here
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Welcome()),
-                    );
+                    if (_isInputValid()) {
+                      User.nstaff = _selectedCompanySize;
+                      User.cname = _companyNameController.text;
+                      User.website = _websiteController.text;
+                      User.description = _descriptionController.text;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Welcome()),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("Please fill in all the required fields."),
+                        ),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor:
@@ -144,5 +163,12 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
         ),
       ),
     );
+  }
+
+  bool _isInputValid() {
+    return _selectedCompanySize.isNotEmpty &&
+        _companyNameController.text.isNotEmpty &&
+        _websiteController.text.isNotEmpty &&
+        _descriptionController.text.isNotEmpty;
   }
 }

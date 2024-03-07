@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 import 'signUp2.dart';
 import 'login.dart';
+import '/components/controller.dart';
 
 class SignUp1 extends StatefulWidget {
   @override
@@ -95,6 +96,11 @@ class _SignUpState1 extends State<SignUp1> {
             ElevatedButton(
               onPressed: () {
                 if (_isCompany || _isStudent) {
+                  if (_isCompany) {
+                    User.isCompany = true;
+                  } else {
+                    User.isCompany = false;
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => SignUp2()),
