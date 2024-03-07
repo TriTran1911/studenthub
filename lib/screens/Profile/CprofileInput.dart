@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 
 class CompanyProfile extends StatefulWidget {
   @override
@@ -11,6 +11,10 @@ class _CompanyProfileState extends State<CompanyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    return _buildScaffold();
+  }
+
+  Scaffold _buildScaffold() {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
@@ -20,99 +24,98 @@ class _CompanyProfileState extends State<CompanyProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(
-                child: Text(
-                  'Welcome to Student Hub',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
+              buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
               SizedBox(height: 15),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Company name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField('Company name'),
               SizedBox(height: 15),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Website',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField('Website'),
               SizedBox(height: 15),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Discription',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField('Discription'),
               SizedBox(height: 15),
-              Text(
-                'How many people are in your company?',
-                style: TextStyle(fontSize: 16),
-              ),
-              RadioListTile(
-                title: Text('It\'s just me', style: TextStyle(fontSize: 14)),
-                value: 'Just me',
-                groupValue: isJustMeSelected ? 'Just me' : null,
-                onChanged: isJustMeSelected
-                    ? null // Không có hành động khi người dùng cố gắng thay đổi giá trị
-                    : (value) {
-                        setState(() {
-                        });
-                      },
-              ),
+              buildText('How many people are in your company?', 16),
+              buildRadioListTile(),
               SizedBox(height: 15),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.end, // Align buttons to the end (right)
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add functionality for the 'Edit' button here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.blueGrey, // Text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(20.0), // Border radius
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12), // Button padding
-                        ),
-                        child: Text('Edit'),
-                      ),
-                    ),
-                    SizedBox(width: 16), // Add some space between the buttons
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add functionality for the 'Cancel' button here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.blueGrey, // Text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(20.0), // Border radius
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12), // Button padding
-                        ),
-                        child: Text('Cancel'),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              buildActionButtons(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildCenterText(String text, double fontSize, FontWeight fontWeight) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+      ),
+    );
+  }
+
+  Widget buildTextField(String labelText) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget buildText(String text, double fontSize) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: fontSize),
+    );
+  }
+
+  Widget buildRadioListTile() {
+    return RadioListTile(
+      title: Text('It\'s just me', style: TextStyle(fontSize: 14)),
+      value: 'Just me',
+      groupValue: isJustMeSelected ? 'Just me' : null,
+      onChanged: isJustMeSelected
+          ? null
+          : (value) {
+              setState(() {});
+            },
+    );
+  }
+
+  Widget buildActionButtons() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          buildButton('Edit', () {
+            setState(() {
+
+            });
+          }),
+          SizedBox(width: 16),
+          buildButton('Cancel', () {
+            setState(() {
+
+            });
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget buildButton(String text, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.blueGrey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        ),
+        child: Text(text),
       ),
     );
   }

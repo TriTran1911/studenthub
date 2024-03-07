@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
 import '/components/controller.dart';
 
@@ -16,6 +16,10 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
 
   @override
   Widget build(BuildContext context) {
+    return _BuildScaffold(context);
+  }
+
+  Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
@@ -25,140 +29,108 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Center(
-                child: Text(
-                  'Welcome to Student Hub',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
+              buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
               SizedBox(height: 15),
-              Text(
-                'Tell us about your company and you will be on your way connect with high-skilled students',
-                style: TextStyle(fontSize: 16),
-              ),
+              buildText(
+                  'Tell us about your company and you will be on your way connect with high-skilled students',
+                  16),
               SizedBox(height: 15),
-              Text(
-                'How many people are in your company?',
-                style: TextStyle(fontSize: 16),
-              ),
-              RadioListTile(
-                title: Text('It\'s just me', style: TextStyle(fontSize: 14)),
-                value: 'Just me',
-                groupValue: _selectedCompanySize,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCompanySize = value!;
-                  });
-                },
-              ),
-              RadioListTile(
-                title: Text('2-9 employees', style: TextStyle(fontSize: 14)),
-                value: '2-9 employees',
-                groupValue: _selectedCompanySize,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCompanySize = value!;
-                  });
-                },
-              ),
-              RadioListTile(
-                title: Text('10-99 employees', style: TextStyle(fontSize: 14)),
-                value: '10-99 employees',
-                groupValue: _selectedCompanySize,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCompanySize = value!;
-                  });
-                },
-              ),
-              RadioListTile(
-                title:
-                    Text('100-1000 employees', style: TextStyle(fontSize: 14)),
-                value: '100-1000 employees',
-                groupValue: _selectedCompanySize,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCompanySize = value!;
-                  });
-                },
-              ),
-              RadioListTile(
-                title: Text('More than 1000 employees',
-                    style: TextStyle(fontSize: 14)),
-                value: 'More than 1000 employees',
-                groupValue: _selectedCompanySize,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCompanySize = value!;
-                  });
-                },
-              ),
+              buildText('How many people are in your company?', 16),
+              buildRadioListTile('It\'s just me', 'Just me'),
+              buildRadioListTile('2-9 employees', '2-9 employees'),
+              buildRadioListTile('10-99 employees', '10-99 employees'),
+              buildRadioListTile('100-1000 employees', '100-1000 employees'),
+              buildRadioListTile(
+                  'More than 1000 employees', 'More than 1000 employees'),
               SizedBox(height: 15),
-              TextField(
-                controller: _companyNameController,
-                decoration: InputDecoration(
-                  labelText: 'Company name',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField(_companyNameController, 'Company name'),
               SizedBox(height: 15),
-              TextField(
-                controller: _websiteController,
-                decoration: InputDecoration(
-                  labelText: 'Website',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField(_websiteController, 'Website'),
               SizedBox(height: 15),
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              buildTextField(_descriptionController, 'Description'),
               SizedBox(height: 15),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_isInputValid()) {
-                      User.nstaff = _selectedCompanySize;
-                      User.cname = _companyNameController.text;
-                      User.website = _websiteController.text;
-                      User.description = _descriptionController.text;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Welcome()),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text("Please fill in all the required fields."),
-                        ),
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-              ),
+              buildContinueButton(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCenterText(String text, double fontSize, FontWeight fontWeight) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+      ),
+    );
+  }
+
+  Widget buildText(String text, double fontSize) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: fontSize),
+    );
+  }
+
+  Widget buildRadioListTile(String title, String value) {
+    return RadioListTile(
+      title: Text(title, style: TextStyle(fontSize: 14)),
+      value: value,
+      groupValue: _selectedCompanySize,
+      onChanged: (value) {
+        setState(() {
+          _selectedCompanySize = value!;
+        });
+      },
+    );
+  }
+
+  Widget buildTextField(TextEditingController controller, String labelText) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget buildContinueButton() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        onPressed: () {
+          if (_isInputValid()) {
+            User.nstaff = _selectedCompanySize;
+            User.cname = _companyNameController.text;
+            User.website = _websiteController.text;
+            User.description = _descriptionController.text;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Welcome()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Please fill in all the required fields."),
+              ),
+            );
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+        ),
+        child: Text(
+          'Continue',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
           ),
         ),
       ),

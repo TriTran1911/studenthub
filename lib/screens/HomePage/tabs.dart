@@ -3,7 +3,9 @@ import 'projects.dart';
 import 'dashboard.dart';
 import 'message.dart';
 import 'alerts.dart';
-import 'package:studenthub/components/custom_appbar.dart';
+import '/components/controller.dart';
+import '/components/appbar.dart';
+
 
 class TabsPage extends StatefulWidget {
   @override
@@ -13,11 +15,11 @@ class TabsPage extends StatefulWidget {
 class _TabsPageState extends State<TabsPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    ProjectsPage(),
-    DashboardPage(),
-    MessagePage(),
-    AlertsPage(),
+  final List<TabInfo> _tabs = [
+    TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.folder),
+    TabInfo(page: DashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
+    TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
+    TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
   ];
 
   void _onItemTapped(int index) {
@@ -30,31 +32,21 @@ class _TabsPageState extends State<TabsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      body: _pages[_selectedIndex],
+      body: _tabs[_selectedIndex].page,
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
-            label: 'Projects',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Message',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Alerts',
-          ),
-        ],
+        items: _tabs.map((tab) => _buildBottomNavigationBarItem(tab)).toList(),
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(TabInfo tab) {
+    return BottomNavigationBarItem(
+      icon: Icon(tab.icon),
+      label: tab.label,
     );
   }
 }
