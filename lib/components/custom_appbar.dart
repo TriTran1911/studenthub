@@ -9,22 +9,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Color.fromARGB(255, 92, 92, 92),
       title: Row(
-<<<<<<< Updated upstream
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('StudentHub'),
-          IconButton(
-            icon: Icon(Icons.account_circle),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SwitchAccountScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-=======
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('StudentHub', 
@@ -41,7 +25,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
->>>>>>> Stashed changes
     );
   }
 
