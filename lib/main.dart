@@ -4,6 +4,7 @@ import 'screens/homescreen.dart';
 import 'screens/login_page.dart';
 import 'screens/signup1_page.dart';
 import '../screens/switch_account.dart';
+import 'screens/profile_input_2.dart';
 import '../components/project.dart';
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: HomeScreen(),
+      home: ProfileInputScreen(),
     );
   }
 }
