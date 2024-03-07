@@ -33,6 +33,7 @@ class Login extends StatelessWidget {
             SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
+                appBarIcon.isBlocked = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => TabsPage()),

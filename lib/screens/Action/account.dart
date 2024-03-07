@@ -12,8 +12,7 @@ class AccountController extends StatefulWidget {
 
 class _AccountControllerState extends State<AccountController> {
   String? selectedAccount;
-  IconData selectedAccountIcon =
-      Icons.business;
+  IconData selectedAccountIcon = Icons.business;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +61,11 @@ class _AccountControllerState extends State<AccountController> {
                 User.isCompany ? CWithoutProfile() : StudentInfoScreen()));
   }
 
-  void _handleSettingsButtonPress(BuildContext context) {
-
-  }
+  void _handleSettingsButtonPress(BuildContext context) {}
 
   void _handleLogoutButtonPress(BuildContext context) {
+    appBarIcon.isSelected = !appBarIcon.isSelected;
+    appBarIcon.isBlocked = true;
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => Login()));
   }

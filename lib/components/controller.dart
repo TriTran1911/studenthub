@@ -11,6 +11,11 @@ class User {
   static String description = '';
 }
 
+class appBarIcon {
+  static bool isSelected = false;
+  static bool isBlocked = true;
+}
+
 class TabInfo {
   final Widget page;
   final String label;

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '/screens/action/account.dart';
+import '/components/controller.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar();
-  static bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
-          !isSelected
+          !appBarIcon.isSelected
               ? IconButton(
                   icon: Icon(
                     Icons.account_circle,
@@ -27,14 +27,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 30,
                   ),
                   onPressed: () {
-                    isSelected = !isSelected;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AccountController()),
-                    );
-                  },
-                )
+                    !appBarIcon.isBlocked
+                        ? (
+                            appBarIcon.isSelected = true,
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AccountController()),
+                            )
+                          )
+                        : null;
+                  })
               : IconButton(
                   icon: Icon(
                     Icons.search,
@@ -42,11 +45,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 30,
                   ),
                   onPressed: () {
-                    isSelected = !isSelected;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => TabsPage()),
-                    );
+                    appBarIcon.isSelected = false;
+                    !appBarIcon.isBlocked
+                        ? Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => TabsPage()),
+                          )
+                        : null;
                   },
                 ),
         ],
