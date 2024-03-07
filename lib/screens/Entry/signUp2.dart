@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/screens/Action/switchAccount.dart';
+import 'package:studenthub/screens/Action/account.dart';
 import '/components/custom_appbar.dart';
 
 class SignUp2 extends StatefulWidget {
@@ -53,15 +53,15 @@ class _Signup2State extends State<SignUp2> {
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              // ignore: avoid_init_to_null
               onPressed: () {
-                // Add functionality for the button here
-                _handleSignup();
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SwitchAccount()),
-                );
+                if (_agreedToTerms) {
+                  _handleSignup();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccountController()),
+                  );
+                }
               },
               child: Text('Create my account'),
               style: ElevatedButton.styleFrom(
@@ -70,9 +70,7 @@ class _Signup2State extends State<SignUp2> {
             ),
             SizedBox(height: 10.0),
             TextButton(
-              onPressed: () {
-                
-              },
+              onPressed: () {},
               child: Text('Looking for a project? Apply as a user'),
             ),
           ],

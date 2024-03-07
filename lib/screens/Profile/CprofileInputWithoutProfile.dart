@@ -2,26 +2,12 @@ import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 import '/screens/action/welcome.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class CWithoutProfile extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Student Hub',
-      home: StudentHubPage(),
-    );
-  }
+  _CWithoutProfileState createState() => _CWithoutProfileState();
 }
 
-class StudentHubPage extends StatefulWidget {
-  @override
-  _StudentHubPageState createState() => _StudentHubPageState();
-}
-
-class _StudentHubPageState extends State<StudentHubPage> {
+class _CWithoutProfileState extends State<CWithoutProfile> {
   String _selectedCompanySize = '';
 
   @override
@@ -132,7 +118,7 @@ class _StudentHubPageState extends State<StudentHubPage> {
                     // Add functionality for the button here
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => WelcomePage()),
+                      MaterialPageRoute(builder: (context) => Welcome()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

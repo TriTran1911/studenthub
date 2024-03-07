@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '/components/custom_appbar.dart';
 
-class ProfileInputScreen extends StatefulWidget {
+class CompanyProfile extends StatefulWidget {
   @override
-  _ProfileInputScreenState createState() => _ProfileInputScreenState();
+  _CompanyProfileState createState() => _CompanyProfileState();
 }
 
-class _ProfileInputScreenState extends State<ProfileInputScreen> {
+class _CompanyProfileState extends State<CompanyProfile> {
   bool isJustMeSelected = true;
 
   @override
