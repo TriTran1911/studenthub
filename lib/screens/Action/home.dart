@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to SignUp1Page when Company button is pressed
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),
                 );
@@ -46,7 +46,7 @@ class Home extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to SignUp1Page when Student button is pressed
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),
                 );

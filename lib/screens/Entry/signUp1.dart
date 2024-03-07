@@ -93,7 +93,7 @@ class _SignUpState1 extends State<SignUp1> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => SignUp2()),
                 );

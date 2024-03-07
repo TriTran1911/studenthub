@@ -57,7 +57,7 @@ class _Signup2State extends State<SignUp2> {
                 if (_agreedToTerms) {
                   _handleSignup();
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => AccountController()),
                   );
