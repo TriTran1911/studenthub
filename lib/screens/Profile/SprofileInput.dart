@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
-import '../components/custom_appbar.dart';
+import '/components/custom_appbar.dart';
 
-class StudentProfileInputScreen extends StatefulWidget {
+class StudentProfile extends StatefulWidget {
   @override
-  _StudentProfileInputState createState() => _StudentProfileInputState();
+  _StudentProfileState createState() => _StudentProfileState();
 }
 
-class _StudentProfileInputState extends State<StudentProfileInputScreen> {
+class _StudentProfileState extends State<StudentProfile> {
   String cvPath = '';
   String cvFileName = '';
   String transcriptPath = '';
@@ -25,10 +25,10 @@ class _StudentProfileInputState extends State<StudentProfileInputScreen> {
         setState(() {
           if (fileType == 'CV') {
             cvPath = result.files.single.path!;
-            cvFileName = result.files.single.name ?? '';
+            cvFileName = result.files.single.name;
           } else if (fileType == 'Transcript') {
             transcriptPath = result.files.single.path!;
-            transcriptFileName = result.files.single.name ?? '';
+            transcriptFileName = result.files.single.name;
           }
         });
       }

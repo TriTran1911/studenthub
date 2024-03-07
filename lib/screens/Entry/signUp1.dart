@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import '../components/custom_appbar.dart';
-import '../screens/signup2_page.dart';
+import '/components/custom_appbar.dart';
+import 'signUp2.dart';
+import 'login.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUp1 extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignUpState1 createState() => _SignUpState1();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpState1 extends State<SignUp1> {
   bool _isCompany = false;
   bool _isStudent = false;
 
@@ -93,17 +94,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignupScreen_2()),
-                );
+                if (_isCompany || _isStudent) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUp2()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Please select an option"),
+                    ),
+                  );
+                }
               },
-              child: Text('Create account'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Create account',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
             ),
             SizedBox(height: 20.0),
-            Text(
-              "Already have an account? Login",
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Already have an account?  ",
+                  textAlign: TextAlign.center,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                  child: Text(
+                    "Login",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../screens/projects_page.dart';
-import '../screens/dashboard_page.dart';
-import '../screens/message_page.dart';
-import '../screens/alerts_page.dart';
-import '../components/custom_appbar.dart';
+import 'projects.dart';
+import 'dashboard.dart';
+import 'message.dart';
+import 'alerts.dart';
+import 'package:studenthub/components/custom_appbar.dart';
 
-class HomePage extends StatefulWidget {
+class TabsPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _TabsPageState createState() => _TabsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _TabsPageState extends State<TabsPage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [

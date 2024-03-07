@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import '../components/custom_appbar.dart';
-import 'welcome_page.dart';
+import '/components/custom_appbar.dart';
 
-class ProfileInputScreen extends StatefulWidget {
+class CompanyProfile extends StatefulWidget {
   @override
-  _ProfileInputScreenState createState() => _ProfileInputScreenState();
+  _CompanyProfileState createState() => _CompanyProfileState();
 }
 
-class _ProfileInputScreenState extends State<ProfileInputScreen> {
-  String _selectedCompanySize = '';
+class _CompanyProfileState extends State<CompanyProfile> {
   bool isJustMeSelected = true;
 
   @override
@@ -62,7 +60,6 @@ class _ProfileInputScreenState extends State<ProfileInputScreen> {
                     ? null // Không có hành động khi người dùng cố gắng thay đổi giá trị
                     : (value) {
                         setState(() {
-                          _selectedCompanySize = (value as String?)!;
                         });
                       },
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/project.dart';
+import '/components/project.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -27,11 +27,8 @@ class _DashboardPageState extends State<DashboardPage> {
         .toList();
   }
 
-  late Project _selectedProject;
-
   void _selectProject(Project project) {
     setState(() {
-      _selectedProject = project;
     });
   }
 

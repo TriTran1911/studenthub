@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../components/custom_appbar.dart';
+import '/components/custom_appbar.dart';
+import '/screens/Profile/CprofileInputWithoutProfile.dart';
 
-class SwitchAccountScreen extends StatefulWidget {
+class AccountController extends StatefulWidget {
   @override
-  _SwitchAccountScreenState createState() => _SwitchAccountScreenState();
+  _AccountControllerState createState() => _AccountControllerState();
 }
 
-class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
+class _AccountControllerState extends State<AccountController> {
   String? selectedAccount;
-  bool isExpanded = false;
   IconData selectedAccountIcon =
       Icons.business; // Added variable for selected account icon
 
@@ -24,7 +24,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           children: <Widget>[
             SizedBox(height: 16),
             Divider(height: 1, color: Colors.grey), // Divider
-            _buildDropdownButton(_handleCompanySelection),
+            _buildListView(_handleCompanySelection),
             Divider(height: 1, color: Colors.grey), // Divider
 
             SizedBox(height: 8),
@@ -52,12 +52,14 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     setState(() {
       selectedAccount = selectedCompany;
       selectedAccountIcon = companyIcon;
-      isExpanded = false; // Collapse the ExpansionTile
     });
   }
 
-  void _handleProfilesButtonPress() {
-    // Handle 'Profiles' button press
+  void _handleProfilesButtonPress(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => CWithoutProfile())
+    );
   }
 
   void _handleSettingsButtonPress() {
@@ -68,7 +70,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     // Handle 'Logout' button press
   }
 
-  Widget _buildDropdownButton(
+  Widget _buildListView(
     void Function(String? selectedCompany, IconData companyIcon)
         handleCompanySelection,
   ) {
@@ -76,13 +78,6 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       leading: Icon(selectedAccountIcon), // Use the selected account icon
       title: Text(selectedAccount ?? 'Select an account',
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-      onExpansionChanged: (value) {
-        setState(() {
-          isExpanded = value;
-        });
-      },
-
-      initiallyExpanded: isExpanded,
       children: [
         ListView(
           shrinkWrap: true,
@@ -121,7 +116,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
-          onPressed: onPressed as void Function()?,
+          onPressed: () => onPressed(context),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors
                 .transparent, // Set the button background color to transparent

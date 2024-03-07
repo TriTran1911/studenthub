@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import '../components/custom_appbar.dart';
+import '/components/custom_appbar.dart';
+import '/screens/entry/Login.dart';
 
-class HomeScreen extends StatelessWidget {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +10,8 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, // Đặt mainAxisAlignment thành start
+          mainAxisAlignment:
+              MainAxisAlignment.start, // Đặt mainAxisAlignment thành start
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 50), // Duy chuyển nội dung lên trên 50 pixels
@@ -33,25 +34,53 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
               onPressed: () {
                 // Navigate to SignUp1Page when Company button is pressed
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => Login()),
                 );
               },
-              child: Text('Company'),
+              child: Text(
+                'Company',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
               onPressed: () {
                 // Navigate to SignUp1Page when Student button is pressed
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => Login()),
                 );
               },
-              child: Text('Student'),
+              child: Text(
+                'Student',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
             ),
             SizedBox(height: 20),
             Column(

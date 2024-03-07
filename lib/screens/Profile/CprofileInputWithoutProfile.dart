@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
-import '../components/custom_appbar.dart';
-import 'welcome_page.dart';
+import '/components/custom_appbar.dart';
+import '/screens/action/welcome.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class CWithoutProfile extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Student Hub',
-      home: StudentHubPage(),
-    );
-  }
+  _CWithoutProfileState createState() => _CWithoutProfileState();
 }
 
-class StudentHubPage extends StatefulWidget {
-  @override
-  _StudentHubPageState createState() => _StudentHubPageState();
-}
-
-class _StudentHubPageState extends State<StudentHubPage> {
+class _CWithoutProfileState extends State<CWithoutProfile> {
   String _selectedCompanySize = '';
 
   @override
@@ -132,20 +118,25 @@ class _StudentHubPageState extends State<StudentHubPage> {
                     // Add functionality for the button here
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => WelcomePage()),
+                      MaterialPageRoute(builder: (context) => Welcome()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.blueGrey, // Text color
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(20.0), // Border radius
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12), // Button padding
                   ),
-                  child: Text('Continue'),
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ),
               ),
             ],

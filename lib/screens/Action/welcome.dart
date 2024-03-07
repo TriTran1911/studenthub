@@ -1,23 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/screens/homepage.dart';
-import '../components/custom_appbar.dart';
-import 'homepage.dart';
+import '/screens/HomePage/tabs.dart';
+import '/components/custom_appbar.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome Page',
-      home: WelcomePage(),
-    );
-  }
-}
-
-class WelcomePage extends StatelessWidget {
+class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +31,7 @@ class WelcomePage extends StatelessWidget {
                 // Add functionality for the button here
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => TabsPage()),
                 );
               },
               child: Text('Get started!'),
