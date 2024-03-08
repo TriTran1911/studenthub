@@ -6,12 +6,6 @@ final List<String> techstackOptions = [
   'Front-end Developer',
   'Back-end Developer',
   'iOS Developer',
-<<<<<<< HEAD
-=======
-  'Android Developer',
-  'DevOps Engineer',
-  'UI/UX Designer',
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
   // Add more techstack options here
 ];
 
@@ -26,7 +20,6 @@ final List<String> skillsetOptions = [
   // Add more skills here
 ];
 
-<<<<<<< HEAD
 final List<String> languageList = [
   'English: Native or Bilingual',
   'Spanish: Fluent',
@@ -40,17 +33,6 @@ List<String> educationList = [
   // Add more education entries here
 ];
 
-=======
-final List<String> languageOptions = [
-  'English',
-  'Spanish',
-  'French',
-  'German',
-  'Chinese',
-  // Add more languages here
-];
-
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
 class StudentInfoScreen extends StatefulWidget {
   @override
   _StudentInfoScreenState createState() => _StudentInfoScreenState();
@@ -62,13 +44,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
   List<String> selectedLanguages = [];
 
   bool showSkillContainer = false;
-<<<<<<< HEAD
   bool anySkillSelected = false;
-=======
-  bool showLanguageContainer = false;
-  bool anySkillSelected = false;
-  bool anyLanguageSelected = false;
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
 
   @override
   Widget build(BuildContext context) {
@@ -172,29 +148,18 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-<<<<<<< HEAD
                     _addLanguage();
-=======
-                    // Handle adding a new language
-                    // This could open a dialog or navigate to another screen for adding a new language
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-<<<<<<< HEAD
                     _editLanguages();
-=======
-                    // Handle editing the list of languages
-                    // This could open a dialog or navigate to another screen for editing languages
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
                   },
                 ),
               ],
             ),
             SizedBox(height: 10.0),
-<<<<<<< HEAD
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -214,37 +179,12 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
               onAdd: _addEducation,
               onEdit: _editEducation,
               onDelete: _deleteEducation,
-=======
-            Container(
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      anyLanguageSelected
-                          ? selectedLanguages.join(", ")
-                          : 'Tap here to select languages',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.grey,
-                        fontWeight: anyLanguageSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
             ),
           ],
         ),
       ),
     );
   }
-<<<<<<< HEAD
 
   void _addLanguage() {
     showDialog(
@@ -468,8 +408,6 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
       educationList.removeAt(index);
     });
   }
-=======
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
 }
 
 class TechstackSelection extends StatelessWidget {
@@ -586,7 +524,6 @@ class __SkillContainerStateState extends State<_SkillContainerState> {
     return selectedSkills;
   }
 }
-<<<<<<< HEAD
 
 class _EducationSection extends StatelessWidget {
   final List<String> educationList;
@@ -657,5 +594,3 @@ class _EducationSection extends StatelessWidget {
     );
   }
 }
-=======
->>>>>>> 98df228edcba1ce47677ff4f2557794accacd2c6
