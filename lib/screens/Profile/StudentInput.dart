@@ -6,9 +6,6 @@ final List<String> techstackOptions = [
   'Front-end Developer',
   'Back-end Developer',
   'iOS Developer',
-  'Android Developer',
-  'DevOps Engineer',
-  'UI/UX Designer',
   // Add more techstack options here
 ];
 
@@ -23,13 +20,17 @@ final List<String> skillsetOptions = [
   // Add more skills here
 ];
 
-final List<String> languageOptions = [
-  'English',
-  'Spanish',
-  'French',
-  'German',
-  'Chinese',
+final List<String> languageList = [
+  'English: Native or Bilingual',
+  'Spanish: Fluent',
+  'French: Intermediate',
   // Add more languages here
+];
+
+List<String> educationList = [
+  "Le Hong Phong High School\n2008-2010",
+  "Ho Chi Minh University of Sciences\n2010-2014",
+  // Add more education entries here
 ];
 
 class StudentInfoScreen extends StatefulWidget {
@@ -43,9 +44,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
   List<String> selectedLanguages = [];
 
   bool showSkillContainer = false;
-  bool showLanguageContainer = false;
   bool anySkillSelected = false;
-  bool anyLanguageSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,47 +148,265 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
                 IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    // Handle adding a new language
-                    // This could open a dialog or navigate to another screen for adding a new language
+                    _addLanguage();
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    // Handle editing the list of languages
-                    // This could open a dialog or navigate to another screen for editing languages
+                    _editLanguages();
                   },
                 ),
               ],
             ),
             SizedBox(height: 10.0),
-            Container(
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      anyLanguageSelected
-                          ? selectedLanguages.join(", ")
-                          : 'Tap here to select languages',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.grey,
-                        fontWeight: anyLanguageSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (String language in languageList)
+                  Text(
+                    language,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
                     ),
                   ),
-                ],
-              ),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            _EducationSection(
+              educationList: educationList,
+              onAdd: _addEducation,
+              onEdit: _editEducation,
+              onDelete: _deleteEducation,
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _addLanguage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String newLanguage = '';
+        return AlertDialog(
+          title: Text('Add Language'),
+          content: TextField(
+            onChanged: (value) {
+              newLanguage = value;
+            },
+            decoration: InputDecoration(hintText: 'Enter language'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  languageList.add(newLanguage);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editLanguages() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      List<String> editedLanguages = List.from(languageList);
+      return AlertDialog(
+        title: Text('Edit Languages'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (int i = 0; i < editedLanguages.length; i++)
+              TextField(
+                onChanged: (value) {
+                  editedLanguages[i] = value;
+                },
+                decoration: InputDecoration(hintText: 'Enter language'),
+                controller: TextEditingController(text: editedLanguages[i]),
+              ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                languageList.clear();
+                languageList.addAll(editedLanguages);
+              });
+              Navigator.of(context).pop();
+            },
+            child: Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+  void _addEducation() {
+    String schoolName = '';
+    String startYear = '';
+    String endYear = '';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Education'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  schoolName = value;
+                },
+                decoration: InputDecoration(hintText: 'School Name'),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        startYear = value;
+                      },
+                      decoration: InputDecoration(hintText: 'Start Year'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        endYear = value;
+                      },
+                      decoration: InputDecoration(hintText: 'End Year'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  educationList.add('$schoolName\n$startYear-$endYear');
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editEducation(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String editedSchoolName = educationList[index].split('\n')[0];
+        String editedYears = educationList[index].split('\n')[1];
+        String editedStartYear = editedYears.split('-')[0];
+        String editedEndYear = editedYears.split('-')[1];
+
+        return AlertDialog(
+          title: Text('Edit Education'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (value) {
+                  editedSchoolName = value;
+                },
+                decoration: InputDecoration(hintText: 'School Name'),
+                controller: TextEditingController(text: editedSchoolName),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        editedStartYear = value;
+                      },
+                      decoration: InputDecoration(hintText: 'Start Year'),
+                      keyboardType: TextInputType.number,
+                      controller: TextEditingController(text: editedStartYear),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        editedEndYear = value;
+                      },
+                      decoration: InputDecoration(hintText: 'End Year'),
+                      keyboardType: TextInputType.number,
+                      controller: TextEditingController(text: editedEndYear),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  educationList[index] = '$editedSchoolName\n$editedStartYear-$editedEndYear';
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteEducation(int index) {
+    setState(() {
+      educationList.removeAt(index);
+    });
   }
 }
 
@@ -305,5 +522,75 @@ class __SkillContainerStateState extends State<_SkillContainerState> {
       }
     }
     return selectedSkills;
+  }
+}
+
+class _EducationSection extends StatelessWidget {
+  final List<String> educationList;
+  final VoidCallback onAdd;
+  final Function(int) onEdit;
+  final Function(int) onDelete;
+
+  _EducationSection({
+    required this.educationList,
+    required this.onAdd,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Education',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: onAdd,
+            ),
+          ],
+        ),
+        SizedBox(height: 8.0),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int i = 0; i < educationList.length; i++)
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        educationList[i],
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () => onEdit(i),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => onDelete(i),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 }
