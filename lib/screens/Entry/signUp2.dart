@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import 'package:studenthub/screens/action/account.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 import '/components/controller.dart';
 
 class SignUp2 extends StatefulWidget {
@@ -19,108 +20,128 @@ class _Signup2State extends State<SignUp2> {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  User.isCompany ? 'Sign up as Company' : 'Sign up as Student',
-                  style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 20.0),
-              ChatBubble(
-                textEditingController: _userNameController,
-                label: 'Username',
-              ),
-              ChatBubble(
-                textEditingController: _emailController,
-                label: 'Work email address',
-              ),
-              ChatBubble(
-                textEditingController: _passwordController,
-                label: 'Password (8 or more characters)',
-                isPassword: true,
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                children: [
-                  Checkbox(
-                    value: _agreedToTerms,
-                    onChanged: (value) =>
-                        setState(() => _agreedToTerms = value!),
-                  ),
-                  Text('Yes, I understand and agree to StudetHub'),
-                ],
-              ),
-              SizedBox(height: 15.0),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_checkSignup()) {
-                      _handleSignup();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AccountController(),
-                        ),
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Create my account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    User.isCompany
-                        ? "Looking for a project?  "
-                        : "Want to offer projects?  ",
-                    textAlign: TextAlign.center,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      User.isCompany = !User.isCompany; // Toggle user type
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUp2()),
-                      );
-                    },
-                    child: Text(
-                      User.isCompany ? "Apply as a user" : "Apply as a company",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      body: _buildBody(context),
+    );
+  }
+
+  SingleChildScrollView _buildBody(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTitleText(),
+            SizedBox(height: 20.0),
+            ChatBubble(
+              textEditingController: _userNameController,
+              label: 'Username',
+            ),
+            ChatBubble(
+              textEditingController: _emailController,
+              label: 'Work email address',
+            ),
+            ChatBubble(
+              textEditingController: _passwordController,
+              label: 'Password (8 or more characters)',
+              isPassword: true,
+            ),
+            SizedBox(height: 10.0),
+            _buildAgreementRow(),
+            SizedBox(height: 15.0),
+            _buildElevatedButton('Create my account', _handleOnPressed),
+            SizedBox(height: 10.0),
+            _buildToggleUserTypeRow(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Text _buildTitleText() {
+    return Text(
+      User.isCompany ? 'Sign up as Company' : 'Sign up as Student',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Row _buildAgreementRow() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _agreedToTerms,
+          onChanged: (value) => setState(() => _agreedToTerms = value!),
+        ),
+        Text('Yes, I understand and agree to StudetHub'),
+      ],
+    );
+  }
+
+  Center _buildElevatedButton(String text, VoidCallback onPressed) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
           ),
         ),
       ),
     );
+  }
+
+  Row _buildToggleUserTypeRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          User.isCompany
+              ? "Looking for a project?  "
+              : "Want to offer projects?  ",
+          textAlign: TextAlign.center,
+        ),
+        GestureDetector(
+          onTap: () {
+            User.isCompany = !User.isCompany; // Toggle user type
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SignUp2()),
+            );
+          },
+          child: Text(
+            User.isCompany ? "Apply as a student" : "Apply as a company",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _handleOnPressed() {
+    if (_checkSignup()) {
+      _handleSignup();
+      appBarIcon.isBlocked = true;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TabsPage(),
+        ),
+      );
+    }
   }
 
   void _handleSignup() {

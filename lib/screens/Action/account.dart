@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInputWithoutProfile.dart';
-import '../Profile/SprofileInput.dart';
+import '/screens/Profile/SprofileInput1.dart';
 import '/components/controller.dart';
+import '/screens/Entry/Login.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -11,41 +12,36 @@ class AccountController extends StatefulWidget {
 
 class _AccountControllerState extends State<AccountController> {
   String? selectedAccount;
-  IconData selectedAccountIcon =
-      Icons.business; // Added variable for selected account icon
+  IconData selectedAccountIcon = Icons.business;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 16),
-            Divider(height: 1, color: Colors.grey), // Divider
-            _buildListView(_handleCompanySelection),
-            Divider(height: 1, color: Colors.grey), // Divider
+      body: _Padding(),
+    );
+  }
 
-            SizedBox(height: 8),
-            _buildElevatedButton(Icons.account_circle_outlined, 'Profiles',
-                _handleProfilesButtonPress),
-            SizedBox(height: 8),
-            Divider(height: 1, color: Colors.grey), // Divider
-            SizedBox(height: 8),
-            _buildElevatedButton(
-                Icons.settings, 'Settings', _handleSettingsButtonPress),
-            SizedBox(height: 8),
-            Divider(height: 1, color: Colors.grey), // Divider
-            SizedBox(height: 8),
-            _buildElevatedButton(
-                Icons.logout, 'Logout', _handleLogoutButtonPress),
-            SizedBox(height: 8),
-            Divider(height: 1, color: Colors.grey), // Divider
-          ],
-        ),
+  Padding _Padding() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Divider(height: 17, color: Colors.grey),
+          _buildListView(_handleCompanySelection),
+          Divider(height: 17, color: Colors.grey),
+          _buildElevatedButton(Icons.account_circle_outlined, 'Profiles',
+              _handleProfilesButtonPress),
+          Divider(height: 17, color: Colors.grey),
+          _buildElevatedButton(
+              Icons.settings, 'Settings', _handleSettingsButtonPress),
+          Divider(height: 17, color: Colors.grey),
+          _buildElevatedButton(
+              Icons.logout, 'Logout', _handleLogoutButtonPress),
+          Divider(height: 17, color: Colors.grey),
+        ],
       ),
     );
   }
@@ -62,15 +58,16 @@ class _AccountControllerState extends State<AccountController> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                User.isCompany ? CWithoutProfile() : StudentProfile()));
+                User.isCompany ? CWithoutProfile() : StudentInfoScreen()));
   }
 
-  void _handleSettingsButtonPress() {
-    // Handle 'Settings' button press
-  }
+  void _handleSettingsButtonPress(BuildContext context) {}
 
-  void _handleLogoutButtonPress() {
-    // Handle 'Logout' button press
+  void _handleLogoutButtonPress(BuildContext context) {
+    appBarIcon.isSelected = !appBarIcon.isSelected;
+    appBarIcon.isBlocked = true;
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   Widget _buildListView(
@@ -78,7 +75,7 @@ class _AccountControllerState extends State<AccountController> {
         handleCompanySelection,
   ) {
     return ExpansionTile(
-      leading: Icon(selectedAccountIcon), // Use the selected account icon
+      leading: Icon(selectedAccountIcon),
       title: Text(selectedAccount ?? 'Select an account',
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       children: [
@@ -107,7 +104,6 @@ class _AccountControllerState extends State<AccountController> {
                 handleCompanySelection('Hai Pham Student', Icons.school);
               },
             ),
-            // Add more list tiles for additional accounts
           ],
         ),
       ],
@@ -121,24 +117,22 @@ class _AccountControllerState extends State<AccountController> {
         ElevatedButton(
           onPressed: () => onPressed(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors
-                .transparent, // Set the button background color to transparent
-            elevation: 0, // Set elevation to 0 to remove the shadow
+            backgroundColor: Colors.transparent,
+            elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  8.0), // Adjust the border radius as needed
+              borderRadius: BorderRadius.circular(8.0),
             ),
           ),
           child: Row(
             children: [
               Icon(icon, color: Colors.black),
-              SizedBox(width: 8), // Adjust spacing between icon and text
+              SizedBox(width: 8),
               Text(
                 text,
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Set the text color to black
+                  color: Colors.black,
                 ),
               ),
             ],

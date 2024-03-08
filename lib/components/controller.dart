@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class User {
   static String username = '';
   static String email = '';
@@ -7,4 +9,17 @@ class User {
   static String cname = '';
   static String website = '';
   static String description = '';
+}
+
+class appBarIcon {
+  static bool isSelected = false;
+  static bool isBlocked = true;
+}
+
+class TabInfo {
+  final Widget page;
+  final String label;
+  final IconData icon;
+
+  TabInfo({required this.page, required this.label, required this.icon});
 }

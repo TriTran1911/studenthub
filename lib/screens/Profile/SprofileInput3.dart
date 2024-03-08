@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 import '../HomePage/tabs.dart';
 
 class StudentProfile extends StatefulWidget {

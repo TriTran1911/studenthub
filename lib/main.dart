@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
 import '/screens/action/home.dart';
-import '/screens/Profile/StudentInput.dart';
 
 void main() {
   Project.addProject('Project 1', ProjectDuration.oneToThreeMonths,
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: StudentInfoScreen(),
+      home: Home(),
     );
   }
 }

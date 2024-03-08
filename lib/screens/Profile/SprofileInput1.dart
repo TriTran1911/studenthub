@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/components/custom_appbar.dart';
+import '../../components/appbar.dart';
 
 final List<String> techstackOptions = [
   'Fullstack Engineer',
