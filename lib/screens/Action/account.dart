@@ -66,8 +66,7 @@ class _AccountControllerState extends State<AccountController> {
   void _handleLogoutButtonPress(BuildContext context) {
     appBarIcon.isSelected = !appBarIcon.isSelected;
     appBarIcon.isBlocked = true;
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Login()));
+    navigateToPage(Login(), context);
   }
 
   Widget _buildListView(

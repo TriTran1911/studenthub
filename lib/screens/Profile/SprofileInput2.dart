@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import 'package:intl/intl.dart';
 import './SprofileInput3.dart';
+import '../../components/controller.dart';
 
 class StudentInfoScreen2 extends StatefulWidget {
   final GlobalKey<_ProjectListState> projectListKey =
@@ -66,10 +67,7 @@ class _StudentInfoScreen2State extends State<StudentInfoScreen2> {
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => StudentProfile()),
-                  );
+                  navigateToPage(StudentProfile(), context);
                 },
                 child: Text(
                   'Next',

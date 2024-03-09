@@ -23,3 +23,25 @@ class TabInfo {
 
   TabInfo({required this.page, required this.label, required this.icon});
 }
+
+Route _createRoute(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+void navigateToPage(Widget page, BuildContext context) {
+  Navigator.of(context).pushReplacement(_createRoute(page));
+}

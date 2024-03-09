@@ -18,26 +18,30 @@ class _CompanyProfileState extends State<CompanyProfile> {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
-              SizedBox(height: 15),
-              buildTextField('Company name'),
-              SizedBox(height: 15),
-              buildTextField('Website'),
-              SizedBox(height: 15),
-              buildTextField('Discription'),
-              SizedBox(height: 15),
-              buildText('How many people are in your company?', 16),
-              buildRadioListTile(),
-              SizedBox(height: 15),
-              buildActionButtons(),
-            ],
-          ),
+      body: _buildSingleChildScrollView(),
+    );
+  }
+
+  SingleChildScrollView _buildSingleChildScrollView() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
+            SizedBox(height: 15),
+            buildTextField('Company name'),
+            SizedBox(height: 15),
+            buildTextField('Website'),
+            SizedBox(height: 15),
+            buildTextField('Discription'),
+            SizedBox(height: 15),
+            buildText('How many people are in your company?', 16),
+            buildRadioListTile(),
+            SizedBox(height: 15),
+            buildActionButtons(),
+          ],
         ),
       ),
     );

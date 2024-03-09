@@ -25,10 +25,7 @@ class Home extends StatelessWidget {
           _buildElevatedButton(
             'Company',
             () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
+              navigateToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),
@@ -36,10 +33,7 @@ class Home extends StatelessWidget {
             'Student',
             () {
               User.isCompany = false;
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
+              navigateToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),

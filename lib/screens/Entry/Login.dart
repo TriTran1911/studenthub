@@ -34,10 +34,7 @@ class Login extends StatelessWidget {
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => TabsPage()),
-                );
+                navigateToPage(TabsPage(), context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -49,10 +46,7 @@ class Login extends StatelessWidget {
             SizedBox(height: 300.0),
             _buildSignUpText(),
             _buildElevatedButton('Sign Up', () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => SignUp1()),
-              );
+              navigateToPage(SignUp1(), context);
             }),
           ],
         ),

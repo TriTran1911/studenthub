@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../components/appbar.dart';
 import '../HomePage/tabs.dart';
+import '../../components/controller.dart';
 
 class StudentProfile extends StatefulWidget {
   @override
@@ -67,10 +68,7 @@ class _StudentProfileState extends State<StudentProfile> {
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => TabsPage()),
-                );
+                navigateToPage(TabsPage(), context);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),

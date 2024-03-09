@@ -23,35 +23,39 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
-              SizedBox(height: 15),
-              buildText(
-                  'Tell us about your company and you will be on your way connect with high-skilled students',
-                  16),
-              SizedBox(height: 15),
-              buildText('How many people are in your company?', 16),
-              buildRadioListTile('It\'s just me', 'Just me'),
-              buildRadioListTile('2-9 employees', '2-9 employees'),
-              buildRadioListTile('10-99 employees', '10-99 employees'),
-              buildRadioListTile('100-1000 employees', '100-1000 employees'),
-              buildRadioListTile(
-                  'More than 1000 employees', 'More than 1000 employees'),
-              SizedBox(height: 15),
-              buildTextField(_companyNameController, 'Company name'),
-              SizedBox(height: 15),
-              buildTextField(_websiteController, 'Website'),
-              SizedBox(height: 15),
-              buildTextField(_descriptionController, 'Description'),
-              SizedBox(height: 15),
-              buildContinueButton(),
-            ],
-          ),
+      body: _buidSingleChildScrollView(),
+    );
+  }
+
+  SingleChildScrollView _buidSingleChildScrollView() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
+            SizedBox(height: 15),
+            buildText(
+                'Tell us about your company and you will be on your way connect with high-skilled students',
+                16),
+            SizedBox(height: 15),
+            buildText('How many people are in your company?', 16),
+            buildRadioListTile('It\'s just me', 'Just me'),
+            buildRadioListTile('2-9 employees', '2-9 employees'),
+            buildRadioListTile('10-99 employees', '10-99 employees'),
+            buildRadioListTile('100-1000 employees', '100-1000 employees'),
+            buildRadioListTile(
+                'More than 1000 employees', 'More than 1000 employees'),
+            SizedBox(height: 15),
+            buildTextField(_companyNameController, 'Company name'),
+            SizedBox(height: 15),
+            buildTextField(_websiteController, 'Website'),
+            SizedBox(height: 15),
+            buildTextField(_descriptionController, 'Description'),
+            SizedBox(height: 15),
+            buildContinueButton(),
+          ],
         ),
       ),
     );

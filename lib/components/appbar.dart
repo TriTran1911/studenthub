@@ -27,16 +27,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 30,
                   ),
                   onPressed: () {
-                    !appBarIcon.isBlocked
-                        ? (
-                            appBarIcon.isSelected = true,
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AccountController()),
-                            )
-                          )
-                        : null;
+                    if (!appBarIcon.isBlocked) {
+                      appBarIcon.isSelected = true;
+                      navigateToPage(AccountController(), context);
+                    }
                   })
               : IconButton(
                   icon: Icon(
@@ -47,10 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     appBarIcon.isSelected = false;
                     !appBarIcon.isBlocked
-                        ? Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => TabsPage()),
-                          )
+                        ? navigateToPage(TabsPage(), context)
                         : null;
                   },
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/appbar.dart';
+import '/components/controller.dart';
 
 class Welcome extends StatelessWidget {
   @override
@@ -56,10 +57,7 @@ class Welcome extends StatelessWidget {
   ElevatedButton _buildGetStartedButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => TabsPage()),
-        );
+        navigateToPage(TabsPage(), context);
       },
       child: Text('Get started!'),
     );
