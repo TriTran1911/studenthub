@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
 import 'projectDetail.dart';
+import 'favoriteList.dart';
 
 class ProjectsPage extends StatefulWidget {
   @override
@@ -105,6 +106,22 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   void _showFavoriteProjects(BuildContext context) {
-    // Your implementation to show favorite projects goes here
-  }
+  // Filter projects to show only favorite projects
+  List<Project> favoriteProjects =
+      projects.where((project) => project.isFavorite).toList();
+
+  // Navigate to a new page to display favorite projects
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => FavoriteProjectsPage(
+        projects: favoriteProjects,
+        handleProjectTool: _handleProjectTool, // Pass the handleProjectTool function
+        selectProject: _selectProject, // Pass the selectProject function
+      ),
+    ),
+  );
+}
+
+
 }
