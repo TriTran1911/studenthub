@@ -6,10 +6,10 @@ void main() {
   DateTime now = DateTime.now();
   DateTime projectCreationDate = DateTime(now.year, now.month, now.day);
 
-  Project.addProject('Build a website ', ProjectDuration.oneToThreeMonths, ["I need a university student", "Have 1 year experience"], 'Open', projectCreationDate, proposals: 5, messages: 3, hiredCount: 1);
-  Project.addProject('Build a mobile app', ProjectDuration.threeToSixMonths, ["I need a college student", "Have 2 year experience"], 'Open', projectCreationDate, proposals: 3, messages: 2, hiredCount: 0);
-  Project.addProject('Build a web app', ProjectDuration.oneToThreeMonths, ["I need a high school student", "Have 3 year experience"], 'Open', projectCreationDate, proposals: 2, messages: 1, hiredCount: 0);
-  Project.addProject('Build a desktop app', ProjectDuration.threeToSixMonths, ["I need a university student", "Have 4 year experience"], 'Open', projectCreationDate, proposals: 1, messages: 0, hiredCount: 0);
+  Project.addProject('Build a website ', ProjectDuration.oneToThreeMonths, ["I need a university student", "Have 1 year experience"], 'Open', projectCreationDate, proposals: 5, messages: 3, hiredCount: 1, studentsNeeded: 3, timeNeeded: '2 months');
+  Project.addProject('Build a mobile app', ProjectDuration.threeToSixMonths, ["I need a college student", "Have 2 year experience"], 'Open', projectCreationDate, proposals: 3, messages: 2, hiredCount: 0, studentsNeeded: 2, timeNeeded: '3 months');
+  Project.addProject('Build a web app', ProjectDuration.oneToThreeMonths, ["I need a high school student", "Have 3 year experience"], 'Open', projectCreationDate, proposals: 2, messages: 1, hiredCount: 0, studentsNeeded: 3, timeNeeded: '4 months');
+  Project.addProject('Build a desktop app', ProjectDuration.threeToSixMonths, ["I need a university student", "Have 4 year experience"], 'Open', projectCreationDate, proposals: 1, messages: 0, hiredCount: 0, studentsNeeded: 2, timeNeeded: '3 months');
 
   runApp(MyApp());
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
+import 'projectDetail.dart';
 
 class ProjectsPage extends StatefulWidget {
   @override
@@ -20,20 +21,24 @@ class _ProjectsPageState extends State<ProjectsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Your projects',
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: Column(
         children: [
-          _buildSearchBar(),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSearchBar(),
+              ),
+        
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              _showFavoriteProjects(context);
+            },
+          ),
+        ],
+          ),
           Expanded(
-            child: Project.buildProjectsList(
+            child: Project.buildProjectsListWithoutMessagesHired(
               projects,
               _handleProjectTool,
               _selectProject,
@@ -73,8 +78,12 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   void _selectProject(Project project) {
-    // Your implementation to handle project selection goes here
-  }
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => ProjectDetailPage(project: project)),
+  );
+}
+
 
   void _handleProjectTool(ProjectTool result, Project project) {
     switch (result) {
@@ -93,5 +102,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _removeProject(Project project) {
     // Your implementation to remove a project goes here
+  }
+
+  void _showFavoriteProjects(BuildContext context) {
+    // Your implementation to show favorite projects goes here
   }
 }
