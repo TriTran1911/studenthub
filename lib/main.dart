@@ -3,18 +3,15 @@ import '/components/project.dart';
 import '/screens/action/home.dart';
 
 void main() {
-  Project.addProject('Project 1', ProjectDuration.oneToThreeMonths,
-      'Description 1', 'Working');
-  Project.addProject('Project 2', ProjectDuration.threeToSixMonths,
-      'Description 2', 'Achieved');
-  Project.addProject('Project 3', ProjectDuration.oneToThreeMonths,
-      'Description 3', 'Working');
-  Project.addProject('Project 4', ProjectDuration.threeToSixMonths,
-      'Description 4', 'Achieved');
-  Project.addProject('Project 5', ProjectDuration.oneToThreeMonths,
-      'Description 5', 'Working');
-  Project.addProject('Project 6', ProjectDuration.threeToSixMonths,
-      'Description 6', 'Achieved');
+  DateTime now = DateTime.now();
+  DateTime projectCreationDate = DateTime(now.year, now.month, now.day);
+
+  Project.addProject('Build a website ', ProjectDuration.oneToThreeMonths, 'I need a website for my business', 'Open', projectCreationDate, proposals: 5, messages: 3, hiredCount: 1);
+  Project.addProject('Create a mobile app', ProjectDuration.threeToSixMonths, 'I need a mobile app for my business', 'Open', projectCreationDate, proposals: 3, messages: 2, hiredCount: 0);
+  Project.addProject('Design a logo', ProjectDuration.oneToThreeMonths, 'I need a logo for my business', 'Open', projectCreationDate, proposals: 2, messages: 1, hiredCount: 0);
+  Project.addProject('Write a business plan', ProjectDuration.threeToSixMonths, 'I need a business plan for my business', 'Open', projectCreationDate, proposals: 1, messages: 0, hiredCount: 0);
+  Project.addProject('Create a marketing strategy', ProjectDuration.oneToThreeMonths, 'I need a marketing strategy for my business', 'Open', projectCreationDate, proposals: 0, messages: 0, hiredCount: 0);
+  Project.addProject('Build a website 1', ProjectDuration.oneToThreeMonths, 'I need a website for my business', 'Open', projectCreationDate, proposals: 5, messages: 3, hiredCount: 1);
 
   runApp(MyApp());
 }

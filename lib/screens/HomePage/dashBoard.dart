@@ -50,9 +50,9 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         body: TabBarView(
           children: [
-            _buildProjectsList(Project.projects),
-            _buildProjectsList(workingProjects),
-            _buildProjectsList(achievedProjects),
+            Project.buildProjectsList(Project.projects, _handleProjectTool, _selectProject),
+            Project.buildProjectsList(workingProjects, _handleProjectTool, _selectProject),
+            Project.buildProjectsList(achievedProjects, _handleProjectTool, _selectProject),
           ],
         ),
       ),
@@ -126,6 +126,7 @@ class _DashboardPageState extends State<DashboardPage> {
             duration,
             description,
             'Working',
+            DateTime.now(),
           );
         });
       },
@@ -461,59 +462,5 @@ class _DashboardPageState extends State<DashboardPage> {
         _removeProject(project);
         break;
     }
-  }
-
-  Widget _buildProjectsList(List<Project> projects) {
-    return ListView.builder(
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        String durationText;
-        if (projects[index].duration == ProjectDuration.oneToThreeMonths) {
-          durationText = '1 to 3 months';
-        } else {
-          durationText = '3 to 6 months';
-        }
-
-        return ListTile(
-          title: Text(
-            projects[index].title,
-            style: TextStyle(color: const Color.fromARGB(255, 25, 99, 28)),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$durationText\n'),
-              Text(
-                  'Student looking for: \n\t\t\t ${projects[index].description}\n'),
-            ],
-          ),
-          trailing: PopupMenuButton<ProjectTool>(
-            onSelected: (ProjectTool result) {
-              _handleProjectTool(result, projects[index]);
-            },
-            itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<ProjectTool>>[
-              PopupMenuItem<ProjectTool>(
-                value: ProjectTool.Edit,
-                child: ListTile(
-                  leading: Icon(Icons.edit),
-                  title: Text('Edit'),
-                ),
-              ),
-              PopupMenuItem<ProjectTool>(
-                value: ProjectTool.Remove,
-                child: ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Remove'),
-                ),
-              ),
-            ],
-          ),
-          onTap: () {
-            _selectProject(projects[index]);
-          },
-        );
-      },
-    );
   }
 }
