@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Create Post'),
         ),
-        body: CreatePostPage(),
+        body: ProjectsPage(),
       ),
     );
   }
 }
 
-class CreatePostPage extends StatelessWidget {
+class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,7 +35,8 @@ class CreatePostPage extends StatelessWidget {
           SizedBox(height: 10),
           IconButton(
             icon: Icon(Icons.info),
-            tooltip: 'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
+            tooltip:
+                'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
             onPressed: () {}, // Add functionality if needed
           ),
           SizedBox(height: 10),
@@ -58,7 +59,8 @@ class CreatePostPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10),
-                Text('• Build responsive WordPress site with booking/payment functionality'),
+                Text(
+                    '• Build responsive WordPress site with booking/payment functionality'),
                 Text('• Facebook ad specialist needed for product launch'),
               ],
             ),
