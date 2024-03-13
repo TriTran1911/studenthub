@@ -15,7 +15,9 @@ void main() {
       projectCreationDate,
       proposals: 5,
       messages: 3,
-      hiredCount: 1);
+      hiredCount: 1,
+      studentsNeeded: 3, 
+      timeNeeded: '2 months');
   Project.addProject(
       'Build a mobile app',
       ProjectDuration.threeToSixMonths,
@@ -24,7 +26,9 @@ void main() {
       projectCreationDate,
       proposals: 3,
       messages: 2,
-      hiredCount: 0);
+      hiredCount: 0,
+      studentsNeeded: 2, 
+      timeNeeded: '3 months');
   Project.addProject(
       'Build a web app',
       ProjectDuration.oneToThreeMonths,
@@ -33,7 +37,9 @@ void main() {
       projectCreationDate,
       proposals: 2,
       messages: 1,
-      hiredCount: 0);
+      hiredCount: 0,
+      studentsNeeded: 3, 
+      timeNeeded: '4 months');
   Project.addProject(
       'Build a desktop app',
       ProjectDuration.threeToSixMonths,
@@ -42,7 +48,9 @@ void main() {
       projectCreationDate,
       proposals: 1,
       messages: 0,
-      hiredCount: 0);
+      hiredCount: 0,
+      studentsNeeded: 2, 
+      timeNeeded: '3 months');
 
   // Add a proposer before running the app
   Proposer.addProposer(

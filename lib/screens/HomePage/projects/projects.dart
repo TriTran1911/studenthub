@@ -1,79 +1,127 @@
 import 'package:flutter/material.dart';
+import '/components/project.dart';
+import 'projectDetail.dart';
+import 'favoriteList.dart';
 
-void main() {
-  runApp(MyApp());
+class ProjectsPage extends StatefulWidget {
+  @override
+  _ProjectsPageState createState() => _ProjectsPageState();
 }
 
-class MyApp extends StatelessWidget {
+class _ProjectsPageState extends State<ProjectsPage> {
+  late List<Project> projects;
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Create Post'),
-        ),
-        body: ProjectsPage(),
-      ),
-    );
+  void initState() {
+    super.initState();
+
+    // Initialize the projects list
+    projects = Project.projects;
   }
-}
 
-class ProjectsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      body: Column(
         children: [
-          Text(
-            '1/4     Let\'s start with a strong title',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSearchBar(),
+              ),
+        
           IconButton(
-            icon: Icon(Icons.info),
-            tooltip:
-                'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
-            onPressed: () {}, // Add functionality if needed
-          ),
-          SizedBox(height: 10),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Write a title for your post',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0), // Add left padding
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Example titles',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                    '• Build responsive WordPress site with booking/payment functionality'),
-                Text('• Facebook ad specialist needed for product launch'),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
+            icon: Icon(Icons.favorite),
             onPressed: () {
-              // Navigate to next page or perform action
+              _showFavoriteProjects(context);
             },
-            child: Text('Next: Scope'),
+          ),
+        ],
+          ),
+          Expanded(
+            child: Project.buildProjectsListWithoutMessagesHired(
+              projects,
+              _handleProjectTool,
+              _selectProject,
+            ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search projects...',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        onChanged: (query) {
+          _filterProjects(query);
+        },
+      ),
+    );
+  }
+
+  void _filterProjects(String query) {
+    setState(() {
+      // Filter the projects list based on the query
+      projects = Project.projects
+          .where((project) =>
+              project.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void _selectProject(Project project) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => ProjectDetailPage(project: project)),
+  );
+}
+
+
+  void _handleProjectTool(ProjectTool result, Project project) {
+    switch (result) {
+      case ProjectTool.Edit:
+        _editProject(project);
+        break;
+      case ProjectTool.Remove:
+        _removeProject(project);
+        break;
+    }
+  }
+
+  void _editProject(Project project) {
+    // Your implementation to edit a project goes here
+  }
+
+  void _removeProject(Project project) {
+    // Your implementation to remove a project goes here
+  }
+
+  void _showFavoriteProjects(BuildContext context) {
+  // Filter projects to show only favorite projects
+  List<Project> favoriteProjects =
+      projects.where((project) => project.isFavorite).toList();
+
+  // Navigate to a new page to display favorite projects
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => FavoriteProjectsPage(
+        projects: favoriteProjects,
+        handleProjectTool: _handleProjectTool, // Pass the handleProjectTool function
+        selectProject: _selectProject, // Pass the selectProject function
+      ),
+    ),
+  );
+}
+
+
 }
