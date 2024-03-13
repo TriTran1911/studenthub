@@ -50,9 +50,12 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         body: TabBarView(
           children: [
-            Project.buildProjectsList(Project.projects, _handleProjectTool, _selectProject),
-            Project.buildProjectsList(workingProjects, _handleProjectTool, _selectProject),
-            Project.buildProjectsList(achievedProjects, _handleProjectTool, _selectProject),
+            Project.buildProjectsList(
+                Project.projects, _handleProjectTool, _selectProject),
+            Project.buildProjectsList(
+                workingProjects, _handleProjectTool, _selectProject),
+            Project.buildProjectsList(
+                achievedProjects, _handleProjectTool, _selectProject),
           ],
         ),
       ),
@@ -63,7 +66,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
-        onPressed: _addProject,
+        onPressed: () => _addProject(context),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -110,12 +113,14 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {});
   }
 
-  void _addProject() {
+  void _addProject(BuildContext context) {
     TextEditingController titleController = TextEditingController();
     ProjectDuration selectedDuration = ProjectDuration.oneToThreeMonths;
-    TextEditingController descriptionController = TextEditingController();
+    TextEditingController descriptionController =
+        TextEditingController(text: "");
 
     _showAddProjectDialog(
+      context: context,
       titleController: titleController,
       selectedDuration: selectedDuration,
       descriptionController: descriptionController,
@@ -124,7 +129,7 @@ class _DashboardPageState extends State<DashboardPage> {
           Project.addProject(
             title,
             duration,
-            description,
+            [description], // Wrap the single description in a list
             'Working',
             DateTime.now(),
           );
@@ -138,7 +143,7 @@ class _DashboardPageState extends State<DashboardPage> {
         TextEditingController(text: project.title);
     ProjectDuration selectedDuration = project.duration;
     TextEditingController descriptionController =
-        TextEditingController(text: project.description);
+        TextEditingController(text: project.description.join('\n'));
 
     showDialog(
       context: context,
@@ -162,8 +167,13 @@ class _DashboardPageState extends State<DashboardPage> {
                 SizedBox(height: 20.0),
                 buildTextField(descriptionController, 'Description'),
                 SizedBox(height: 20.0),
-                buildActionButtons(project, titleController, selectedDuration,
-                    descriptionController),
+                buildActionButtons(
+                  context,
+                  project,
+                  titleController,
+                  selectedDuration,
+                  descriptionController,
+                ),
               ],
             ),
           ),
@@ -201,6 +211,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _showAddProjectDialog({
+    required BuildContext context,
     required TextEditingController titleController,
     required ProjectDuration selectedDuration,
     required TextEditingController descriptionController,
@@ -245,9 +256,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     value: selectedDuration,
                     onChanged: (ProjectDuration? newValue) {
                       if (newValue != null) {
-                        setState(() {
-                          selectedDuration = newValue;
-                        });
+                        selectedDuration = newValue;
                       }
                     },
                     items:
@@ -272,7 +281,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextFormField(
                     controller: descriptionController,
-                    maxLines: 3,
+                    maxLines: null, // Allow for multiple lines
                     decoration: InputDecoration(
                       labelText: 'Description',
                       border: OutlineInputBorder(),
@@ -378,10 +387,12 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget buildActionButtons(
-      Project project,
-      TextEditingController titleController,
-      ProjectDuration selectedDuration,
-      TextEditingController descriptionController) {
+    BuildContext context,
+    Project project,
+    TextEditingController titleController,
+    ProjectDuration selectedDuration,
+    TextEditingController descriptionController,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -398,7 +409,8 @@ class _DashboardPageState extends State<DashboardPage> {
         ElevatedButton(
           onPressed: () {
             String newTitle = titleController.text;
-            String newDescription = descriptionController.text;
+            List<String> newDescription = descriptionController.text.split(
+                '\n'); // Split the multiline description into a list of lines
 
             setState(() {
               project.title = newTitle;
