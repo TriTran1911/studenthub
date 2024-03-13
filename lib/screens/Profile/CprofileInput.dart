@@ -57,10 +57,22 @@ class _CompanyProfileState extends State<CompanyProfile> {
   }
 
   Widget buildTextField(String labelText) {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: OutlineInputBorder(),
+    return Container(
+      height: 200.0, // Adjust the height as needed
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: TextField(
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
+          decoration: InputDecoration(
+            hintText: 'Enter your project description here...',
+            border: InputBorder.none,
+          ),
+        ),
       ),
     );
   }
@@ -92,15 +104,11 @@ class _CompanyProfileState extends State<CompanyProfile> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           buildButton('Edit', () {
-            setState(() {
-
-            });
+            setState(() {});
           }),
           SizedBox(width: 16),
           buildButton('Cancel', () {
-            setState(() {
-
-            });
+            setState(() {});
           }),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/screens/Action/projectTab.dart';
 
 enum ProjectTool { Edit, Remove }
 
@@ -148,6 +149,13 @@ class Project {
               ),
               onTap: () {
                 _selectProject(projects[index]);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProposalsPage(project: projects[index]),
+                  ),
+                );
               },
             ),
             Divider(
