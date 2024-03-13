@@ -9,36 +9,28 @@ void main() {
 
   // Add a project before running the app
   Project.addProject(
-    Project(
-      'Web Development',
-      ProjectDuration.oneToThreeMonths,
-      [
-        'Create a website for a small business.',
-        'The website should be responsive and user-friendly.',
-      ],
-      'Open',
-      projectCreationDate,
-      members: 1,
-      proposals: 3,
-      messages: 5,
-      hiredCount: 1,
-    ),
+    'Create a website',
+    ProjectDuration.oneToThreeMonths,
+    [
+      'We need a website for our company. It should be modern and responsive.',
+      'We need a website for our company. It should be modern and responsive.',
+    ],
+    'Open',
+    projectCreationDate,
+    studentsNeeded: 3,
+    timeNeeded: '1-3 months',
   );
   Project.addProject(
-    Project(
-      'Mobile Development',
-      ProjectDuration.threeToSixMonths,
-      [
-        'Create a mobile app for a small business.',
-        'The app should be responsive and user-friendly.',
-      ],
-      'Open',
-      projectCreationDate,
-      members: 1,
-      proposals: 2,
-      messages: 3,
-      hiredCount: 1,
-    ),
+    'Create a mobile app',
+    ProjectDuration.threeToSixMonths,
+    [
+      'We need a mobile app for our company. It should be modern and responsive.',
+      'We need a mobile app for our company. It should be modern and responsive.',
+    ],
+    'Open',
+    projectCreationDate,
+    studentsNeeded: 2,
+    timeNeeded: '3-6 months',
   );
 
   // Add a proposer before running the app

@@ -26,6 +26,7 @@ class ScopePage extends StatefulWidget {
 class _ScopePageState extends State<ScopePage> {
   String selectedDuration = '';
   int numberOfStudents = 0;
+  String studentsInput = '';
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +79,7 @@ class _ScopePageState extends State<ScopePage> {
             keyboardType: TextInputType.number,
             onChanged: (value) {
               setState(() {
+                studentsInput = value;
                 numberOfStudents = int.tryParse(value) ?? 0;
               });
             },
