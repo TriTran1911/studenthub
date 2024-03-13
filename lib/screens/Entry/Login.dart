@@ -65,7 +65,8 @@ class Login extends StatelessWidget {
     );
   }
 
-  TextField _buildTextField(TextEditingController controller, String label, {bool obscureText = false}) {
+  TextField _buildTextField(TextEditingController controller, String label,
+      {bool obscureText = false}) {
     return TextField(
       controller: controller,
       obscureText: obscureText,
