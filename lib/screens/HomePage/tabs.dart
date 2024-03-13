@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'projects.dart';
-import 'dashboard.dart';
-import 'message.dart';
-import 'alerts.dart';
+import 'projects/projects.dart';
+import 'dashBoard/dashboard.dart';
+import 'message/message.dart';
+import 'alerts/alerts.dart';
 import '/components/controller.dart';
 import '/components/appbar.dart';
 
