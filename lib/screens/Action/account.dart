@@ -3,7 +3,7 @@ import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInputWithoutProfile.dart';
 import '/screens/Profile/SprofileInput1.dart';
 import '/components/controller.dart';
-import '/screens/Entry/Login.dart';
+import 'home.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -66,7 +66,7 @@ class _AccountControllerState extends State<AccountController> {
   void _handleLogoutButtonPress(BuildContext context) {
     appBarIcon.isSelected = !appBarIcon.isSelected;
     appBarIcon.isBlocked = true;
-    navigateToPage(Login(), context);
+    navigateToPage(Home(), context);
   }
 
   Widget _buildListView(
