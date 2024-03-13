@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/appbar.dart';
 import 'projectPost2.dart';
 import '/components/project.dart';
 
@@ -11,9 +12,7 @@ class ProjectPost1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Create Post'),
-        ),
+        appBar: CustomAppBar(),
         body: BuildProjectPost1(), // Changed to use PascalCase for class name
       ),
     );
@@ -26,7 +25,7 @@ class BuildProjectPost1 extends StatefulWidget { // Changed to StatefulWidget
 }
 
 class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State class
-  final _titleController = TextEditingController(); // Added controller
+  final TextEditingController _titleController = TextEditingController(); // Added controller
 
   @override
   void dispose() {
@@ -91,10 +90,9 @@ class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State 
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => projectPost2()), // Changed to PascalCase
+                    MaterialPageRoute(builder: (context) => ProjectPost2(title: _titleController.text,)), // Changed to PascalCase
                   );
                 },
                 child: Text(
