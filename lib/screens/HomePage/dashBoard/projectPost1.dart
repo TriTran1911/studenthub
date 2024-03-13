@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
-import '/components/appbar.dart';
+import 'projectPost2.dart';
+import '/components/project.dart';
 
 void main() {
-  runApp(projectPost2());
+  runApp(ProjectPost1());
 }
 
-class projectPost2 extends StatelessWidget {
+class ProjectPost1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: CustomAppBar(),
-        body: CreatePostPage(),
+        appBar: AppBar(
+          title: Text('Create Post'),
+        ),
+        body: BuildProjectPost1(), // Changed to use PascalCase for class name
       ),
     );
   }
 }
 
-class CreatePostPage extends StatelessWidget {
+class BuildProjectPost1 extends StatefulWidget { // Changed to StatefulWidget
+  @override
+  _BuildProjectPost1State createState() => _BuildProjectPost1State();
+}
+
+class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State class
+  final _titleController = TextEditingController(); // Added controller
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed
+    _titleController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,6 +56,7 @@ class CreatePostPage extends StatelessWidget {
           ),
           SizedBox(height: 10),
           TextField(
+            controller: _titleController, // Assigning controller
             decoration: InputDecoration(
               hintText: 'Write a title for your post',
               border: OutlineInputBorder(),
@@ -73,13 +91,14 @@ class CreatePostPage extends StatelessWidget {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => projectPost2()),
+                    MaterialPageRoute(builder: (context) => projectPost2()), // Changed to PascalCase
                   );
                 },
                 child: Text(
-                  'Next: Scope',
+                  'Next: Description',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

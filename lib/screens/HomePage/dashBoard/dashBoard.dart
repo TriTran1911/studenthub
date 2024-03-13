@@ -126,13 +126,7 @@ class _DashboardPageState extends State<DashboardPage> {
       descriptionController: descriptionController,
       onProjectAdded: (title, duration, description) {
         setState(() {
-          Project.addProject(
-            title,
-            duration,
-            [description], // Wrap the single description in a list
-            'Working',
-            DateTime.now(),
-          );
+          
         });
       },
     );

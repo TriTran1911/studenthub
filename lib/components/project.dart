@@ -13,22 +13,55 @@ class Project {
   ProjectDuration duration;
   List<String> description;
   String status;
+  int members;
   DateTime creationDate;
   int proposals; // Integer representing the number of proposals
   int messages; // Integer representing the number of messages
   int hiredCount; // Integer representing the number of times hired
 
-  Project(this.title, this.duration, this.description, this.status,
-      this.creationDate,
-      {this.proposals = 0, this.messages = 0, this.hiredCount = 0});
+  Project(this.title, this.duration, this.description, this.status, this.creationDate, 
+      {this.members = 0, this.proposals = 0, this.messages = 0, this.hiredCount = 0});
+
+  void setTitle(String newTitle) {
+    title = newTitle;
+  }
+
+  void setDuration(ProjectDuration newDuration) {
+    duration = newDuration;
+  }
+
+  void setDescription(List<String> newDescription) {
+    description = newDescription;
+  }
+
+  void setStatus(String newStatus) {
+    status = newStatus;
+  }
+
+  void setMembers(int newMembers) {
+    members = newMembers;
+  }
+
+  void setCreationDate(DateTime newCreationDate) {
+    creationDate = newCreationDate;
+  }
+
+  void setProposals(int newProposals) {
+    proposals = newProposals;
+  }
+
+  void setMessages(int newMessages) {
+    messages = newMessages;
+  }
+
+  void setHiredCount(int newHiredCount) {
+    hiredCount = newHiredCount;
+  }
 
   static List<Project> projects = [];
 
-  static void addProject(String title, ProjectDuration duration,
-      List<String> description, String status, DateTime creationDate,
-      {int proposals = 0, int messages = 0, int hiredCount = 0}) {
-    projects.add(Project(title, duration, description, status, creationDate,
-        proposals: proposals, messages: messages, hiredCount: hiredCount));
+  static void addProject(Project project) {
+    projects.add(project);
   }
 
   static void removeProject(Project project) {

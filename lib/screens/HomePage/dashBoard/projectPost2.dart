@@ -3,10 +3,10 @@ import '/components/appbar.dart';
 import 'projectPost3.dart';
 
 void main() {
-  runApp(projectPost1());
+  runApp(projectPost2());
 }
 
-class projectPost1 extends StatelessWidget {
+class projectPost2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -7,42 +7,39 @@ void main() {
   DateTime now = DateTime.now();
   DateTime projectCreationDate = DateTime(now.year, now.month, now.day);
 
+  // Add a project before running the app
   Project.addProject(
-      'Build a website ',
+    Project(
+      'Web Development',
       ProjectDuration.oneToThreeMonths,
-      ["I need a university student", "Have 1 year experience"],
+      [
+        'Create a website for a small business.',
+        'The website should be responsive and user-friendly.',
+      ],
       'Open',
       projectCreationDate,
-      proposals: 5,
-      messages: 3,
-      hiredCount: 1);
-  Project.addProject(
-      'Build a mobile app',
-      ProjectDuration.threeToSixMonths,
-      ["I need a college student", "Have 2 year experience"],
-      'Open',
-      projectCreationDate,
+      members: 1,
       proposals: 3,
-      messages: 2,
-      hiredCount: 0);
+      messages: 5,
+      hiredCount: 1,
+    ),
+  );
   Project.addProject(
-      'Build a web app',
-      ProjectDuration.oneToThreeMonths,
-      ["I need a high school student", "Have 3 year experience"],
-      'Open',
-      projectCreationDate,
-      proposals: 2,
-      messages: 1,
-      hiredCount: 0);
-  Project.addProject(
-      'Build a desktop app',
+    Project(
+      'Mobile Development',
       ProjectDuration.threeToSixMonths,
-      ["I need a university student", "Have 4 year experience"],
+      [
+        'Create a mobile app for a small business.',
+        'The app should be responsive and user-friendly.',
+      ],
       'Open',
       projectCreationDate,
-      proposals: 1,
-      messages: 0,
-      hiredCount: 0);
+      members: 1,
+      proposals: 2,
+      messages: 3,
+      hiredCount: 1,
+    ),
+  );
 
   // Add a proposer before running the app
   Proposer.addProposer(

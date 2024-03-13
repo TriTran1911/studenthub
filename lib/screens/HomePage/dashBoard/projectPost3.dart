@@ -89,7 +89,6 @@ class _projectPost3State extends State<projectPost3> {
               child: ElevatedButton(
                 onPressed: () {
                   String description = _descriptionController.text;
-                  print('Project Description: $description');
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => projectPost3()),
