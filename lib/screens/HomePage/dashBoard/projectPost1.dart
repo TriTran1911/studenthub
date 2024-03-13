@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import '/components/appbar.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(projectPost2());
 }
 
-class MyApp extends StatelessWidget {
+class projectPost2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Create Post'),
-        ),
+        appBar: CustomAppBar(),
         body: CreatePostPage(),
       ),
     );
@@ -53,14 +52,45 @@ class CreatePostPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Text('• Build responsive WordPress site with booking/payment functionality'),
-          Text('• Facebook ad specialist needed for product launch'),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0), // Apply left padding here
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('• Build responsive WordPress site with booking/payment functionality'),
+                Text('• Facebook ad specialist needed for product launch'),
+              ],
+            ),
+          ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Navigate to next page or perform action
-            },
-            child: Text('Next: Scope'),
+          Container(
+            alignment: Alignment.centerRight,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => projectPost2()),
+                  );
+                },
+                child: Text(
+                  'Next: Scope',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
+              ),
+            ),
           ),
         ],
       ),
