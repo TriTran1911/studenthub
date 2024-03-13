@@ -46,23 +46,15 @@ class CreatePostPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0), // Add left padding
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Example titles',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text('• Build responsive WordPress site with booking/payment functionality'),
-                Text('• Facebook ad specialist needed for product launch'),
-              ],
+          Text(
+            'Example titles',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 10),
+          Text('• Build responsive WordPress site with booking/payment functionality'),
+          Text('• Facebook ad specialist needed for product launch'),
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
