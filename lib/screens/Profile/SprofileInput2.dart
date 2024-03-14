@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../components/appbar.dart';
+import '/components/appbar.dart';
 import 'package:intl/intl.dart';
-import './SprofileInput3.dart';
-import '../../components/controller.dart';
+import 'SprofileInput3.dart';
+import '/components/controller.dart';
 
 class StudentInfoScreen2 extends StatefulWidget {
   final GlobalKey<_ProjectListState> projectListKey =
@@ -134,7 +134,7 @@ class _ProjectListState extends State<ProjectList> {
             showEditProjectModal(
               context,
               initialProject: projects[index],
-              onSave: (updatedProject) {
+              onSave: (updatedProject, _, __) {
                 updateProject(index, updatedProject);
               },
             );
@@ -237,8 +237,8 @@ void showAddProjectModal(
   required Function(ProjectListItem) onSave,
 }) {
   TextEditingController nameController = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
+  DateTime startDate = DateTime.now(); // Initialize start date
+  DateTime endDate = DateTime.now(); // Initialize end date
   TextEditingController durationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController skillSetController = TextEditingController();
@@ -246,82 +246,136 @@ void showAddProjectModal(
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Add Project',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Project Name'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: startDateController,
-                decoration: InputDecoration(labelText: 'Start Date'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: endDateController,
-                decoration: InputDecoration(labelText: 'End Date'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: durationController,
-                decoration: InputDecoration(labelText: 'Duration'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: skillSetController,
-                decoration: InputDecoration(labelText: 'Skill Set'),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  onSave(
-                    ProjectListItem(
-                      name: nameController.text,
-                      startDate: DateTime.tryParse(startDateController.text) ??
-                          DateTime.now(),
-                      endDate: DateTime.tryParse(endDateController.text) ??
-                          DateTime.now(),
-                      description: descriptionController.text,
-                      skillSet: skillSetController.text,
-                    ),
-                  );
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Add',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Add Project',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                ),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Project Name'),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Start Date'),
+                          trailing: Text(
+                            DateFormat('MM/yyyy').format(startDate.toLocal()),
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () async {
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: startDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null && pickedDate != startDate) {
+                              setState(() {
+                                startDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 16), // Add space between the ListTiles
+                      Expanded(
+                        child: ListTile(
+                          title: Text('End Date'),
+                          trailing: Text(
+                            DateFormat('MM/yyyy').format(endDate.toLocal()),
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () async {
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: endDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null && pickedDate != endDate) {
+                              setState(() {
+                                endDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: durationController,
+                    decoration: InputDecoration(labelText: 'Duration'),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(labelText: 'Description'),
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      // Implement the logic when the 'Skill Set' is tapped
+                    },
+                    child: ListTile(
+                      title: Text('Skill Set'),
+                      trailing: Text(
+                        skillSetController.text,
+                        style: TextStyle(color: Colors.blue), // Optional style
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      onSave(
+                        ProjectListItem(
+                          name: nameController.text,
+                          startDate: startDate,
+                          endDate: endDate,
+                          description: descriptionController.text,
+                          skillSet: skillSetController.text,
+                        ),
+                      );
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Add',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
     },
   );
@@ -330,14 +384,12 @@ void showAddProjectModal(
 void showEditProjectModal(
   BuildContext context, {
   required ProjectListItem initialProject,
-  required Function(ProjectListItem) onSave,
+  required Function(ProjectListItem, DateTime, DateTime) onSave,
 }) {
   TextEditingController nameController =
       TextEditingController(text: initialProject.name);
-  TextEditingController startDateController = TextEditingController(
-      text: DateFormat('MM/yyyy').format(initialProject.startDate.toLocal()));
-  TextEditingController endDateController = TextEditingController(
-      text: DateFormat('MM/yyyy').format(initialProject.endDate.toLocal()));
+  DateTime startDate = initialProject.startDate;
+  DateTime endDate = initialProject.endDate;
   TextEditingController descriptionController =
       TextEditingController(text: initialProject.description);
   TextEditingController skillSetController =
@@ -346,77 +398,129 @@ void showEditProjectModal(
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Edit Project',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Project Name'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: startDateController,
-                decoration: InputDecoration(labelText: 'Start Date'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: endDateController,
-                decoration: InputDecoration(labelText: 'End Date'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: skillSetController,
-                decoration: InputDecoration(labelText: 'Skill Set'),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  onSave(
-                    ProjectListItem(
-                      name: nameController.text,
-                      startDate: DateTime.parse(startDateController.text),
-                      endDate: DateTime.parse(endDateController.text),
-                      description: descriptionController.text,
-                      skillSet: skillSetController.text,
-                      onEditPressed: initialProject.onEditPressed,
-                      onRemovePressed: initialProject.onRemovePressed,
-                    ),
-                  );
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Edit Project',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                ),
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(labelText: 'Project Name'),
+                  ),
+                  SizedBox(height: 16),
+                  // DatePicker for Start Dates
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Start Date'),
+                          trailing: Text(
+                              DateFormat('MM/yyyy').format(startDate.toLocal()),
+                              style: TextStyle(
+                                color: Colors.black,
+                              )),
+                          onTap: () async {
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: startDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null && pickedDate != startDate) {
+                              setState(() {
+                                startDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 16), // Add space between the ListTiles
+                      Expanded(
+                        child: ListTile(
+                          title: Text('End Date'),
+                          trailing: Text(
+                              DateFormat('MM/yyyy').format(endDate.toLocal()),
+                              style: TextStyle(
+                                color: Colors.black,
+                              )),
+                          onTap: () async {
+                            final pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: endDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null && pickedDate != endDate) {
+                              setState(() {
+                                endDate = pickedDate;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(labelText: 'Description'),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: skillSetController,
+                    decoration: InputDecoration(labelText: 'Skill Set'),
+                  ),
+
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      onSave(
+                        ProjectListItem(
+                          name: nameController.text,
+                          startDate: startDate,
+                          endDate: endDate,
+                          description: descriptionController.text,
+                          skillSet: skillSetController.text,
+                          onEditPressed: initialProject.onEditPressed,
+                          onRemovePressed: initialProject.onRemovePressed,
+                        ),
+                        startDate,
+                        endDate,
+                      );
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
     },
   );

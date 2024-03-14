@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
+import 'SprofileInput2.dart';
 
 final List<String> techstackOptions = [
   'Fullstack Engineer',
@@ -116,7 +117,9 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.grey,
-                      fontWeight: anySkillSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: anySkillSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                 ),
@@ -180,6 +183,30 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
               onEdit: _editEducation,
               onDelete: _deleteEducation,
             ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentInfoScreen2()),
+                );
+              },
+              child: Text(
+                'Next',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -222,48 +249,47 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
   }
 
   void _editLanguages() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      List<String> editedLanguages = List.from(languageList);
-      return AlertDialog(
-        title: Text('Edit Languages'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (int i = 0; i < editedLanguages.length; i++)
-              TextField(
-                onChanged: (value) {
-                  editedLanguages[i] = value;
-                },
-                decoration: InputDecoration(hintText: 'Enter language'),
-                controller: TextEditingController(text: editedLanguages[i]),
-              ),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<String> editedLanguages = List.from(languageList);
+        return AlertDialog(
+          title: Text('Edit Languages'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (int i = 0; i < editedLanguages.length; i++)
+                TextField(
+                  onChanged: (value) {
+                    editedLanguages[i] = value;
+                  },
+                  decoration: InputDecoration(hintText: 'Enter language'),
+                  controller: TextEditingController(text: editedLanguages[i]),
+                ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  languageList.clear();
+                  languageList.addAll(editedLanguages);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
           ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                languageList.clear();
-                languageList.addAll(editedLanguages);
-              });
-              Navigator.of(context).pop();
-            },
-            child: Text('Save'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   void _addEducation() {
     String schoolName = '';
@@ -391,7 +417,8 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  educationList[index] = '$editedSchoolName\n$editedStartYear-$editedEndYear';
+                  educationList[index] =
+                      '$editedSchoolName\n$editedStartYear-$editedEndYear';
                 });
                 Navigator.of(context).pop();
               },
@@ -460,7 +487,8 @@ class __SkillContainerStateState extends State<_SkillContainerState> {
   @override
   void initState() {
     super.initState();
-    _selectedSkills = List.generate(widget.skills.length, (index) => widget.selectedSkills.contains(widget.skills[index]));
+    _selectedSkills = List.generate(widget.skills.length,
+        (index) => widget.selectedSkills.contains(widget.skills[index]));
   }
 
   @override
@@ -500,7 +528,8 @@ class __SkillContainerStateState extends State<_SkillContainerState> {
               widget.skills[i],
               style: TextStyle(
                 color: _selectedSkills[i] ? Colors.grey[400] : Colors.white,
-                fontWeight: _selectedSkills[i] ? FontWeight.bold : FontWeight.normal,
+                fontWeight:
+                    _selectedSkills[i] ? FontWeight.bold : FontWeight.normal,
               ),
             ),
             backgroundColor: _selectedSkills[i] ? Colors.blueGrey : Colors.blue,

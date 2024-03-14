@@ -7,50 +7,31 @@ void main() {
   DateTime now = DateTime.now();
   DateTime projectCreationDate = DateTime(now.year, now.month, now.day);
 
+  // Add a project before running the app
   Project.addProject(
-      'Build a website ',
-      ProjectDuration.oneToThreeMonths,
-      ["I need a university student", "Have 1 year experience"],
-      'Open',
-      projectCreationDate,
-      proposals: 5,
-      messages: 3,
-      hiredCount: 1,
-      studentsNeeded: 3, 
-      timeNeeded: '2 months');
+    'Create a website',
+    ProjectDuration.oneToThreeMonths,
+    [
+      'We need a website for our company. It should be modern and responsive.',
+      'We need a website for our company. It should be modern and responsive.',
+    ],
+    'Open',
+    projectCreationDate,
+    studentsNeeded: 3,
+    timeNeeded: '1-3 months',
+  );
   Project.addProject(
-      'Build a mobile app',
-      ProjectDuration.threeToSixMonths,
-      ["I need a college student", "Have 2 year experience"],
-      'Open',
-      projectCreationDate,
-      proposals: 3,
-      messages: 2,
-      hiredCount: 0,
-      studentsNeeded: 2, 
-      timeNeeded: '3 months');
-  Project.addProject(
-      'Build a web app',
-      ProjectDuration.oneToThreeMonths,
-      ["I need a high school student", "Have 3 year experience"],
-      'Open',
-      projectCreationDate,
-      proposals: 2,
-      messages: 1,
-      hiredCount: 0,
-      studentsNeeded: 3, 
-      timeNeeded: '4 months');
-  Project.addProject(
-      'Build a desktop app',
-      ProjectDuration.threeToSixMonths,
-      ["I need a university student", "Have 4 year experience"],
-      'Open',
-      projectCreationDate,
-      proposals: 1,
-      messages: 0,
-      hiredCount: 0,
-      studentsNeeded: 2, 
-      timeNeeded: '3 months');
+    'Create a mobile app',
+    ProjectDuration.threeToSixMonths,
+    [
+      'We need a mobile app for our company. It should be modern and responsive.',
+      'We need a mobile app for our company. It should be modern and responsive.',
+    ],
+    'Open',
+    projectCreationDate,
+    studentsNeeded: 2,
+    timeNeeded: '3-6 months',
+  );
 
   // Add a proposer before running the app
   Proposer.addProposer(
