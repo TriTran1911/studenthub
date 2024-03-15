@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '/screens/HomePage/projects/projects.dart';
+import '/screens/Action/projectTab.dart';
 
 enum ProjectTool { Edit, Remove }
 
@@ -136,11 +138,11 @@ class Project {
               trailing: IconButton(
                 icon: Icon(Icons.more_horiz),
                 onPressed: () {
-                  _showBottomSheet(context);
+                  print(projects[index].title);
+                  _showBottomSheet(context, projects[index]);
                 },
               ),
               onTap: () {
-<<<<<<< HEAD
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -148,9 +150,6 @@ class Project {
                         ProposalsPage(project: projects[index]),
                   ),
                 );
-=======
-                _selectProject(projects[index]);
->>>>>>> 72b02a8dacef9f0888a19e3fb776504a0d8c20b8
               },
             ),
             Divider(
@@ -163,7 +162,7 @@ class Project {
     );
   }
 
-  static void _showBottomSheet(BuildContext context) {
+  static void _showBottomSheet(BuildContext context, Project project) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -173,72 +172,124 @@ class Project {
             children: [
               ListTile(
                 title: Text(
-                  'View Proposals', 
+                  'View Proposals',
                   style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  'View Messages',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  'View Hired',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text(
+                  'View job posting',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  'Edit posting',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
                 onTap: () {
+                  _editProject(context, project);
                 },
               ),
               ListTile(
-                title: Text('View Messages', 
+                title: Text(
+                  'Remove posting',
                   style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
                 onTap: () {
-                },
-              ),
-              ListTile(
-                title: Text('View Hired', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
+                  _removeProject(context, project);
                 },
               ),
               Divider(height: 17, color: Colors.grey),
               ListTile(
-                title: Text('View job posting', 
+                title: Text(
+                  'Start working this project',
                   style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              ListTile(
-                title: Text('Edit posting', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              ListTile(
-                title: Text('Remove posting', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              Divider(height: 17, color: Colors.grey),
-              ListTile(
-                title: Text('Start working this project', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onTap: () {},
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  static void _editProject(BuildContext context, Project project) {
+    // Implement editing logic here
+    // For example, you can navigate to an editing screen
+    // where users can modify the project details.
+    // You can pass the project object to the editing screen
+    // to pre-fill the existing details.
+  }
+
+  static void _removeProject(BuildContext context, Project project) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Deletion"),
+          content: Text("Are you sure you want to delete this project?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Project.removeProject(project);
+                Navigator.of(context).pop();
+              },
+              child: Text("Delete"),
+            ),
+          ],
         );
       },
     );
