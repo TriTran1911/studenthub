@@ -16,7 +16,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     _updateProjectsList();
-    
+
     return _buildDefaultTabController();
   }
 
@@ -58,14 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProjectPost1(),
-            ),
-          );
-        },
+        onPressed: () {},
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -89,7 +82,16 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _addProject() {}
+  void _addProject() {
+    setState(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProjectPost1(),
+        ),
+      );
+    });
+  }
 
   Widget _buildTab(String title) {
     return Tab(

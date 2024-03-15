@@ -10,28 +10,60 @@ void main() {
 
   // Add a project before running the app
   Project.addProject(
-    'Create a website',
-    ProjectDuration.oneToThreeMonths,
-    [
-      'We need a website for our company. It should be modern and responsive.',
-      'We need a website for our company. It should be modern and responsive.',
-    ],
-    'Open',
-    projectCreationDate,
-    studentsNeeded: 3,
-    timeNeeded: '1-3 months',
+    Project(
+      'Web development',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'We are looking for a web developer to help us build a website.',
+        'The website will be built using HTML, CSS, and JavaScript.',
+        'The website will be hosted on Firebase.',
+      ],
+      'Open',
+      projectCreationDate,
+      studentsNeeded: 3,
+    ),
   );
   Project.addProject(
-    'Create a mobile app',
-    ProjectDuration.threeToSixMonths,
-    [
-      'We need a mobile app for our company. It should be modern and responsive.',
-      'We need a mobile app for our company. It should be modern and responsive.',
-    ],
-    'Open',
-    projectCreationDate,
-    studentsNeeded: 2,
-    timeNeeded: '3-6 months',
+    Project(
+      'Mobile development',
+      ProjectDuration.threeToSixMonths,
+      [
+        'We are looking for a mobile developer to help us build a mobile app.',
+        'The mobile app will be built using Flutter.',
+        'The mobile app will be hosted on Firebase.',
+      ],
+      'Open',
+      projectCreationDate,
+      studentsNeeded: 2,
+    ),
+  );
+  Project.addProject(
+    Project(
+      'Web development',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'We are looking for a web developer to help us build a website.',
+        'The website will be built using HTML, CSS, and JavaScript.',
+        'The website will be hosted on Firebase.',
+      ],
+      'Open',
+      projectCreationDate,
+      studentsNeeded: 1,
+    ),
+  );
+  Project.addProject(
+    Project(
+      'Mobile development',
+      ProjectDuration.threeToSixMonths,
+      [
+        'We are looking for a mobile developer to help us build a mobile app.',
+        'The mobile app will be built using Flutter.',
+        'The mobile app will be hosted on Firebase.',
+      ],
+      'Open',
+      projectCreationDate,
+      studentsNeeded: 2,
+    ),
   );
 
   // Add a proposer before running the app

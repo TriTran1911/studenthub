@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
+import '/components/project.dart';
 
 class ProjectPost4 extends StatelessWidget {
   final String title;
@@ -22,8 +23,20 @@ class ProjectPost4 extends StatelessWidget {
       appBar: CustomAppBar(),
       body: _buildPadding(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Add your functionality here
+        onPressed: () { // Add setState to update the UI
+          Project.addProject(
+            Project(
+              title,
+              selectedDuration == '1-3 months'
+                  ? ProjectDuration.oneToThreeMonths
+                  : ProjectDuration.threeToSixMonths,
+              descriptionLines, // Changed to descriptionLines
+              'Open',
+              DateTime.now(),
+              studentsNeeded: numberOfStudents,
+            ),
+          );
+          Navigator.pop(context);
         },
         label: Text('Post job', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Colors.blue,
