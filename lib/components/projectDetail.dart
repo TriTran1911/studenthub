@@ -53,7 +53,7 @@ class DetailTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    'Student required: \n\t\t\t• ${project.proposals} students'),
+                    'Student required: \n\t\t\t• ${project.studentsNeeded} students'),
               ],
             ),
           ],
