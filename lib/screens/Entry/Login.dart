@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
-import '/screens/homepage/tabs.dart';
+import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
 
 class Login extends StatelessWidget {
@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
-                navigateToPage(TabsPage(), context);
+                navigateToPage(TabsPage(index: 0), context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

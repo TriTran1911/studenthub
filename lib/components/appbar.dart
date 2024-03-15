@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     appBarIcon.isSelected = false;
                     !appBarIcon.isBlocked
-                        ? navigateToPage(TabsPage(), context)
+                        ? navigateToPage(TabsPage(index: 0), context)
                         : null;
                   },
                 ),

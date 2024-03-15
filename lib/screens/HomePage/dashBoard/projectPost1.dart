@@ -13,17 +13,13 @@ class _ProjectPost1State extends State<ProjectPost1> {
   final TextEditingController _titleController = TextEditingController();
 
   @override
-  void dispose() {
-    _titleController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: CustomAppBar(),
-        body: _buildPadding(context),
+        body: SingleChildScrollView(
+          child: _buildPadding(context),
+        ),
       ),
     );
   }

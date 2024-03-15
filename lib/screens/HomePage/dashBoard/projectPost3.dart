@@ -21,12 +21,6 @@ class _ProjectPost3State extends State<ProjectPost3> {
   TextEditingController _descriptionController = TextEditingController();
 
   @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import '/screens/HomePage/dashBoard/projectPost1.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
 import 'projectPost1.dart';
@@ -13,6 +12,7 @@ class _DashboardPageState extends State<DashboardPage> {
   // count number of time open the page
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -89,14 +89,12 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _addProject() {
-    setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProjectPost1(),
-        ),
-      );
-    });
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectPost1(),
+      ),
+    );
   }
 
   Widget _buildTab(String title) {
@@ -206,7 +204,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>

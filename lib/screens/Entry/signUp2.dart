@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/screens/HomePage/tabs.dart';
-import 'package:studenthub/screens/action/account.dart';
-import '../../components/appbar.dart';
+import '/screens/HomePage/tabs.dart';
+import '/components/appbar.dart';
 import '/components/controller.dart';
 
 class SignUp2 extends StatefulWidget {
@@ -135,7 +134,7 @@ class _Signup2State extends State<SignUp2> {
     if (_checkSignup()) {
       _handleSignup();
       appBarIcon.isBlocked = false;
-      navigateToPage(TabsPage(), context);
+      navigateToPage(TabsPage(index: 0), context);
     }
   }
 
