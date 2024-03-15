@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'projectPost2.dart';
-import '/components/project.dart';
 
 class ProjectPost1 extends StatefulWidget {
   @override

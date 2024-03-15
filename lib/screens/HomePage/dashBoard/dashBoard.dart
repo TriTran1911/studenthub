@@ -134,13 +134,6 @@ class _DashboardPageState extends State<DashboardPage> {
     return ListView.builder(
       itemCount: projects.length,
       itemBuilder: (context, index) {
-        String durationText;
-
-        durationText =
-            (projects[index].duration == ProjectDuration.oneToThreeMonths)
-                ? '1 to 3 months'
-                : '3 to 6 months';
-
         // Calculate days since creation
         final daysSinceCreation =
             DateTime.now().difference(projects[index].creationDate).inDays;

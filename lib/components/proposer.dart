@@ -18,6 +18,6 @@ class Proposer {
         name: name,
         position: position,
         coverLetter: coverLetter,
-        isHired: isHired ?? false));
+        isHired: isHired));
   }
 }

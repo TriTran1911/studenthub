@@ -4,6 +4,7 @@ import '/components/appbar.dart';
 import '/components/project.dart';
 import '/components/projectDetail.dart';
 
+// ignore: must_be_immutable
 class ProposalsPage extends StatelessWidget {
   Project project;
   final int initialTabIndex;

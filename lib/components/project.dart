@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import '/screens/HomePage/projects/projects.dart';
-import '/screens/Action/projectTab.dart';
 
 enum ProjectTool { Edit, Remove }
 
@@ -60,13 +58,6 @@ class Project {
     return ListView.builder(
       itemCount: projects.length,
       itemBuilder: (context, index) {
-        String durationText;
-        if (projects[index].duration == ProjectDuration.oneToThreeMonths) {
-          durationText = '1 to 3 months';
-        } else {
-          durationText = '3 to 6 months';
-        }
-
         // Calculate days since creation
         final daysSinceCreation =
             DateTime.now().difference(projects[index].creationDate).inDays;
