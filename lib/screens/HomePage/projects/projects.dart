@@ -120,9 +120,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _removeProject(Project project) {
     // Your implementation to remove a project goes here
-    setState(() {
-      projects.remove(project);
-    });
   }
 
   void _showFavoriteProjects(BuildContext context) {
