@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '/screens/HomePage/dashBoard/projectPost1.dart';
+// import '/screens/HomePage/dashBoard/projectPost1.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
+import 'projectPost1.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -12,13 +13,6 @@ class _DashboardPageState extends State<DashboardPage> {
   // count number of time open the page
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _updateProjectsList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +26,17 @@ class _DashboardPageState extends State<DashboardPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Your projects',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Your projects',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           actions: <Widget>[
             _buildPostJobButton(),
@@ -70,7 +69,7 @@ class _DashboardPageState extends State<DashboardPage> {
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
         ),
@@ -80,12 +79,24 @@ class _DashboardPageState extends State<DashboardPage> {
             'Post a job',
             style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _addProject() {
+    setState(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProjectPost1(),
+        ),
+      );
+    });
   }
 
   Widget _buildTab(String title) {
@@ -110,17 +121,6 @@ class _DashboardPageState extends State<DashboardPage> {
         .toList();
   }
 
-  void _addProject() {
-    setState(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProjectPost1(),
-        ),
-      );
-    });
-  }
-
   Widget buildTextField(TextEditingController controller, String hintText) {
     return TextField(
       controller: controller,
@@ -136,11 +136,11 @@ class _DashboardPageState extends State<DashboardPage> {
       itemCount: projects.length,
       itemBuilder: (context, index) {
         String durationText;
-        if (projects[index].duration == ProjectDuration.oneToThreeMonths) {
-          durationText = '1 to 3 months';
-        } else {
-          durationText = '3 to 6 months';
-        }
+
+        durationText =
+            (projects[index].duration == ProjectDuration.oneToThreeMonths)
+                ? '1 to 3 months'
+                : '3 to 6 months';
 
         // Calculate days since creation
         final daysSinceCreation =
@@ -206,7 +206,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
@@ -254,6 +254,150 @@ class _DashboardPageState extends State<DashboardPage> {
               },
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _editPosting(BuildContext context, Project project) {
+    TextEditingController titleController =
+        TextEditingController(text: project.title);
+    int selectedDurationIndex =
+        project.duration == ProjectDuration.oneToThreeMonths ? 0 : 1;
+    int studentsNeeded = project.studentsNeeded;
+    TextEditingController descriptionController =
+        TextEditingController(text: project.description.join('\n'));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Edit Posting"),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(labelText: "Title"),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Duration: "),
+                        RadioListTile(
+                          title: Text("1 to 3 months"),
+                          value: 0,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile(
+                          title: Text("4 to 6 months"),
+                          value: 1,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Students Needed: "),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Text(studentsNeeded.toString() + ''),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 4.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    setState(() {
+                                      studentsNeeded++;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 4.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    if (studentsNeeded > 0) {
+                                      setState(() {
+                                        studentsNeeded--;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(labelText: "Description"),
+                      maxLines: null,
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Save"),
+                  onPressed: () {
+                    setState(() {
+                      project.title = titleController.text;
+                      project.duration = selectedDurationIndex == 0
+                          ? ProjectDuration.oneToThreeMonths
+                          : ProjectDuration.threeToSixMonths;
+                      project.studentsNeeded = studentsNeeded;
+                      project.description =
+                          descriptionController.text.split('\n');
+                    });
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -311,7 +455,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  _editPosting(context, project);
+                },
               ),
               ListTile(
                 title: Text('Remove posting',

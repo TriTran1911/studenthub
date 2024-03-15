@@ -48,19 +48,9 @@ class Project {
 
   static List<Project> projects = [];
 
-  static void addProject(String title, ProjectDuration duration,
-      List<String> description, String status, DateTime creationDate,
-      {int proposals = 0,
-      int messages = 0,
-      int hiredCount = 0,
-      int studentsNeeded = 0,
-      String timeNeeded = ''}) {
-    projects.add(Project(title, duration, description, status, creationDate,
-        proposals: proposals,
-        messages: messages,
-        hiredCount: hiredCount,
-        studentsNeeded: studentsNeeded,
-        timeNeeded: timeNeeded));
+  // Add a project to the list of projects
+  static void addProject(Project project) {
+    projects.add(project);
   }
 
   static void removeProject(Project project) {

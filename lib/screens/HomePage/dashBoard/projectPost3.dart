@@ -43,7 +43,7 @@ class _ProjectPost3State extends State<ProjectPost3> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '3/4 Next, provide project description',
+            '3/4    Next, provide project description',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 16.0),
@@ -94,7 +94,7 @@ class _ProjectPost3State extends State<ProjectPost3> {
               child: ElevatedButton(
                 onPressed: () {
                   List<String> descriptionLines = _descriptionController.text.split('\n');
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProjectPost4(
