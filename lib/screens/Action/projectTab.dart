@@ -6,8 +6,9 @@ import '/components/projectDetail.dart';
 
 class ProposalsPage extends StatelessWidget {
   Project project;
+  final int initialTabIndex;
 
-  ProposalsPage({required this.project});
+  ProposalsPage({required this.project, this.initialTabIndex = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +21,25 @@ class ProposalsPage extends StatelessWidget {
   DefaultTabController _buildDefaultTabController() {
     return DefaultTabController(
       length: 4,
+      initialIndex: initialTabIndex,
       child: Column(
         children: [
-          SizedBox(height: 16), // Add space above the title
+          SizedBox(height: 16),
           Text(
-            project.title, // Add your project name here
+            project.title,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16), // Add space below the title
+          SizedBox(height: 16),
           TabBar(
+            indicatorColor: Colors.blue,
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+              color: Colors.blue,
+            ),
             tabs: [
               Tab(text: 'Proposals'),
               Tab(text: 'Detail'),
@@ -39,7 +47,7 @@ class ProposalsPage extends StatelessWidget {
               Tab(text: 'Hired'),
             ],
           ),
-          SizedBox(height: 16), // Add space below the tab bar (optional
+          SizedBox(height: 16),
           Expanded(
             child: TabBarView(
               children: [
@@ -85,22 +93,21 @@ class _ProposalsTabState extends State<ProposalsTab>
       itemBuilder: (context, index) {
         final proposer = Proposer.proposers[index];
         return ListTile(
-          contentPadding: EdgeInsets.all(16), // Add padding for better spacing
+          contentPadding: EdgeInsets.all(16),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(Icons.person, size: 48), // Add the icon
+                  Icon(Icons.person, size: 48),
                   SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(proposer.name,
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)), // Name
-                      Text(proposer.position), // Position
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(proposer.position),
                     ],
                   ),
                 ],
@@ -144,9 +151,7 @@ class _ProposalsTabState extends State<ProposalsTab>
                         if (!proposer.isHired) {
                           _showHireConfirmationDialog(
                               context, proposer.name, index);
-                        } else {
-                          // Send hired offer logic goes here
-                        }
+                        } else {}
                       },
                       child: Text(
                         proposer.isHired ? 'Sent hired offer' : 'Hire',
@@ -198,15 +203,14 @@ class _ProposalsTabState extends State<ProposalsTab>
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                // set proposer.isHired to true
                 hireProposer(index);
-                Navigator.of(context).pop(); // Dismiss the dialog
+                Navigator.of(context).pop();
               },
               child: Text('Send'),
             ),

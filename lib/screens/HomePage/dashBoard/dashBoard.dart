@@ -32,7 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
               Text(
                 'Your projects',
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -42,6 +42,7 @@ class _DashboardPageState extends State<DashboardPage> {
             _buildPostJobButton(),
           ],
           bottom: TabBar(
+            indicatorColor: Colors.blue,
             tabs: [
               _buildTab('All Projects'),
               _buildTab('Working'),
@@ -234,22 +235,48 @@ class _DashboardPageState extends State<DashboardPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion"),
+          title: Text(
+            "Delete Posting",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: Text("Are you sure you want to delete this posting?"),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel"),
+              child: Text(
+                "Cancel",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16.0,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
-              child: Text("Delete"),
+            ElevatedButton(
+              child: Text(
+                "Delete",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
               onPressed: () {
                 _removeProject(project);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -272,7 +299,13 @@ class _DashboardPageState extends State<DashboardPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text("Edit Posting"),
+              title: Text(
+                "Edit Posting",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -295,6 +328,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               selectedDurationIndex = value!;
                             });
                           },
+                          activeColor: Colors.blue,
                         ),
                         RadioListTile(
                           title: Text("4 to 6 months"),
@@ -305,59 +339,123 @@ class _DashboardPageState extends State<DashboardPage> {
                               selectedDurationIndex = value!;
                             });
                           },
+                          activeColor: Colors.blue,
                         ),
                       ],
                     ),
                     Row(
                       children: [
                         Text("Students Needed: "),
-                        Spacer(),
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4.0),
+                              horizontal: 1.0, vertical: 1.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(4.0),
+                            border: Border.all(color: Colors.black),
                           ),
-                          child: Text(studentsNeeded.toString() + ''),
+                          child: IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              if (studentsNeeded > 0) {
+                                setState(() {
+                                  studentsNeeded--;
+                                });
+                              }
+                            },
+                          ),
                         ),
-                        Spacer(),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(4.0),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                int updatedStudentsNeeded = studentsNeeded;
+                                return AlertDialog(
+                                  title: Text(
+                                    "Edit Students Needed",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  content: TextFormField(
+                                    initialValue: studentsNeeded.toString(),
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      updatedStudentsNeeded =
+                                          int.tryParse(value) ?? 0;
+                                    },
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          studentsNeeded =
+                                              updatedStudentsNeeded;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.blue),
+                                        shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15.0, vertical: 15.0),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                top: BorderSide(color: Colors.black),
+                                bottom: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            child: Text(studentsNeeded.toString()),
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 4.0),
-                                child: IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {
-                                    setState(() {
-                                      studentsNeeded++;
-                                    });
-                                  },
-                                ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 4.0),
-                                child: IconButton(
-                                  icon: Icon(Icons.remove),
-                                  onPressed: () {
-                                    if (studentsNeeded > 0) {
-                                      setState(() {
-                                        studentsNeeded--;
-                                      });
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 1.0, vertical: 1.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                studentsNeeded++;
+                              });
+                            },
                           ),
                         ),
                       ],
@@ -372,13 +470,18 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text("Cancel"),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                TextButton(
-                  child: Text("Save"),
+                ElevatedButton(
                   onPressed: () {
                     setState(() {
                       project.title = titleController.text;
@@ -392,6 +495,22 @@ class _DashboardPageState extends State<DashboardPage> {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -416,7 +535,16 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProposalsPage(project: project, initialTabIndex: 0),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 title: Text('View Messages',
@@ -425,7 +553,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProposalsPage(
+                          project: project,
+                          initialTabIndex: 2), // Pass initialTabIndex as 2
+                    ),
+                  );
+                },
               ),
               ListTile(
                 title: Text('View Hired',
@@ -434,7 +572,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProposalsPage(
+                          project: project,
+                          initialTabIndex: 3), // Pass initialTabIndex as 3
+                    ),
+                  );
+                },
               ),
               Divider(height: 17, color: Colors.grey),
               ListTile(
@@ -455,6 +603,11 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   _editPosting(context, project);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("You have edited the posting."),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -466,6 +619,11 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   _showDeleteConfirmationDialog(context, project);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("You have removed the posting."),
+                    ),
+                  );
                 },
               ),
               Divider(height: 17, color: Colors.grey),
@@ -476,7 +634,18 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    project.status = 'Working';
+                  });
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text("You have started working on this project."),
+                    ),
+                  );
+                },
               ),
             ],
           ),
