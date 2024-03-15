@@ -60,7 +60,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
           onPressed: () {
             _showFavoriteProjects(context);
           },
-          child: Icon(Icons.favorite, color: Colors.green),
+          child: Icon(Icons.favorite, color: Color.fromARGB(255, 250, 24, 24)),
           elevation: 0,
           mini: true,
         ),
@@ -123,22 +123,23 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   void _showFavoriteProjects(BuildContext context) {
-    // Filter projects to show only favorite projects
-    List<Project> favoriteProjects =
-        projects.where((project) => project.isFavorite).toList();
+  // Filter projects to show only favorite projects
+  List<Project> favoriteProjects =
+      Project.projects.where((project) => Project.isFavorite(project)).toList();
 
-    // Navigate to a new page to display favorite projects
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FavoriteProjectsPage(
-          projects: favoriteProjects,
-          handleProjectTool: _handleProjectTool,
-          selectProject: _selectProject,
-        ),
+  // Navigate to a new page to display favorite projects
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => FavoriteProjectsPage(
+        projects: favoriteProjects,
+        handleProjectTool: _handleProjectTool,
+        selectProject: _selectProject,
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void _showFilterOptions(BuildContext context) {
     showModalBottomSheet(
