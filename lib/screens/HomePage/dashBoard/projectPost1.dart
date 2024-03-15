@@ -3,59 +3,54 @@ import 'package:studenthub/components/appbar.dart';
 import 'projectPost2.dart';
 import '/components/project.dart';
 
-void main() {
-  runApp(ProjectPost1());
-}
-
-class ProjectPost1 extends StatelessWidget {
+class ProjectPost1 extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: CustomAppBar(),
-        body: BuildProjectPost1(), // Changed to use PascalCase for class name
-      ),
-    );
-  }
+  _ProjectPost1State createState() => _ProjectPost1State();
 }
 
-class BuildProjectPost1 extends StatefulWidget { // Changed to StatefulWidget
-  @override
-  _BuildProjectPost1State createState() => _BuildProjectPost1State();
-}
-
-class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State class
-  final TextEditingController _titleController = TextEditingController(); // Added controller
+class _ProjectPost1State extends State<ProjectPost1> {
+  // Added State class
+  final TextEditingController _titleController = TextEditingController();
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed
     _titleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: CustomAppBar(),
+        body: _buildPadding(context),
+      ),
+    );
+  }
+
+  Padding _buildPadding(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '1/4     Let\'s start with a strong title',
+            '1/4    Let\'s start with a strong title',
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
           SizedBox(height: 10),
           IconButton(
             icon: Icon(Icons.info),
-            tooltip: 'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
-            onPressed: () {}, // Add functionality if needed
+            tooltip:
+                'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
+            onPressed: () {},
           ),
           SizedBox(height: 10),
           TextField(
-            controller: _titleController, // Assigning controller
+            controller: _titleController,
             decoration: InputDecoration(
               hintText: 'Write a title for your post',
               border: OutlineInputBorder(),
@@ -66,16 +61,20 @@ class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State 
             'Example titles',
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left: 16.0), // Apply left padding here
+            padding:
+                const EdgeInsets.only(left: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('• Build responsive WordPress site with booking/payment functionality'),
-                Text('• Facebook ad specialist needed for product launch'),
+                Text('• Build responsive WordPress site with booking/payment functionality', 
+                    style: TextStyle(fontSize: 16)),
+                Text('• Facebook ad specialist needed for product launch',
+                  style: TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -90,16 +89,21 @@ class _BuildProjectPost1State extends State<BuildProjectPost1> { // Added State 
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProjectPost2(title: _titleController.text,)), // Changed to PascalCase
-                  );
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProjectPost2(
+                          title: _titleController.text,
+                        ),
+                      ),
+                    );
                 },
                 child: Text(
                   'Next: Description',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
+import 'projectPost1.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -13,16 +14,9 @@ class _DashboardPageState extends State<DashboardPage> {
   late List<Project> achievedProjects;
 
   @override
-  void initState() {
-    super.initState();
-
-    _updateProjectsList();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _updateProjectsList();
-
+    
     return _buildDefaultTabController();
   }
 
@@ -64,12 +58,19 @@ class _DashboardPageState extends State<DashboardPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
-        onPressed: () => _addProject(context),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProjectPost1(),
+            ),
+          );
+        },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
         ),
@@ -79,6 +80,7 @@ class _DashboardPageState extends State<DashboardPage> {
             'Post a job',
             style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),
           ),
@@ -86,6 +88,8 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+
+  void _addProject() {}
 
   Widget _buildTab(String title) {
     return Tab(
@@ -108,8 +112,6 @@ class _DashboardPageState extends State<DashboardPage> {
         .where((project) => project.status == 'Achieved')
         .toList();
   }
-
-  void _addProject(BuildContext context) {}
 
   Widget buildTextField(TextEditingController controller, String hintText) {
     return TextField(
@@ -196,7 +198,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>

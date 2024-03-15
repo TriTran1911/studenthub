@@ -40,7 +40,7 @@ class ProjectPost4 extends StatelessWidget {
         children: [
           SizedBox(height: 16),
           Text(
-            '4/4     Project details',
+            '4/4    Project details',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
