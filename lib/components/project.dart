@@ -8,6 +8,16 @@ enum ProjectDuration {
   threeToSixMonths,
 }
 
+final views = [
+  'View proposals',
+  'View messages',
+  'View hired',
+  'View job posting',
+  'Edit posting',
+  'Remove posting',
+  'Start working this project',
+];
+
 class Project {
   String title;
   ProjectDuration duration;
@@ -56,8 +66,7 @@ class Project {
     projects.remove(project);
   }
 
-  static Widget buildProjectsList(List<Project> projects,
-      Function _handleProjectTool, Function _selectProject) {
+  static Widget buildProjectsList(List<Project> projects) {
     return ListView.builder(
       itemCount: projects.length,
       itemBuilder: (context, index) {
@@ -125,30 +134,13 @@ class Project {
                   ),
                 ],
               ),
-              trailing: PopupMenuButton<ProjectTool>(
-                onSelected: (ProjectTool result) {
-                  _handleProjectTool(result, projects[index]);
+              trailing: IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {
+                  _showBottomSheet(context);
                 },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<ProjectTool>>[
-                  PopupMenuItem<ProjectTool>(
-                    value: ProjectTool.Edit,
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Edit'),
-                    ),
-                  ),
-                  PopupMenuItem<ProjectTool>(
-                    value: ProjectTool.Remove,
-                    child: ListTile(
-                      leading: Icon(Icons.delete),
-                      title: Text('Remove'),
-                    ),
-                  ),
-                ],
               ),
               onTap: () {
-                _selectProject(projects[index]);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -161,17 +153,96 @@ class Project {
             Divider(
               height: 17,
               color: Colors.grey,
-            ), // Add a divider between projects
+            ),
           ],
         );
       },
     );
   }
 
-  static Widget buildProjectsListWithoutMessagesHired(
-      List<Project> projects,
-      Function _handleProjectTool,
-      Function _selectProject) {
+  static void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 430,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  'View Proposals', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('View Messages', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('View Hired', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text('View job posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('Edit posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('Remove posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text('Start working this project', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget buildProjectsListWithoutMessagesHired(List<Project> projects,
+      Function _handleProjectTool, Function _selectProject) {
     return ListView.builder(
       itemCount: projects.length,
       itemBuilder: (context, index) {
@@ -201,7 +272,8 @@ class Project {
                     'Students are looking for:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text('Time: ${projects[index].timeNeeded}, ${projects[index].studentsNeeded} students needed'),
+                  Text(
+                      'Time: ${projects[index].timeNeeded}, ${projects[index].studentsNeeded} students needed'),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Column(
@@ -220,7 +292,8 @@ class Project {
                     children: [
                       Column(
                         children: [
-                          Text('Proposals: less than ${projects[index].proposals}'),
+                          Text(
+                              'Proposals: less than ${projects[index].proposals}'),
                         ],
                       ),
                     ],

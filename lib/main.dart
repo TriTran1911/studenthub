@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/project.dart';
 import '/components/proposer.dart';
 import '/screens/action/home.dart';
+import '/screens/homepage/tabs.dart';
 
 void main() {
   DateTime now = DateTime.now();
