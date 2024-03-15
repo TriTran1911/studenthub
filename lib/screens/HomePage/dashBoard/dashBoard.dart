@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
+import '/screens/Action/projectTab.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -50,9 +51,9 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         body: TabBarView(
           children: [
-            Project.buildProjectsList(Project.projects),
-            Project.buildProjectsList(workingProjects),
-            Project.buildProjectsList(achievedProjects),
+            buildProjectsList(Project.projects),
+            buildProjectsList(workingProjects),
+            buildProjectsList(achievedProjects),
           ],
         ),
       ),
@@ -119,6 +120,181 @@ class _DashboardPageState extends State<DashboardPage> {
         hintText: hintText,
         border: OutlineInputBorder(),
       ),
+    );
+  }
+
+  Widget buildProjectsList(List<Project> projects) {
+    return ListView.builder(
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        String durationText;
+        if (projects[index].duration == ProjectDuration.oneToThreeMonths) {
+          durationText = '1 to 3 months';
+        } else {
+          durationText = '3 to 6 months';
+        }
+
+        // Calculate days since creation
+        final daysSinceCreation =
+            DateTime.now().difference(projects[index].creationDate).inDays;
+
+        return Column(
+          children: [
+            ListTile(
+              title: Text(
+                projects[index].title,
+                style: TextStyle(color: Colors.green),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Created $daysSinceCreation days ago'),
+                  Text(
+                    'Students are looking for:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: projects[index]
+                          .description
+                          .map((descriptionItem) => Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Text('• $descriptionItem'),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text('${projects[index].proposals}'),
+                          Text('Proposals'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('${projects[index].messages}'),
+                          Text('Messages'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text('${projects[index].hiredCount}'),
+                          Text('Hired'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {
+                  _showBottomSheet(context, projects[index]);
+                },
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProposalsPage(project: projects[index]),
+                  ),
+                );
+              },
+            ),
+            Divider(
+              height: 17,
+              color: Colors.grey,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static void _showBottomSheet(BuildContext context, Project project) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 430,
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  'View Proposals', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('View Messages', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('View Hired', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text('View job posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('Edit posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              ListTile(
+                title: Text('Remove posting', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text('Start working this project', 
+                  style: TextStyle(
+                    color: Colors.blue, 
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 16,)),
+                onTap: () {
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
