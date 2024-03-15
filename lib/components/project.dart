@@ -29,7 +29,6 @@ class Project {
   int hiredCount; // Integer representing the number of times hired
   int studentsNeeded; // Number of students needed for the project
   String timeNeeded; // Time needed for the project
-  bool isFavorite; // Indicates whether the project is favorited
 
   Project(
     this.title,
@@ -42,7 +41,6 @@ class Project {
     this.hiredCount = 0,
     this.studentsNeeded = 0,
     this.timeNeeded = '',
-    this.isFavorite = false,
   });
 
   static List<Project> projects = [];
@@ -117,16 +115,17 @@ class Project {
                 ],
               ),
               trailing: IconButton(
-                icon: Icon(
-                  projects[index].isFavorite
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: projects[index].isFavorite ? Colors.red : null,
-                ),
-                onPressed: () {
-                  _toggleFavorite(projects[index]);
-                },
-              ),
+  icon: Icon(
+    Project.isFavorite(projects[index])
+        ? Icons.favorite
+        : Icons.favorite_border,
+    color: Project.isFavorite(projects[index]) ? Colors.red : null,
+  ),
+  onPressed: () {
+    _toggleFavorite(projects[index]);
+  },
+),
+
               onTap: () {
                 _selectProject(projects[index]);
               },
@@ -140,8 +139,22 @@ class Project {
       },
     );
   }
+  static List<Project> favoriteProjects = [];
+
+  static bool isFavorite(Project project) {
+    return favoriteProjects.contains(project);
+  }
+
+  static void toggleFavorite(Project project) {
+    if (isFavorite(project)) {
+      favoriteProjects.remove(project);
+    } else {
+      favoriteProjects.add(project);
+    }
+  }
 
   static void _toggleFavorite(Project project) {
-    project.isFavorite = !project.isFavorite;
+    Project.toggleFavorite(project);
   }
+
 }
