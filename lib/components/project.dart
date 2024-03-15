@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import '/screens/HomePage/projects/projects.dart';
 import '/screens/Action/projectTab.dart';
 
 enum ProjectTool { Edit, Remove }
@@ -53,7 +54,6 @@ class Project {
   static void removeProject(Project project) {
     projects.remove(project);
   }
-
 
   static Widget buildProjectsListWithoutMessagesHired(List<Project> projects,
       Function _handleProjectTool, Function _selectProject) {

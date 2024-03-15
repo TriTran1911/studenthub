@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import '/screens/HomePage/dashBoard/projectPost1.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
 import 'projectPost1.dart';
@@ -25,12 +26,17 @@ class _DashboardPageState extends State<DashboardPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Your projects',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Your projects',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           actions: <Widget>[
             _buildPostJobButton(),
@@ -58,7 +64,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => _addProject(),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -130,11 +136,11 @@ class _DashboardPageState extends State<DashboardPage> {
       itemCount: projects.length,
       itemBuilder: (context, index) {
         String durationText;
-        if (projects[index].duration == ProjectDuration.oneToThreeMonths) {
-          durationText = '1 to 3 months';
-        } else {
-          durationText = '3 to 6 months';
-        }
+
+        durationText =
+            (projects[index].duration == ProjectDuration.oneToThreeMonths)
+                ? '1 to 3 months'
+                : '3 to 6 months';
 
         // Calculate days since creation
         final daysSinceCreation =
@@ -225,6 +231,178 @@ class _DashboardPageState extends State<DashboardPage> {
     });
   }
 
+  void _showDeleteConfirmationDialog(BuildContext context, Project project) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Deletion"),
+          content: Text("Are you sure you want to delete this posting?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                _removeProject(project);
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editPosting(BuildContext context, Project project) {
+    TextEditingController titleController =
+        TextEditingController(text: project.title);
+    int selectedDurationIndex =
+        project.duration == ProjectDuration.oneToThreeMonths ? 0 : 1;
+    int studentsNeeded = project.studentsNeeded;
+    TextEditingController descriptionController =
+        TextEditingController(text: project.description.join('\n'));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Edit Posting"),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(labelText: "Title"),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Duration: "),
+                        RadioListTile(
+                          title: Text("1 to 3 months"),
+                          value: 0,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile(
+                          title: Text("4 to 6 months"),
+                          value: 1,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("Students Needed: "),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Text(studentsNeeded.toString() + ''),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 4.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    setState(() {
+                                      studentsNeeded++;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 4.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    if (studentsNeeded > 0) {
+                                      setState(() {
+                                        studentsNeeded--;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextField(
+                      controller: descriptionController,
+                      decoration: InputDecoration(labelText: "Description"),
+                      maxLines: null,
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Save"),
+                  onPressed: () {
+                    setState(() {
+                      project.title = titleController.text;
+                      project.duration = selectedDurationIndex == 0
+                          ? ProjectDuration.oneToThreeMonths
+                          : ProjectDuration.threeToSixMonths;
+                      project.studentsNeeded = studentsNeeded;
+                      project.description =
+                          descriptionController.text.split('\n');
+                    });
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _showBottomSheet(BuildContext context, Project project) {
     showModalBottomSheet(
       context: context,
@@ -277,7 +455,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     )),
-                onTap: () {},
+                onTap: () {
+                  _editPosting(context, project);
+                },
               ),
               ListTile(
                 title: Text('Remove posting',
@@ -287,8 +467,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       fontSize: 16,
                     )),
                 onTap: () {
-                  _removeProject(project);
-                  Navigator.pop(context);
+                  _showDeleteConfirmationDialog(context, project);
                 },
               ),
               Divider(height: 17, color: Colors.grey),
