@@ -109,9 +109,7 @@ class _DashboardPageState extends State<DashboardPage> {
         .toList();
   }
 
-  void _addProject(BuildContext context) {
-    
-  }
+  void _addProject(BuildContext context) {}
 
   Widget buildTextField(TextEditingController controller, String hintText) {
     return TextField(
@@ -217,7 +215,13 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  static void _showBottomSheet(BuildContext context, Project project) {
+  void _removeProject(Project project) {
+    setState(() {
+      Project.removeProject(project);
+    });
+  }
+
+  void _showBottomSheet(BuildContext context, Project project) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -226,70 +230,72 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             children: [
               ListTile(
-                title: Text(
-                  'View Proposals', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
+                title: Text('View Proposals',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
               ),
               ListTile(
-                title: Text('View Messages', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
+                title: Text('View Messages',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
               ),
               ListTile(
-                title: Text('View Hired', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
+                title: Text('View Hired',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
+              ),
+              Divider(height: 17, color: Colors.grey),
+              ListTile(
+                title: Text('View job posting',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Edit posting',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Remove posting',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
                 onTap: () {
+                  _removeProject(project);
+                  Navigator.pop(context);
                 },
               ),
               Divider(height: 17, color: Colors.grey),
               ListTile(
-                title: Text('View job posting', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              ListTile(
-                title: Text('Edit posting', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              ListTile(
-                title: Text('Remove posting', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
-              ),
-              Divider(height: 17, color: Colors.grey),
-              ListTile(
-                title: Text('Start working this project', 
-                  style: TextStyle(
-                    color: Colors.blue, 
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16,)),
-                onTap: () {
-                },
+                title: Text('Start working this project',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    )),
+                onTap: () {},
               ),
             ],
           ),
