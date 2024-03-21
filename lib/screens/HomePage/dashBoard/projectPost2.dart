@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/controller.dart';
 import '/components/appbar.dart';
 import 'projectPost3.dart';
 
