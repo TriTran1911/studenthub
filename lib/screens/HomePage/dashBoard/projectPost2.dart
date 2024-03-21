@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import '/components/appbar.dart';
 import 'projectPost3.dart';
 
@@ -17,12 +18,10 @@ class _ProjectPost2State extends State<ProjectPost2> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: CustomAppBar(),
-        body: SingleChildScrollView(
-          child: _buildPadding(context),
-        ),
+    return Scaffold(
+      appBar: CustomAppBar(),
+      body: SingleChildScrollView(
+        child: _buildPadding(context),
       ),
     );
   }
@@ -98,7 +97,7 @@ class _ProjectPost2State extends State<ProjectPost2> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProjectPost3(

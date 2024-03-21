@@ -88,7 +88,7 @@ class _ProjectPost3State extends State<ProjectPost3> {
               child: ElevatedButton(
                 onPressed: () {
                   List<String> descriptionLines = _descriptionController.text.split('\n');
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProjectPost4(

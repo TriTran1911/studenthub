@@ -134,7 +134,7 @@ class _Signup2State extends State<SignUp2> {
     if (_checkSignup()) {
       _handleSignup();
       appBarIcon.isBlocked = false;
-      navigateToPage(TabsPage(index: 0), context);
+      navigateToPagePushReplacement(TabsPage(index: 0), context);
     }
   }
 

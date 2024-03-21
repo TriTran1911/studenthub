@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
           _buildElevatedButton(
             'Company',
             () {
-              navigateToPage(Login(), context);
+              navigateToPagePushReplacement(Login(), context);
             },
           ),
           SizedBox(height: 20),
@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
             'Student',
             () {
               User.isCompany = false;
-              navigateToPage(Login(), context);
+              navigateToPagePushReplacement(Login(), context);
             },
           ),
           SizedBox(height: 20),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'projectPost2.dart';
+import '/components/controller.dart';
 
 class ProjectPost1 extends StatefulWidget {
   @override
@@ -13,12 +14,10 @@ class _ProjectPost1State extends State<ProjectPost1> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: CustomAppBar(),
-        body: SingleChildScrollView(
-          child: _buildPadding(context),
-        ),
+    return Scaffold(
+      appBar: CustomAppBar(),
+      body: SingleChildScrollView(
+        child: _buildPadding(context),
       ),
     );
   }
@@ -61,15 +60,15 @@ class _ProjectPost1State extends State<ProjectPost1> {
           ),
           SizedBox(height: 10),
           Padding(
-            padding:
-                const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('• Build responsive WordPress site with booking/payment functionality', 
+                Text(
+                    '• Build responsive WordPress site with booking/payment functionality',
                     style: TextStyle(fontSize: 16)),
                 Text('• Facebook ad specialist needed for product launch',
-                  style: TextStyle(fontSize: 16)),
+                    style: TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -84,14 +83,14 @@ class _ProjectPost1State extends State<ProjectPost1> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProjectPost2(
-                          title: _titleController.text,
-                        ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProjectPost2(
+                        title: _titleController.text,
                       ),
-                    );
+                    ),
+                  );
                 },
                 child: Text(
                   'Next: Description',
