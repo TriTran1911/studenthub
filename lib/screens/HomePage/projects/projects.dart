@@ -16,11 +16,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
   @override
   void initState() {
     super.initState();
-
-    // Initialize the projects list
     projects = Project.projects;
-
-    // Initialize the search controller
     _searchController = TextEditingController();
   }
 
@@ -46,11 +42,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
             ),
           ),
           Expanded(
-            child: Project.buildProjectsListWithoutMessagesHired(
-              projects,
-              _handleProjectTool,
-              _selectProject,
-            ),
+            child: _buildProjectsListWithoutMessagesHired(),
           ),
         ],
       ),
@@ -85,9 +77,84 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
+  Widget _buildProjectsListWithoutMessagesHired() {
+    return ListView.builder(
+      itemCount: projects.length,
+      itemBuilder: (context, index) {
+        final daysSinceCreation =
+            DateTime.now().difference(projects[index].creationDate).inDays;
+
+        return Column(
+          children: [
+            ListTile(
+              title: Text(
+                projects[index].title,
+                style: TextStyle(color: Colors.green),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Created $daysSinceCreation days ago'),
+                  Text(
+                    'Students are looking for:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                      'Time: ${projects[index].timeNeeded}, ${projects[index].studentsNeeded} students needed'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: projects[index]
+                          .description
+                          .map((descriptionItem) => Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Text('• $descriptionItem'),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                              'Proposals: less than ${projects[index].proposals}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  Project.isFavorite(projects[index])
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color:
+                      Project.isFavorite(projects[index]) ? Colors.red : null,
+                ),
+                onPressed: () {
+                  _toggleFavorite(projects[index]);
+                },
+              ),
+              onTap: () {
+                _selectProject(projects[index]);
+              },
+            ),
+            Divider(
+              height: 17,
+              color: Colors.grey,
+            ), // Add a divider between projects
+          ],
+        );
+      },
+    );
+  }
+
   void _filterProjects(String query) {
     setState(() {
-      // Filter the projects list based on the query
       projects = Project.projects
           .where((project) =>
               project.title.toLowerCase().contains(query.toLowerCase()))
@@ -99,8 +166,71 @@ class _ProjectsPageState extends State<ProjectsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ProjectDetailPage(project: project)),
+        builder: (context) => ProjectDetailPage(project: project),
+      ),
     );
+  }
+
+  void _toggleFavorite(Project project) {
+    setState(() {
+      Project.toggleFavorite(project);
+    });
+  }
+
+  void _showFavoriteProjects(BuildContext context) {
+    List<Project> favoriteProjects = Project.projects
+        .where((project) => Project.isFavorite(project))
+        .toList();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FavoriteProjectsPage(
+          projects: favoriteProjects,
+          handleProjectTool: _handleProjectTool,
+          selectProject: _selectProject,
+        ),
+      ),
+    );
+  }
+
+  void _showFilterOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return FilterProjectsPage(
+          applyFilters: _applyFilters,
+        );
+      },
+    );
+  }
+
+  void _applyFilters(
+      Duration? projectDuration, int? studentsNeeded, int? proposalsLessThan) {
+    setState(() {
+      projects = Project.projects.where((project) {
+        bool passFilter = true;
+        if (projectDuration != null) {
+          switch (project.duration) {
+            case ProjectDuration.oneToThreeMonths:
+              passFilter = passFilter && projectDuration.inDays <= 90;
+              break;
+            case ProjectDuration.threeToSixMonths:
+              passFilter= passFilter &&
+                  projectDuration.inDays > 90 &&
+                  projectDuration.inDays <= 180;
+              break;
+          }
+        }
+        if (studentsNeeded != null) {
+          passFilter = passFilter && project.studentsNeeded >= studentsNeeded;
+        }
+        if (proposalsLessThan != null) {
+          passFilter = passFilter && project.proposals < proposalsLessThan;
+        }
+        return passFilter;
+      }).toList();
+    });
   }
 
   void _handleProjectTool(ProjectTool result, Project project) {
@@ -120,66 +250,5 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _removeProject(Project project) {
     // Your implementation to remove a project goes here
-  }
-
-  void _showFavoriteProjects(BuildContext context) {
-  // Filter projects to show only favorite projects
-  List<Project> favoriteProjects =
-      Project.projects.where((project) => Project.isFavorite(project)).toList();
-
-  // Navigate to a new page to display favorite projects
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => FavoriteProjectsPage(
-        projects: favoriteProjects,
-        handleProjectTool: _handleProjectTool,
-        selectProject: _selectProject,
-      ),
-    ),
-  );
-}
-
-
-  void _showFilterOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return FilterProjectsPage(
-          applyFilters: _applyFilters,
-        );
-      },
-    );
-  }
-
-  void _applyFilters(
-      Duration? projectDuration, int? studentsNeeded, int? proposalsLessThan) {
-    setState(() {
-      // Apply filters to the projects list
-      // Update the projects list based on the selected filters
-      projects = Project.projects.where((project) {
-        bool passFilter = true;
-        if (projectDuration != null) {
-          switch (project.duration) {
-            case ProjectDuration.oneToThreeMonths:
-              passFilter = passFilter && projectDuration.inDays <= 90;
-              break;
-            case ProjectDuration.threeToSixMonths:
-              passFilter = passFilter &&
-                  projectDuration.inDays > 90 &&
-                  projectDuration.inDays <= 180;
-              break;
-            // Add cases for other project durations as needed
-          }
-        }
-        if (studentsNeeded != null) {
-          passFilter = passFilter && project.studentsNeeded >= studentsNeeded;
-        }
-        if (proposalsLessThan != null) {
-          passFilter = passFilter && project.proposals < proposalsLessThan;
-        }
-        return passFilter;
-      }).toList();
-    });
   }
 }
