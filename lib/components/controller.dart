@@ -42,6 +42,10 @@ Route _createRoute(Widget page) {
   );
 }
 
-void navigateToPage(Widget page, BuildContext context) {
+void navigateToPagePushReplacement(Widget page, BuildContext context) {
   Navigator.of(context).pushReplacement(_createRoute(page));
+}
+
+void navigateToPagePush(Widget page, BuildContext context) {
+  Navigator.of(context).push(_createRoute(page));
 }

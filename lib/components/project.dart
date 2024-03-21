@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum ProjectTool { Edit, Remove }
 
 enum ProjectDuration {
@@ -57,3 +55,73 @@ class Project {
   }
 }
 
+// initial projects
+void initialProjects() {
+  Project.projects = [
+    Project(
+      'Javis - AI Copilot',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'A.I. Copilot for software development',
+        'A.I. pair programming',
+        'A.I. code review',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 1)),
+      proposals: 3,
+      messages: 2,
+      hiredCount: 1,
+      studentsNeeded: 2,
+      timeNeeded: '1-3 months',
+    ),
+    // different project name
+    Project(
+      'Senior frontend developer (Fintech)',
+      ProjectDuration.threeToSixMonths,
+      [
+        'We are looking for a senior frontend developer to join our team',
+        'You will be responsible for building the client-side of our web applications',
+        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 2)),
+      proposals: 5,
+      messages: 3,
+      hiredCount: 2,
+      studentsNeeded: 3,
+      timeNeeded: '3-6 months',
+    ),
+    Project(
+      'Senior backend developer (Fintech)',
+      ProjectDuration.threeToSixMonths,
+      [
+        'We are looking for a senior backend developer to join our team',
+        'You will be responsible for building the server-side of our web applications',
+        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 3)),
+      proposals: 4,
+      messages: 4,
+      hiredCount: 3,
+      studentsNeeded: 4,
+      timeNeeded: '3-6 months',
+    ),
+    Project(
+      'Senior fullstack developer (Fintech)',
+      ProjectDuration.threeToSixMonths,
+      [
+        'We are looking for a senior fullstack developer to join our team',
+        'You will be responsible for building the client-side and server-side of our web applications',
+        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 4)),
+      proposals: 6,
+      messages: 5,
+      hiredCount: 4,
+      studentsNeeded: 5,
+      timeNeeded: '3-6 months',
+    ),
+  ];
+}
