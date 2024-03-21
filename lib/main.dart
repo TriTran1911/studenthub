@@ -104,5 +104,6 @@ class MyApp extends StatelessWidget {
           '/': (context) => MessagePage(),
           'chatDetailPage': (context) => ChatDetailPage(),
         });
+    // home: Home();
   }
 }
