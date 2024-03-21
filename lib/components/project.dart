@@ -149,3 +149,73 @@ class Project {
   }
 
 }
+
+// initial projects
+void initialProjects() {
+  Project.projects = [
+    Project(
+      'Javis - AI Copilot',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'A.I. Copilot for software development',
+        'A.I. pair programming',
+        'A.I. code review',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 1)),
+      proposals: 3,
+      messages: 2,
+      hiredCount: 1,
+      studentsNeeded: 2,
+      timeNeeded: '1-3 months',
+    ),
+    Project(
+      'Javis - AI Copilot',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'A.I. Copilot for software development',
+        'A.I. pair programming',
+        'A.I. code review',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 1)),
+      proposals: 3,
+      messages: 2,
+      hiredCount: 1,
+      studentsNeeded: 2,
+      timeNeeded: '1-3 months',
+    ),
+    Project(
+      'Javis - AI Copilot',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'A.I. Copilot for software development',
+        'A.I. pair programming',
+        'A.I. code review',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 1)),
+      proposals: 3,
+      messages: 2,
+      hiredCount: 1,
+      studentsNeeded: 2,
+      timeNeeded: '1-3 months',
+    ),
+    Project(
+      'Javis - AI Copilot',
+      ProjectDuration.oneToThreeMonths,
+      [
+        'A.I. Copilot for software development',
+        'A.I. pair programming',
+        'A.I. code review',
+      ],
+      'Open',
+      DateTime.now().subtract(Duration(days: 1)),
+      proposals: 3,
+      messages: 2,
+      hiredCount: 1,
+      studentsNeeded: 2,
+      timeNeeded: '1-3 months',
+    ),
+  ];
+}
