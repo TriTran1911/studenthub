@@ -130,7 +130,7 @@ class _SignUpState1 extends State<SignUp1> {
         ),
         GestureDetector(
           onTap: () {
-            navigateToPage(Login(), context);
+            navigateToPagePushReplacement(Login(), context);
           },
           child: Text(
             "Login",
@@ -147,7 +147,7 @@ class _SignUpState1 extends State<SignUp1> {
   void _handleOnPressed() {
     if (_isCompany || _isStudent) {
       User.isCompany = _isCompany;
-      navigateToPage(SignUp2(), context);
+      navigateToPagePushReplacement(SignUp2(), context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

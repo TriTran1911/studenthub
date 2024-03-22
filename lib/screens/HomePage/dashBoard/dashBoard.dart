@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
 import 'projectPost1.dart';
+import 'package:studenthub/components/controller.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -12,7 +13,6 @@ class _DashboardPageState extends State<DashboardPage> {
   // count number of time open the page
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
-        onPressed: () => _addProject(),
+        onPressed: () => navigateToPagePushReplacement(ProjectPost1(), context),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -85,15 +85,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _addProject() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectPost1(),
       ),
     );
   }
@@ -137,7 +128,6 @@ class _DashboardPageState extends State<DashboardPage> {
         // Calculate days since creation
         final daysSinceCreation =
             DateTime.now().difference(projects[index].creationDate).inDays;
-
         return Column(
           children: [
             ListTile(
@@ -161,7 +151,22 @@ class _DashboardPageState extends State<DashboardPage> {
                           .description
                           .map((descriptionItem) => Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
+                                child:
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      descriptionItem.isEmpty ? '• No description' : '• ',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(descriptionItem,
+                                          style: TextStyle(fontSize: 16)),
+                                    ),
+                                  ],
+                                ),
                               ))
                           .toList(),
                     ),
@@ -630,12 +635,13 @@ class _DashboardPageState extends State<DashboardPage> {
                 onTap: () {
                   setState(() {
                     project.status = 'Working';
+                  _removeProject(project);
                   });
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
-                          Text("You have started working on this project."),
+                          Text("The project has been moved to the working tab."),
                     ),
                   );
                 },

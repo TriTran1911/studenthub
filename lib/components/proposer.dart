@@ -21,3 +21,39 @@ class Proposer {
         isHired: isHired));
   }
 }
+
+// initial proposers
+void initialProposers() {
+  Proposer.proposers = [
+    Proposer(
+        name: 'Alex Jor',
+        position: 'Software Engineer',
+        coverLetter: 'I am a software engineer with 5 years of experience',
+        isHired: false),
+    Proposer(
+        name: 'John Doe',
+        position: 'Data Scientist',
+        coverLetter: 'I am a data scientist with 3 years of experience',
+        isHired: false),
+    Proposer(
+        name: 'Jane Doe',
+        position: 'Product Manager',
+        coverLetter: 'I am a product manager with 7 years of experience',
+        isHired: false),
+    Proposer(
+        name: 'Alex Jor',
+        position: 'Software Engineer',
+        coverLetter: 'I am a software engineer with 5 years of experience',
+        isHired: false),
+    Proposer(
+        name: 'John Doe',
+        position: 'Data Scientist',
+        coverLetter: 'I am a data scientist with 3 years of experience',
+        isHired: false),
+    Proposer(
+        name: 'Jane Doe',
+        position: 'Product Manager',
+        coverLetter: 'I am a product manager with 7 years of experience',
+        isHired: false),
+  ];
+}
