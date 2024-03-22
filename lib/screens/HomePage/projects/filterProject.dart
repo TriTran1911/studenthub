@@ -131,7 +131,6 @@ TextField(
 
   void _clearFilters() {
     setState(() {
-      // Xóa tất cả các giá trị filter và thiết lập lại mặc định
       selectedProjectDuration = null;
       studentsNeeded = null;
       proposalsLessThan = null;
