@@ -67,7 +67,7 @@ class _StudentInfoScreen2State extends State<StudentInfoScreen2> {
               alignment: Alignment.bottomRight,
               child: ElevatedButton(
                 onPressed: () {
-                  navigateToPage(StudentProfile(), context);
+                  navigateToPagePushReplacement(StudentProfile(), context);
                 },
                 child: Text(
                   'Next',

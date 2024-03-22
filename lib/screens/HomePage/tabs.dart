@@ -28,7 +28,7 @@ class _TabsPageState extends State<TabsPage> {
     TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.folder),
     TabInfo(page: DashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
-    TabInfo(page: MyApp(), label: 'Alerts', icon: Icons.notifications),
+    TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
   ];
 
   void _onItemTapped(int index) {

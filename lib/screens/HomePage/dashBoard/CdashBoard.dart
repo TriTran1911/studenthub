@@ -10,7 +10,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   // count number of time open the page
-  late List<Project> OnBoardingProjects;
+  late List<Project> onBoardingProjects;
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
   
@@ -53,7 +53,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         body: TabBarView(
           children: [
-            buildProjectsList(Project.projects),
+            buildProjectsList(onBoardingProjects),
             buildProjectsList(workingProjects),
             buildProjectsList(achievedProjects),
           ],
@@ -113,7 +113,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _updateProjectsList() {
-    
+    onBoardingProjects = Project.projects
+        .where((project) => project.status == 'onBoarding')
+        .toList();
     workingProjects = Project.projects
         .where((project) => project.status == 'Working')
         .toList();

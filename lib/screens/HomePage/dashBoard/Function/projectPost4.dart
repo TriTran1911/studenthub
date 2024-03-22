@@ -78,7 +78,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '• ',
+                      widget.descriptionLines[index].isEmpty ? '' : '• ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -153,12 +153,14 @@ class _ProjectPost4State extends State<ProjectPost4> {
                           ? ProjectDuration.oneToThreeMonths
                           : ProjectDuration.threeToSixMonths,
                       widget.descriptionLines,
-                      'Open',
+                      'onBoarding',
                       DateTime.now(),
                       studentsNeeded: widget.numberOfStudents,
                     ),
                   );
-                  navigateToPage(TabsPage(index: 1), context);
+                  // pop until the first route
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  navigateToPagePushReplacement(TabsPage(index: 1), context);
                 },
                 child: Text(
                   'Post job',
