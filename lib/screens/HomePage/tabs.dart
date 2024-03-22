@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dashBoard/SDashBoard.dart';
+import 'dashBoard/SdashBoard.dart';
+import 'dashBoard/Cdashboard.dart';
 import 'projects/projects.dart';
-import 'dashBoard/CdashBoard.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
 import '/components/controller.dart';
 import '/components/appbar.dart';
-import 'dashBoard/SDashboard.dart';
 
 class TabsPage extends StatefulWidget {
   final int index;
