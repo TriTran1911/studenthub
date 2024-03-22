@@ -1,5 +1,33 @@
 enum ProjectTool { Edit, Remove }
 
+class SubmittedProject {
+  Project project;
+  DateTime sentTime;
+  String messageStatus; 
+
+  SubmittedProject(this.project, this.sentTime, this.messageStatus);
+}
+
+class SubmittedProjects {
+  static final SubmittedProjects _instance = SubmittedProjects._internal();
+
+  factory SubmittedProjects() {
+    return _instance;
+  }
+
+  SubmittedProjects._internal();
+
+  List<SubmittedProject> submittedProjects = [];
+
+  void addSubmittedProject(Project project, DateTime sentTime, String messageStatus) {
+    submittedProjects.add(SubmittedProject(project, sentTime, messageStatus));
+  }
+
+  bool isProjectSubmitted(Project project) {
+    return submittedProjects.any((submittedProject) => submittedProject.project == project);
+  }
+}
+
 enum ProjectDuration {
   oneToThreeMonths,
   threeToSixMonths,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '/screens/HomePage/dashBoard/studentDashBoard.dart';
 import 'projects/projects.dart';
-import 'dashBoard/dashboard.dart';
+// import 'dashBoard/dashboard.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
 import '/components/controller.dart';
 import '/components/appbar.dart';
+import 'dashBoard/studentDashboard.dart';
 
 class TabsPage extends StatefulWidget {
   final int index;
@@ -26,7 +28,8 @@ class _TabsPageState extends State<TabsPage> {
    
   final List<TabInfo> _tabs = [
     TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.folder),
-    TabInfo(page: DashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
+    TabInfo(page: StudentDashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
+    //TabInfo(page: DashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
     TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
   ];

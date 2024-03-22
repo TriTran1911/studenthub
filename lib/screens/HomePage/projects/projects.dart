@@ -4,6 +4,9 @@ import 'projectDetail.dart';
 import 'favoriteList.dart';
 import 'filterProject.dart';
 
+import '/components/proposer.dart';
+import '/screens/Action/home.dart';
+
 class ProjectsPage extends StatefulWidget {
   @override
   _ProjectsPageState createState() => _ProjectsPageState();
@@ -93,7 +96,8 @@ class _ProjectsPageState extends State<ProjectsPage> {
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children:
+                  [
                   Text('Created $daysSinceCreation days ago'),
                   Text(
                     'Students are looking for:',
@@ -168,7 +172,18 @@ class _ProjectsPageState extends State<ProjectsPage> {
       MaterialPageRoute(
         builder: (context) => ProjectDetailPage(project: project),
       ),
-    );
+    ).then((value) {
+      setState(() {
+        // Check if the project is now favorite or not
+        if (Project.isFavorite(project)) {
+          // If the project is now favorite, refresh the list of projects
+          projects = Project.projects.map((p) {
+            if (p == project) return project;
+            return p;
+          }).toList();
+        }
+      });
+    });
   }
 
   void _toggleFavorite(Project project) {
@@ -191,7 +206,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
           selectProject: _selectProject,
         ),
       ),
-    );
+    ).then((value) {
+      // Update the list of favorite projects when returning from FavoriteProjectsPage
+      setState(() {
+        favoriteProjects = Project.projects
+            .where((project) => Project.isFavorite(project))
+            .toList();
+      });
+    });
   }
 
   void _showFilterOptions(BuildContext context) {
@@ -250,5 +272,25 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _removeProject(Project project) {
     // Your implementation to remove a project goes here
+  }
+}
+
+void main() {
+  initialProposers();
+  initialProjects();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: Home(),
+    );
   }
 }
