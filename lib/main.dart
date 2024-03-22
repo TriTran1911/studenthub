@@ -8,6 +8,7 @@ void main() {
   initialNotifications();
   initialProposers();
   initialProjects();
+  initialSubmittedProjects();
 
   runApp(MyApp());
 }

@@ -26,9 +26,8 @@ class _TabsPageState extends State<TabsPage> {
   }
    
   final List<TabInfo> _tabs = [
-    TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.folder),
-    TabInfo(page: StudentDashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
-    //TabInfo(page: DashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
+    TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.list_alt),
+    TabInfo(page: User.isCompany ? DashboardPage() : StudentDashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
     TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
   ];

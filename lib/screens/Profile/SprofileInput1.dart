@@ -53,161 +53,165 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
       appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Welcome to Student Hub',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Tell us about yourself and you will be on your way to connect with real-world projects',
-              style: TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Techstack',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TechstackSelection(
-              selectedTechstack: selectedTechstack,
-              onChanged: (String? value) {
-                setState(() {
-                  selectedTechstack = value;
-                });
-              },
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              'Skillset',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  showSkillContainer = !showSkillContainer;
-                });
-              },
-              child: Container(
-                height: 50.0,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Center(
-                  child: Text(
-                    anySkillSelected
-                        ? selectedSkillset.join(", ")
-                        : 'Tap here to select skills',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.grey,
-                      fontWeight: anySkillSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Welcome to Student Hub',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            if (showSkillContainer)
-              _SkillContainerState(
-                skills: skillsetOptions,
-                onSelect: (selectedSkills) {
+              SizedBox(height: 8),
+              Text(
+                'Tell us about yourself and you will be on your way to connect with real-world projects',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Techstack',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              TechstackSelection(
+                selectedTechstack: selectedTechstack,
+                onChanged: (String? value) {
                   setState(() {
-                    selectedSkillset = selectedSkills;
-                    anySkillSelected = selectedSkillset.isNotEmpty;
+                    selectedTechstack = value;
                   });
                 },
-                selectedSkills: selectedSkillset,
               ),
-            SizedBox(height: 20.0),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Languages',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    _addLanguage();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    _editLanguages();
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (String language in languageList)
-                  Text(
-                    language,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.black,
-                    ),
-                  ),
-              ],
-            ),
-            SizedBox(height: 20.0),
-            _EducationSection(
-              educationList: educationList,
-              onAdd: _addEducation,
-              onEdit: _editEducation,
-              onDelete: _deleteEducation,
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentInfoScreen2()),
-                );
-              },
-              child: Text(
-                'Next',
+              SizedBox(height: 20.0),
+              Text(
+                'Skillset',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
                 ),
               ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
+              SizedBox(height: 10.0),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showSkillContainer = !showSkillContainer;
+                  });
+                },
+                child: Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
+                  child: Center(
+                    child: Text(
+                      anySkillSelected
+                          ? selectedSkillset.join(", ")
+                          : 'Tap here to select skills',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey,
+                        fontWeight: anySkillSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ],
+              if (showSkillContainer)
+                _SkillContainerState(
+                  skills: skillsetOptions,
+                  onSelect: (selectedSkills) {
+                    setState(() {
+                      selectedSkillset = selectedSkills;
+                      anySkillSelected = selectedSkillset.isNotEmpty;
+                    });
+                  },
+                  selectedSkills: selectedSkillset,
+                ),
+              SizedBox(height: 20.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Languages',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      _addLanguage();
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      _editLanguages();
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (String language in languageList)
+                    Text(
+                      language,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              _EducationSection(
+                educationList: educationList,
+                onAdd: _addEducation,
+                onEdit: _editEducation,
+                onDelete: _deleteEducation,
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => StudentInfoScreen2()),
+                  );
+                },
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

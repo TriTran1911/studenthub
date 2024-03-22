@@ -153,3 +153,9 @@ void initialProjects() {
     ),
   ];
 }
+
+// initial submitted projects
+void initialSubmittedProjects() {
+  SubmittedProjects().addSubmittedProject(Project.projects[0], DateTime.now().subtract(Duration(days: 1)), 'unread');
+  SubmittedProjects().addSubmittedProject(Project.projects[3], DateTime.now().subtract(Duration(days: 4)), 'unread');
+}
