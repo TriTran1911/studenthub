@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/components/appbar.dart';
 
 void main()
 {

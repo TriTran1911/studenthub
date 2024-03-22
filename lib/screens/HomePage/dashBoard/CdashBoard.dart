@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
-import 'projectPost1.dart';
+import '/screens/HomePage/dashBoard/Function/projectPost1.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -10,6 +10,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   // count number of time open the page
+  late List<Project> OnBoardingProjects;
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
   
@@ -112,6 +113,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _updateProjectsList() {
+    
     workingProjects = Project.projects
         .where((project) => project.status == 'Working')
         .toList();
