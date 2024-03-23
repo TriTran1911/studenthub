@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/proposer.dart';
 import '/components/appbar.dart';
 import '/components/project.dart';
-import '/components/projectDetail.dart';
+import '../HomePage/dashBoard/Function/projectDetail.dart';
 import 'package:intl/intl.dart';
 import '/components/notifications.dart';
 
