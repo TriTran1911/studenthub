@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/components/project.dart';
+import '/components/notifications.dart';
+import 'package:intl/intl.dart';
 
 class CoverLetterPage extends StatelessWidget {
   final Project project;
@@ -27,11 +29,11 @@ class CoverLetterPage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Container(
-              height: 200, 
+              height: 200,
               child: TextFormField(
                 maxLines: null,
                 expands: true,
-                textAlignVertical: TextAlignVertical.top, 
+                textAlignVertical: TextAlignVertical.top,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter your cover letter...',
@@ -39,11 +41,24 @@ class CoverLetterPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _sendCoverLetter(context);
-              },
-              child: Text('Send'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _sendCoverLetter(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                    padding: MaterialStateProperty.all(
+                        EdgeInsets.symmetric(vertical: 16, horizontal: 32)),
+                  ),
+                  child: Text('Send',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ],
             ),
           ],
         ),
@@ -56,6 +71,12 @@ class CoverLetterPage extends StatelessWidget {
       DateTime sentTime = DateTime.now();
       SubmittedProjects().addSubmittedProject(project, sentTime, "Submitted");
     }
+    notifications.add({
+      'type': 'You have submitted to join project '+ project.title,
+      'icon': Icons.assignment_turned_in,
+      'date': DateFormat('dd/MM/yyyy').format(DateTime.now()),
+    	});
+    Navigator.pop(context);
     Navigator.pop(context);
   }
 }

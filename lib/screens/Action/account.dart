@@ -54,7 +54,7 @@ class _AccountControllerState extends State<AccountController> {
   }
 
   void _handleProfilesButtonPress(BuildContext context) {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>

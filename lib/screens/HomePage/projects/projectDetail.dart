@@ -116,12 +116,15 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
+                        // color blue
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white), 
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Apply Now',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -145,7 +148,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           isFavorite ? 'Saved' : 'Save',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

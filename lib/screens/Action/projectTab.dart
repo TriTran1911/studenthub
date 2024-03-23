@@ -3,6 +3,8 @@ import '/components/proposer.dart';
 import '/components/appbar.dart';
 import '/components/project.dart';
 import '/components/projectDetail.dart';
+import 'package:intl/intl.dart';
+import '/components/notifications.dart';
 
 // ignore: must_be_immutable
 class ProposalsPage extends StatelessWidget {
@@ -26,12 +28,21 @@ class ProposalsPage extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 16),
-          Text(
-            project.title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+                child: Text(
+                  project.title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
           TabBar(
@@ -52,7 +63,7 @@ class ProposalsPage extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                ProposalsTab(),
+                ProposalsTab(project: project,),
                 DetailTab(project: project),
                 MessageTab(),
                 HiredTab(),
@@ -66,6 +77,10 @@ class ProposalsPage extends StatelessWidget {
 }
 
 class ProposalsTab extends StatefulWidget {
+  Project project;
+
+  ProposalsTab({required this.project});
+
   @override
   _ProposalsTabState createState() => _ProposalsTabState();
 }
@@ -210,6 +225,12 @@ class _ProposalsTabState extends State<ProposalsTab>
             ),
             ElevatedButton(
               onPressed: () {
+                notifications.add({
+                  'type':
+                      'You have offder to join project ' + widget.project.title,
+                  'date': DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                  'icon': Icons.settings,
+                });
                 hireProposer(index);
                 Navigator.of(context).pop();
               },

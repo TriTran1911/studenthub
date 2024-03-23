@@ -144,13 +144,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                 ],
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ProposalsPage(project: project),
-                  ),
-                );
               },
             ),
             Divider(
@@ -167,10 +160,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     return ListView(
       children: [
         ExpansionTile(
+          initiallyExpanded: true,
           title: Text('Active proposal (${activeProposals.length})'),
           children: activeProposals.map((project) => buildProjectTile(project)).toList(),
         ),
         ExpansionTile(
+          initiallyExpanded: true,
           title: Text('Submitted proposal (${submittedProposals.length})'),
           children: submittedProposals.map((project) => buildProjectTile(project)).toList(),
         ),
@@ -179,7 +174,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
   }
 
   Widget buildProjectTile(Project project) {
-    final daysSinceCreation = DateTime.now().difference(project.creationDate).inDays;
+    final submittedProject = SubmittedProjects().submittedProjects.firstWhere((submitted) => submitted.project == project);
+    final daysSinceSubmit = DateTime.now().difference(submittedProject.sentTime).inDays;
     return ListTile(
       title: Text(
         project.title,
@@ -188,7 +184,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Created ${daysSinceCreation} days ago'),
+          Text('Submitted $daysSinceSubmit days ago'),
           Text(
             'Students are looking for:',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -219,12 +215,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         ],
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProposalsPage(project: project),
-          ),
-        );
       },
     );
   }

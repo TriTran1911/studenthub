@@ -33,23 +33,8 @@ class _AlertsPageState extends State<AlertsPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-              onPressed: () => addNotification(
-                  noti[0], Icons.assignment_turned_in, DateTime.now()),
-              child: Text('Submit Notification'),
-            ),
-            ElevatedButton(
               onPressed: () =>
                   addNotification(noti[1], Icons.settings, DateTime.now()),
-              child: Text('Offer Notification'),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () =>
-                  addNotification(noti[2], Icons.settings, DateTime.now()),
               child: Text('Interview Notification'),
             ),
             ElevatedButton(
