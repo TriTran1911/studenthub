@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ChatBottomSheet extends StatefulWidget {
+  final Function(String)
+      onMessageSent; // Callback function to handle sending messages
+
+  ChatBottomSheet({required this.onMessageSent}); // Constructor
+
   @override
   _ChatBottomSheetState createState() => _ChatBottomSheetState();
 }
 
 class _ChatBottomSheetState extends State<ChatBottomSheet> {
+  TextEditingController _textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,6 +52,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
               alignment: Alignment.center,
               width: 270,
               child: TextFormField(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Type a message',
                   border: InputBorder.none,
@@ -55,10 +63,19 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
           Spacer(),
           Padding(
             padding: EdgeInsets.only(right: 10),
-            child: Icon(
-              Icons.send,
-              color: Colors.blue,
-              size: 30,
+            child: GestureDetector(
+              onTap: () {
+                String message = _textEditingController.text.trim();
+                if (message.isNotEmpty) {
+                  widget.onMessageSent(message);
+                  _textEditingController.clear();
+                }
+              },
+              child: Icon(
+                Icons.send,
+                color: Colors.blue,
+                size: 30,
+              ),
             ),
           ),
         ],

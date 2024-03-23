@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecentChats extends StatefulWidget {
@@ -39,12 +40,15 @@ class _RecentChatsState extends State<RecentChats> {
                   height: 65,
                   child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: Image.asset(
-                          'images/siu.jpg',
-                          width: 65,
-                          height: 65,
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(35),
+                          child: Image.asset(
+                            'images/siu.jpg',
+                            width: 55,
+                            height: 55,
+                          ),
                         ),
                       ),
                       Padding(
@@ -52,6 +56,7 @@ class _RecentChatsState extends State<RecentChats> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(height: 3),
                             Text(
                               'Cristiano',
                               style: TextStyle(
@@ -59,7 +64,7 @@ class _RecentChatsState extends State<RecentChats> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10),
+                            SizedBox(height: 7),
                             Text(
                               'Hey, how are you?',
                               style: TextStyle(
@@ -94,7 +99,7 @@ class _RecentChatsState extends State<RecentChats> {
                               ),
                               child: Center(
                                 child: Text(
-                                  '2',
+                                  '1',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
