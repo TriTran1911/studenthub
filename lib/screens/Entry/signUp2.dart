@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/appbar.dart';
 import '/components/controller.dart';
+import '/connection/http.dart';
 
 class SignUp2 extends StatefulWidget {
   @override
@@ -134,14 +137,32 @@ class _Signup2State extends State<SignUp2> {
     if (_checkSignup()) {
       _handleSignup();
       appBarIcon.isBlocked = false;
-      navigateToPagePushReplacement(TabsPage(index: 0), context);
     }
   }
 
-  void _handleSignup() {
+  void _handleSignup() async {
     User.username = _userNameController.text;
     User.email = _emailController.text;
     User.password = _passwordController.text;
+    User.role = User.isCompany ? 1 : 0;
+
+    var data = {
+      'fullname': User.username,
+      'email': User.email,
+      'password': User.password,
+      'role': User.role,
+    };
+
+    String url = 'http://10.0.2.2:4400/api/auth/sign-up';
+
+    var response = await postRequest(url, data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded['statusCode'] == 201) {
+      print('User signed up failed');
+    } else {
+      print('User signed up successfully');
+      navigateToPagePushReplacement(TabsPage(index: 0), context);
+    }
   }
 
   bool _checkSignup() {

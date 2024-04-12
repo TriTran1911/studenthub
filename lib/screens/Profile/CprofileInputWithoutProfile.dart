@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
 import '/components/controller.dart';
+import '/connection/http.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override
@@ -106,10 +109,19 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       child: ElevatedButton(
         onPressed: () {
           if (_isInputValid()) {
-            User.nstaff = _selectedCompanySize;
+            User.nstaff = _selectedCompanySize == 'It\'s just me'
+                ? 0
+                : (_selectedCompanySize == '2-9 employees')
+                    ? 1
+                    : (_selectedCompanySize == '10-99 employees'
+                        ? 2
+                        : (_selectedCompanySize == '100-1000 employees'
+                            ? 3
+                            : 4));
             User.cname = _companyNameController.text;
             User.website = _websiteController.text;
             User.description = _descriptionController.text;
+            _handleCprofileInput();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Welcome()),
@@ -146,5 +158,24 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
         _companyNameController.text.isNotEmpty &&
         _websiteController.text.isNotEmpty &&
         _descriptionController.text.isNotEmpty;
+  }
+
+  void _handleCprofileInput() async {
+    // Handle company profile input
+    var data = {
+      'companyName': User.cname,
+      'size': User.nstaff,
+      'website': User.website,
+      'description': User.description,
+    };
+    String url = 'http://10.0.2.2:4400/api/profile/company';
+
+    var response = await postRequest(url, data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded['statusCode'] == 401) {
+      print('Company profile input failed');
+    } else {
+      print('Company profile input successful');
+    }
   }
 }

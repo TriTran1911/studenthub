@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
+import '/connection/http.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -27,13 +31,14 @@ class Login extends StatelessWidget {
             SizedBox(height: 20.0),
             _buildTitleText(),
             SizedBox(height: 20.0),
-            _buildTextField(_usernameController, 'Username or Email'),
+            _buildTextField(_usernameController, 'Email'),
             SizedBox(height: 20.0),
             _buildTextField(_passwordController, 'Password', obscureText: true),
             SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
+                _handleSingIn();
                 navigateToPagePushReplacement(TabsPage(index: 0), context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -108,5 +113,24 @@ class Login extends StatelessWidget {
   bool _isInputValid() {
     return _usernameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty;
+  }
+
+  void _handleSingIn() async {
+    var body = {
+      'email': _usernameController.text,
+      'password': _passwordController.text,
+    };
+    var response =
+        await postRequest('http://10.0.2.2:4400/api/auth/sign-in', body);
+
+    var responseDecoded = jsonDecode(response);
+    print(responseDecoded['result']['token']);
+    if (responseDecoded['result'] != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', responseDecoded['result']['token']);
+      print('Sign in successful');
+    } else {
+      print('Sign in failed');
+    }
   }
 }
