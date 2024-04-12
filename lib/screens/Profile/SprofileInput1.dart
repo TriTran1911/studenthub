@@ -1,25 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'SprofileInput2.dart';
-
-final List<String> techstackOptions = [
-  'Fullstack Engineer',
-  'Front-end Developer',
-  'Back-end Developer',
-  'iOS Developer',
-  // Add more techstack options here
-];
-
-final List<String> skillsetOptions = [
-  'Node.js',
-  'Swift',
-  'Python',
-  'Java',
-  'C++',
-  'HTML/CSS',
-  'MongoDB',
-  // Add more skills here
-];
+import 'package:studenthub/connection/http.dart';
 
 final List<String> languageList = [
   'English: Native or Bilingual',
@@ -46,6 +31,61 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
 
   bool showSkillContainer = false;
   bool anySkillSelected = false;
+
+  late Future<List<TechStack>> techstackOptions;
+  List<TechStack> techStacks = [];
+
+  late Future<List<SkillSet>> skillsetOptionSet;
+  List<SkillSet> skillsetOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    techstackOptions =
+        getTechStack(); // Removed FutureBuilder, directly assign the future
+    skillsetOptionSet = getSkillSet();
+  }
+
+  Future<List<TechStack>> getTechStack() async {
+    var response =
+        await getRequest('http://10.0.2.2:4400/api/techstack/getAllTechStack');
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded['result'] != null) {
+      print(responseDecoded['result']);
+      List<TechStack> techStack = [];
+      for (var tech in responseDecoded['result']) {
+        techStack.add(TechStack.fromJson(tech));
+      }
+      setState(() {
+        techStacks =
+            techStack; // Update techStacks using setState to trigger a rebuild
+      });
+      return techStack;
+    } else {
+      throw Exception('Failed to load techstack');
+    }
+  }
+
+  Future<List<SkillSet>> getSkillSet() async {
+    var response =
+        await getRequest('http://10.0.2.2:4400/api/skillset/getAllSkillSet');
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded['result'] != null) {
+      print(responseDecoded['result']);
+      List<SkillSet> skillSet = [];
+      for (var skill in responseDecoded['result']) {
+        skillSet.add(SkillSet(name: skill['name']));
+      }
+      setState(() {
+        skillsetOptions = skillSet;
+      });
+      return skillSet;
+    } else {
+      throw Exception('Failed to load skillset');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +128,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
                     selectedTechstack = value;
                   });
                 },
+                techStacks: techStacks.map((tech) => tech.name!).toList(),
               ),
               SizedBox(height: 20.0),
               Text(
@@ -128,11 +169,11 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
               ),
               if (showSkillContainer)
                 _SkillContainerState(
-                  skills: skillsetOptions,
-                  onSelect: (selectedSkills) {
+                  skills: skillsetOptions.map((skill) => skill.name!).toList(),
+                  onSelect: (List<String> selectedSkills) {
                     setState(() {
                       selectedSkillset = selectedSkills;
-                      anySkillSelected = selectedSkillset.isNotEmpty;
+                      anySkillSelected = selectedSkills.isNotEmpty;
                     });
                   },
                   selectedSkills: selectedSkillset,
@@ -187,6 +228,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
+                  _handleSprofileInput1();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -439,19 +481,41 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
       educationList.removeAt(index);
     });
   }
+
+  void _handleSprofileInput1() async {
+    var data = {
+      "techstack": selectedTechstack,
+      "skillset": selectedSkillset,
+      "languages": languageList,
+      "education": educationList,
+    };
+
+    var response =
+        await postRequest('http://10.0.2.2:4400/api/profile/student', data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded['result'] != null) {
+      print('SprofileInput1 success');
+    } else {
+      print('SprofileInput1 failed');
+    }
+  }
 }
 
 class TechstackSelection extends StatelessWidget {
   final String? selectedTechstack;
   final ValueChanged<String?> onChanged;
 
+  final List<String> techStacks;
+
   TechstackSelection({
     required this.selectedTechstack,
     required this.onChanged,
+    required this.techStacks,
   });
 
   @override
   Widget build(BuildContext context) {
+    print('ABC: ${techStacks.length}');
     return DropdownButtonFormField<String>(
       isExpanded: true,
       decoration: InputDecoration(
@@ -460,7 +524,7 @@ class TechstackSelection extends StatelessWidget {
       ),
       value: selectedTechstack,
       onChanged: onChanged,
-      items: techstackOptions.map<DropdownMenuItem<String>>((String value) {
+      items: techStacks.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),

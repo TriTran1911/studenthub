@@ -103,19 +103,19 @@ class _StudentProfileState extends State<StudentProfile> {
             border: Border.all(color: Colors.grey),
           ),
           child: Center(
-            child: filePath.isNotEmpty
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Selected File: $fileName'),
-                      SizedBox(height: 8.0),
-                      Text(filePath),
-                    ],
-                  )
-                : ElevatedButton(
-                    onPressed: () => _pickFile(fileType),
-                    child: Text('Choose File or Drag File In'),
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _pickFile(fileType),
+                  child: Text(filePath.isEmpty
+                      ? 'Choose File or Drag File In'
+                      : 'Change File'),
+                ),
+                SizedBox(height: 8.0),
+                if (filePath.isNotEmpty) Text(fileName), // Display filename
+              ],
+            ),
           ),
         ),
       ],

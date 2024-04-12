@@ -38,8 +38,7 @@ class Login extends StatelessWidget {
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
-                _handleSingIn();
-                navigateToPagePushReplacement(TabsPage(index: 0), context);
+                _handleSingIn(context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -115,7 +114,7 @@ class Login extends StatelessWidget {
         _passwordController.text.isNotEmpty;
   }
 
-  void _handleSingIn() async {
+  void _handleSingIn(BuildContext context) async {
     var body = {
       'email': _usernameController.text,
       'password': _passwordController.text,
@@ -124,13 +123,30 @@ class Login extends StatelessWidget {
         await postRequest('http://10.0.2.2:4400/api/auth/sign-in', body);
 
     var responseDecoded = jsonDecode(response);
-    print(responseDecoded['result']['token']);
     if (responseDecoded['result'] != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', responseDecoded['result']['token']);
       print('Sign in successful');
+      navigateToPagePushReplacement(TabsPage(index: 0), context);
     } else {
-      print('Sign in failed');
+      print('${responseDecoded['errorDetails']}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('${responseDecoded['errorDetails']}'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 }
