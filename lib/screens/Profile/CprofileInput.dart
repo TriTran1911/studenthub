@@ -1,28 +1,36 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
+import '/screens/action/welcome.dart';
+import '/components/controller.dart';
+import '/connection/http.dart';
 
-class CompanyProfile extends StatefulWidget {
+class CWithoutProfile extends StatefulWidget {
   @override
-  _CompanyProfileState createState() => _CompanyProfileState();
+  _CWithoutProfileState createState() => _CWithoutProfileState();
 }
 
-class _CompanyProfileState extends State<CompanyProfile> {
-  bool isJustMeSelected = true;
+class _CWithoutProfileState extends State<CWithoutProfile> {
+  String _selectedCompanySize = '';
+  TextEditingController _companyNameController = TextEditingController();
+  TextEditingController _websiteController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return _buildScaffold();
+    return _BuildScaffold(context);
   }
 
-  Scaffold _buildScaffold() {
+  Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
       resizeToAvoidBottomInset: true,
-      body: _buildSingleChildScrollView(),
+      body: _buidSingleChildScrollView(),
     );
   }
 
-  SingleChildScrollView _buildSingleChildScrollView() {
+  SingleChildScrollView _buidSingleChildScrollView() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -31,16 +39,25 @@ class _CompanyProfileState extends State<CompanyProfile> {
           children: <Widget>[
             buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
             SizedBox(height: 15),
-            buildTextField('Company name'),
-            SizedBox(height: 15),
-            buildTextField('Website'),
-            SizedBox(height: 15),
-            buildTextField('Discription'),
+            buildText(
+                'Tell us about your company and you will be on your way connect with high-skilled students',
+                16),
             SizedBox(height: 15),
             buildText('How many people are in your company?', 16),
-            buildRadioListTile(),
+            buildRadioListTile('It\'s just me', 'Just me'),
+            buildRadioListTile('2-9 employees', '2-9 employees'),
+            buildRadioListTile('10-99 employees', '10-99 employees'),
+            buildRadioListTile('100-1000 employees', '100-1000 employees'),
+            buildRadioListTile(
+                'More than 1000 employees', 'More than 1000 employees'),
             SizedBox(height: 15),
-            buildActionButtons(),
+            buildTextField(_companyNameController, 'Company name'),
+            SizedBox(height: 15),
+            buildTextField(_websiteController, 'Website'),
+            SizedBox(height: 15),
+            buildTextField(_descriptionController, 'Description'),
+            SizedBox(height: 15),
+            buildContinueButton(),
           ],
         ),
       ),
@@ -56,27 +73,6 @@ class _CompanyProfileState extends State<CompanyProfile> {
     );
   }
 
-  Widget buildTextField(String labelText) {
-    return Container(
-      height: 200.0, // Adjust the height as needed
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: TextField(
-          maxLines: null,
-          keyboardType: TextInputType.multiline,
-          decoration: InputDecoration(
-            hintText: 'Enter your project description here...',
-            border: InputBorder.none,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget buildText(String text, double fontSize) {
     return Text(
       text,
@@ -84,51 +80,102 @@ class _CompanyProfileState extends State<CompanyProfile> {
     );
   }
 
-  Widget buildRadioListTile() {
+  Widget buildRadioListTile(String title, String value) {
     return RadioListTile(
-      title: Text('It\'s just me', style: TextStyle(fontSize: 14)),
-      value: 'Just me',
-      groupValue: isJustMeSelected ? 'Just me' : null,
-      onChanged: isJustMeSelected
-          ? null
-          : (value) {
-              setState(() {});
-            },
+      title: Text(title, style: TextStyle(fontSize: 14)),
+      value: value,
+      groupValue: _selectedCompanySize,
+      onChanged: (value) {
+        setState(() {
+          _selectedCompanySize = value!;
+        });
+      },
     );
   }
 
-  Widget buildActionButtons() {
+  Widget buildTextField(TextEditingController controller, String labelText) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget buildContinueButton() {
     return Align(
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          buildButton('Edit', () {
-            setState(() {});
-          }),
-          SizedBox(width: 16),
-          buildButton('Cancel', () {
-            setState(() {});
-          }),
-        ],
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        onPressed: () {
+          if (_isInputValid()) {
+            User.nstaff = _selectedCompanySize == 'It\'s just me'
+                ? 0
+                : (_selectedCompanySize == '2-9 employees')
+                    ? 1
+                    : (_selectedCompanySize == '10-99 employees'
+                        ? 2
+                        : (_selectedCompanySize == '100-1000 employees'
+                            ? 3
+                            : 4));
+            User.cname = _companyNameController.text;
+            User.website = _websiteController.text;
+            User.description = _descriptionController.text;
+            _handleCprofileInput();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Welcome()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Please fill in all the required fields."),
+              ),
+            );
+          }
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+        ),
+        child: Text(
+          'Continue',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+        ),
       ),
     );
   }
 
-  Widget buildButton(String text, VoidCallback onPressed) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.blueGrey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        ),
-        child: Text(text),
-      ),
-    );
+  bool _isInputValid() {
+    return _selectedCompanySize.isNotEmpty &&
+        _companyNameController.text.isNotEmpty &&
+        _websiteController.text.isNotEmpty &&
+        _descriptionController.text.isNotEmpty;
+  }
+
+  void _handleCprofileInput() async {
+    // Handle company profile input
+    var data = {
+      'companyName': User.cname,
+      'size': User.nstaff,
+      'website': User.website,
+      'description': User.description,
+    };
+    String url = 'http://10.0.2.2:4400/api/profile/company';
+
+    var response = await postRequest(url, data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded['statusCode'] == 401) {
+      print('Company profile input failed');
+    } else {
+      print('Company profile input successful');
+    }
   }
 }

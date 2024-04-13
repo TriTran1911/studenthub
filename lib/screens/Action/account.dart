@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:studenthub/screens/Entry/changePassWord.dart';
 import '../../components/appbar.dart';
-import '/screens/Profile/CprofileInputWithoutProfile.dart';
+import '/screens/Profile/CprofileInput.dart';
 import '/screens/Profile/SprofileInput1.dart';
 import '/components/controller.dart';
 import 'home.dart';
@@ -29,18 +31,18 @@ class _AccountControllerState extends State<AccountController> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Divider(height: 17, color: Colors.grey),
+          const Divider(height: 17, color: Colors.grey),
           _buildListView(_handleCompanySelection),
-          Divider(height: 17, color: Colors.grey),
+          const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(Icons.account_circle_outlined, 'Profiles',
               _handleProfilesButtonPress),
-          Divider(height: 17, color: Colors.grey),
+          const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(
               Icons.settings, 'Settings', _handleSettingsButtonPress),
-          Divider(height: 17, color: Colors.grey),
+          const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(
               Icons.logout, 'Logout', _handleLogoutButtonPress),
-          Divider(height: 17, color: Colors.grey),
+          const Divider(height: 17, color: Colors.grey),
         ],
       ),
     );
@@ -61,7 +63,49 @@ class _AccountControllerState extends State<AccountController> {
                 User.isCompany ? CWithoutProfile() : StudentInfoScreen()));
   }
 
-  void _handleSettingsButtonPress(BuildContext context) {}
+  void _handleSettingsButtonPress(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          color: Colors.transparent, // make the container transparent
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0),
+              topRight: Radius.circular(20.0),
+            ),
+            child: Container(
+              color: Colors.white, // set the background color to white
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: SizedBox(
+                  height: 700, // adjust the height as needed
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Column(
+                        children: [
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: PageView(
+                              children: [
+                                ChangePasswordPage(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   void _handleLogoutButtonPress(BuildContext context) {
     appBarIcon.isSelected = !appBarIcon.isSelected;
@@ -83,7 +127,7 @@ class _AccountControllerState extends State<AccountController> {
           children: [
             ListTile(
               leading: Icon(Icons.business),
-              title: Text(
+              title: const Text(
                 'Hai Pham',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
@@ -94,7 +138,7 @@ class _AccountControllerState extends State<AccountController> {
             ),
             ListTile(
               leading: Icon(Icons.school),
-              title: Text(
+              title: const Text(
                 'Hai Pham Student',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
@@ -125,10 +169,10 @@ class _AccountControllerState extends State<AccountController> {
           child: Row(
             children: [
               Icon(icon, color: Colors.black),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 text,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
