@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studenthub/screens/Entry/changePassWord.dart';
+import 'package:studenthub/screens/Action/changePassWord.dart';
 import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/screens/Profile/SprofileInput1.dart';
 import '/components/controller.dart';
 import 'home.dart';
+import 'package:studenthub/screens/Action/changeLanguage.dart';
+import 'package:studenthub/screens/Action/changeTheme.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -71,7 +73,7 @@ class _AccountControllerState extends State<AccountController> {
         return Container(
           color: Colors.transparent, // make the container transparent
           child: ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
             ),
@@ -79,24 +81,28 @@ class _AccountControllerState extends State<AccountController> {
               color: Colors.white, // set the background color to white
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: SizedBox(
-                  height: 700, // adjust the height as needed
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Column(
-                        children: [
-                          const SizedBox(height: 16),
-                          Expanded(
-                            child: PageView(
-                              children: [
-                                ChangePasswordPage(),
-                              ],
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: 400,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Column(
+                          children: [
+                            const SizedBox(height: 16),
+                            Expanded(
+                              child: PageView(
+                                children: [
+                                  ChangePasswordPage(),
+                                  ChangeLanguagePage(),
+                                  ChangeThemePage(),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
