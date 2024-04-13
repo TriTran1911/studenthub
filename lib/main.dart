@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => Home(),
-          'chatDetailPage': (context) => ChatDetailPage(),
         });
   }
 }

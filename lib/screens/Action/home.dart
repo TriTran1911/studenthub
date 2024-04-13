@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/screens/entry/Login.dart';
 import '/components/controller.dart';
+import 'package:lottie/lottie.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -21,6 +22,7 @@ class Home extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 50),
           _buildTextColumn(),
+          Lottie.asset('assets/animation/home.json', height: 300, repeat: true, reverse: true),
           SizedBox(height: 20),
           _buildElevatedButton(
             'Company',

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
@@ -28,26 +29,28 @@ class Login extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
+            Lottie.asset('assets/animation/login.json',
+                height: 200, repeat: true, reverse: true),
             _buildTitleText(),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildTextField(_usernameController, 'Email'),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildTextField(_passwordController, 'Password', obscureText: true),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
                 _handleSingIn(context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text("Please fill in all the required fields."),
                   ),
                 );
               }
             }),
-            SizedBox(height: 300.0),
+            const SizedBox(height: 120.0),
             _buildSignUpText(),
             _buildElevatedButton('Sign Up', () {
               navigateToPagePushReplacement(SignUp1(), context);
@@ -59,7 +62,7 @@ class Login extends StatelessWidget {
   }
 
   Text _buildTitleText() {
-    return Text(
+    return const Text(
       'Login with StudentHub',
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -94,7 +97,7 @@ class Login extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16.0,
         ),
@@ -103,7 +106,7 @@ class Login extends StatelessWidget {
   }
 
   Text _buildSignUpText() {
-    return Text(
+    return const Text(
       "Don't have a Student Hub account?",
       textAlign: TextAlign.center,
     );
@@ -115,6 +118,17 @@ class Login extends StatelessWidget {
   }
 
   void _handleSingIn(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.blue,
+              backgroundColor: Colors.white,
+            ),
+          );
+        });
+
     var body = {
       'email': _usernameController.text,
       'password': _passwordController.text,
@@ -134,19 +148,21 @@ class Login extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text('${responseDecoded['errorDetails']}'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
         },
       );
     }
+
+    Navigator.of(context).pop();
   }
 }
