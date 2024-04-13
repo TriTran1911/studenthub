@@ -10,6 +10,7 @@ class User {
   static String cname = '';
   static String website = '';
   static String description = '';
+  static bool hasProfile = false;
 }
 
 class appBarIcon {

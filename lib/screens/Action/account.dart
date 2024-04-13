@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+// ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
+import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/screens/Profile/SprofileInput1.dart';
@@ -26,6 +28,7 @@ class _AccountControllerState extends State<AccountController> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Padding _Padding() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -58,11 +61,19 @@ class _AccountControllerState extends State<AccountController> {
   }
 
   void _handleProfilesButtonPress(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                User.isCompany ? CWithoutProfile() : StudentInfoScreen()));
+    if (User.isCompany)
+      Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => 
+              User.hasProfile ? CompanyProfile() : CWithoutProfile())
+      );
+    else
+      Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => StudentInfoScreen())
+      );
   }
 
   void _handleSettingsButtonPress(BuildContext context) {
@@ -94,8 +105,8 @@ class _AccountControllerState extends State<AccountController> {
                               child: PageView(
                                 children: [
                                   ChangePasswordPage(),
-                                  ChangeLanguagePage(),
-                                  ChangeThemePage(),
+                                  const ChangeLanguagePage(),
+                                  const ChangeThemePage(),
                                 ],
                               ),
                             ),
@@ -126,29 +137,29 @@ class _AccountControllerState extends State<AccountController> {
     return ExpansionTile(
       leading: Icon(selectedAccountIcon),
       title: Text(selectedAccount ?? 'Select an account',
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       children: [
         ListView(
           shrinkWrap: true,
           children: [
             ListTile(
-              leading: Icon(Icons.business),
+              leading: const Icon(Icons.business),
               title: const Text(
                 'Hai Pham',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text('Company'),
+              subtitle: const Text('Company'),
               onTap: () {
                 handleCompanySelection('Hai Pham', Icons.business);
               },
             ),
             ListTile(
-              leading: Icon(Icons.school),
+              leading: const Icon(Icons.school),
               title: const Text(
                 'Hai Pham Student',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text('Student'),
+              subtitle: const Text('Student'),
               onTap: () {
                 handleCompanySelection('Hai Pham Student', Icons.school);
               },

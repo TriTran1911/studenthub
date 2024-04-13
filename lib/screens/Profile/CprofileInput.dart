@@ -104,6 +104,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
   }
 
   Widget buildContinueButton() {
+    User.hasProfile = true;
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
