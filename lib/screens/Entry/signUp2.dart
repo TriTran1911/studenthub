@@ -153,9 +153,9 @@ class _Signup2State extends State<SignUp2> {
       'role': User.role,
     };
 
-    String url = 'http://localhost:4400/api/auth/sign-up';
+    String url = '/api/auth/sign-up';
 
-    var response = await postRequest(url, data);
+    var response = await Connection.postRequest(url, data);
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['statusCode'] == 201) {
       print('User signed up failed');

@@ -169,9 +169,9 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       'website': User.website,
       'description': User.description,
     };
-    String url = 'http://localhost:4400/api/profile/company';
+    String url = '/api/profile/company';
 
-    var response = await postRequest(url, data);
+    var response = await Connection.postRequest(url, data);
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['statusCode'] == 401) {
       print('Company profile input failed');

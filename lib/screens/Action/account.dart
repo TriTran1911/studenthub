@@ -10,6 +10,7 @@ import '/components/controller.dart';
 import 'home.dart';
 import 'package:studenthub/screens/Action/changeLanguage.dart';
 import 'package:studenthub/screens/Action/changeTheme.dart';
+import 'package:studenthub/connection/http.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -60,20 +61,19 @@ class _AccountControllerState extends State<AccountController> {
     });
   }
 
-  void _handleProfilesButtonPress(BuildContext context) {
-    if (User.isCompany)
-      Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context) => 
-              User.hasProfile ? CompanyProfile() : CWithoutProfile())
-      );
-    else
-      Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context) => StudentInfoScreen())
-      );
+  
+
+  void _handleProfilesButtonPress(BuildContext context) async {
+    final respone = await Connection.getRequest('/api/auth/me', {} );
+    if (respone.statusCode == 200) {
+      final data = respone.body;
+      // if (data['role'] == 'company') {
+      //   navigateToPagePushReplacement(CWithoutProfile(), context);
+      // } else {
+      //   navigateToPagePushReplacement(SWithoutProfile1(), context);
+      // }
+      print(data);
+    }
   }
 
   void _handleSettingsButtonPress(BuildContext context) {
