@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
@@ -65,14 +67,26 @@ class _AccountControllerState extends State<AccountController> {
 
   void _handleProfilesButtonPress(BuildContext context) async {
     final respone = await Connection.getRequest('/api/auth/me', {} );
-    if (respone.statusCode == 200) {
-      final data = respone.body;
-      // if (data['role'] == 'company') {
-      //   navigateToPagePushReplacement(CWithoutProfile(), context);
-      // } else {
-      //   navigateToPagePushReplacement(SWithoutProfile1(), context);
-      // }
-      print(data);
+    final data = jsonDecode(respone);
+
+    if (data['result'] != null) {
+      var result = data['result'];
+      if (result['roles'].length == 1) {
+        if (result['roles'][0] == 1) {
+          result['company'] == null
+              ? navigateToPagePushReplacement(CWithoutProfile(), context)
+              : navigateToPagePushReplacement(CompanyProfile(), context);
+        }
+        else {
+          result['student'] == null
+              ? navigateToPagePushReplacement(StudentInfoScreen(), context)
+              : navigateToPagePushReplacement(StudentInfoScreen(), context);
+        }
+      }
+      else {
+        
+      }
+      print(result);
     }
   }
 
