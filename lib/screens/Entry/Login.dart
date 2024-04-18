@@ -153,24 +153,6 @@ class _LoginState extends State<Login> {
       print('Sign in successful');
       navigateToPagePushReplacement(TabsPage(index: 0), context);
     } else {
-      print('${responseDecoded['errorDetails']}');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('${responseDecoded['errorDetails']}'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
     }
   }
 }
