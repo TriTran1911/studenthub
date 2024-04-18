@@ -9,8 +9,16 @@ import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
 import '/connection/http.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool _obscureText = true;
+
   final TextEditingController _usernameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -36,7 +44,8 @@ class Login extends StatelessWidget {
             const SizedBox(height: 20.0),
             _buildTextField(_usernameController, 'Email'),
             const SizedBox(height: 20.0),
-            _buildTextField(_passwordController, 'Password', obscureText: true),
+            _buildTextField(_passwordController, 'Password',
+                obscureText: _obscureText),
             const SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
@@ -80,6 +89,19 @@ class Login extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(),
+        suffixIcon: label.toLowerCase() == 'password'
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+              )
+            : null,
       ),
     );
   }
@@ -122,8 +144,7 @@ class Login extends StatelessWidget {
       'email': _usernameController.text,
       'password': _passwordController.text,
     };
-    var response =
-        await Connection.postRequest('/api/auth/sign-in', body);
+    var response = await Connection.postRequest('/api/auth/sign-in', body);
 
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['result'] != null) {
