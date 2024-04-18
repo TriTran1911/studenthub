@@ -118,16 +118,6 @@ class Login extends StatelessWidget {
   }
 
   void _handleSingIn(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: Colors.blue,
-              backgroundColor: Colors.white,
-            ),
-          );
-        });
 
     var body = {
       'email': _usernameController.text,
@@ -162,7 +152,5 @@ class Login extends StatelessWidget {
         },
       );
     }
-
-    Navigator.of(context).pop();
   }
 }
