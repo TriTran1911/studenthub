@@ -169,7 +169,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       'website': User.website,
       'description': User.description,
     };
-    String url = 'http://10.0.2.2:4400/api/profile/company';
+    String url = 'http://localhost:4400/api/profile/company';
 
     var response = await postRequest(url, data);
     var responseDecoded = jsonDecode(response);

@@ -5,7 +5,7 @@ class User {
   static String? email;
   static String? password;
   static String? fullname;
-  static int? role;
+  static List<int>? roles;
   static Company? company;
   static Student? student;
 }

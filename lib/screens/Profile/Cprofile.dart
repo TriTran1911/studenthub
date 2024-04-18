@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 
 class CompanyProfile extends StatefulWidget {
-  
-
   @override
   _CompanyProfileState createState() => _CompanyProfileState();
 }
@@ -32,16 +30,22 @@ class _CompanyProfileState extends State<CompanyProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
-            SizedBox(height: 15),
-            buildTextField('Company name'),
-            SizedBox(height: 15),
-            buildTextField('Website'),
-            SizedBox(height: 15),
-            buildTextField('Discription'),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
+            buildText('Company name', 16),
+            const SizedBox(height: 15),
+            buildTextField('Company name', 1),
+            const SizedBox(height: 15),
+            buildText('Website', 16),
+            const SizedBox(height: 15),
+            buildTextField('Website', 1),
+            const SizedBox(height: 15),
+            buildText('Discription', 16),
+            const SizedBox(height: 15),
+            buildTextField('Discription', 3),
+            const SizedBox(height: 15),
             buildText('How many people are in your company?', 16),
             buildRadioListTile(),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildActionButtons(),
           ],
         ),
@@ -58,9 +62,9 @@ class _CompanyProfileState extends State<CompanyProfile> {
     );
   }
 
-  Widget buildTextField(String labelText) {
+  Widget buildTextField(String labelText, int maxLines) {
     return Container(
-      height: 200.0, // Adjust the height as needed
+      height: 50 * maxLines.toDouble(),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(8.0),
@@ -71,8 +75,8 @@ class _CompanyProfileState extends State<CompanyProfile> {
           maxLines: null,
           keyboardType: TextInputType.multiline,
           decoration: InputDecoration(
-            hintText: 'Enter your project description here...',
             border: InputBorder.none,
+            hintText: labelText,
           ),
         ),
       ),

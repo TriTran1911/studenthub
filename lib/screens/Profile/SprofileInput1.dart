@@ -48,7 +48,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
 
   Future<List<TechStack>> getTechStack() async {
     var response =
-        await getRequest('http://10.0.2.2:4400/api/techstack/getAllTechStack');
+        await getRequest('http://localhost:4400/api/techstack/getAllTechStack');
     var responseDecoded = jsonDecode(response);
 
     if (responseDecoded['result'] != null) {
@@ -69,7 +69,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
 
   Future<List<SkillSet>> getSkillSet() async {
     var response =
-        await getRequest('http://10.0.2.2:4400/api/skillset/getAllSkillSet');
+        await getRequest('http://localhost:4400/api/skillset/getAllSkillSet');
     var responseDecoded = jsonDecode(response);
 
     if (responseDecoded['result'] != null) {
@@ -491,7 +491,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
     };
 
     var response =
-        await postRequest('http://10.0.2.2:4400/api/profile/student', data);
+        await postRequest('http://localhost:4400/api/profile/student', data);
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['result'] != null) {
       print('SprofileInput1 success');

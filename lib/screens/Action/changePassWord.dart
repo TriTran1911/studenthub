@@ -137,7 +137,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         // Passwords match
         // Send a request to the server to update the password
         final response = await http.post(
-          Uri.parse('http://10.0.2.2:4400/api/user/changePassword'),
+          Uri.parse('http://localhost:4400/api/user/changePassword'),
           body: {
             'oldPassword': _currentPasswordController.text,
             'newPassword': _newPasswordController.text,

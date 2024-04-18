@@ -134,7 +134,7 @@ class Login extends StatelessWidget {
       'password': _passwordController.text,
     };
     var response =
-        await postRequest('http://10.0.2.2:4400/api/auth/sign-in', body);
+        await postRequest('http://localhost:4400/api/auth/sign-in', body);
 
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['result'] != null) {

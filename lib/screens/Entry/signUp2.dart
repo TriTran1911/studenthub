@@ -153,7 +153,7 @@ class _Signup2State extends State<SignUp2> {
       'role': User.role,
     };
 
-    String url = 'http://10.0.2.2:4400/api/auth/sign-up';
+    String url = 'http://localhost:4400/api/auth/sign-up';
 
     var response = await postRequest(url, data);
     var responseDecoded = jsonDecode(response);
