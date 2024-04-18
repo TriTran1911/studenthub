@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,13 +11,14 @@ import '/connection/http.dart';
 
 class Login extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
   bool _obscureText = true;
 
   final TextEditingController _usernameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -138,7 +140,6 @@ class _LoginState extends State<Login> {
   }
 
   void _handleSingIn(BuildContext context) async {
-
     var body = {
       'email': _usernameController.text,
       'password': _passwordController.text,
