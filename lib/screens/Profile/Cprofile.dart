@@ -22,6 +22,9 @@ class _CompanyProfileState extends State<CompanyProfile> {
     );
   }
 
+  // get the data from the server
+  
+
   SingleChildScrollView _buildSingleChildScrollView() {
     return SingleChildScrollView(
       child: Padding(

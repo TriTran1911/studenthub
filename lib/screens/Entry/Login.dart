@@ -118,7 +118,6 @@ class Login extends StatelessWidget {
   }
 
   void _handleSingIn(BuildContext context) async {
-
     var body = {
       'email': _usernameController.text,
       'password': _passwordController.text,
@@ -133,24 +132,6 @@ class Login extends StatelessWidget {
       print('Sign in successful');
       navigateToPagePushReplacement(TabsPage(index: 0), context);
     } else {
-      print('${responseDecoded['errorDetails']}');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: Text('${responseDecoded['errorDetails']}'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
     }
   }
 }

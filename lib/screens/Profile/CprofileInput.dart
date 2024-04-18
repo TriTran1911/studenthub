@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
 import '/components/controller.dart';
 import '/connection/http.dart';
+import '/components/modelController.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override
@@ -103,14 +105,31 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
     );
   }
 
+  Future<void> postProfile(String companyName, int size, String website, String description) async {
+    var data = {
+      'companyName': companyName,
+      'size': size,
+      'website': website,
+      'description': description,
+    };
+    String url = '/api/profile/company';
+
+    var response = await Connection.postRequest(url, data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded['statusCode'] == 401) {
+      print('Company profile input failed');
+    } else {
+      print('Company profile input successful');
+    }
+  }
+
   Widget buildContinueButton() {
-    User.hasProfile = true;
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
         onPressed: () {
           if (_isInputValid()) {
-            User.nstaff = _selectedCompanySize == 'It\'s just me'
+            int nstaff = _selectedCompanySize == 'It\'s just me'
                 ? 0
                 : (_selectedCompanySize == '2-9 employees')
                     ? 1
@@ -119,10 +138,10 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
                         : (_selectedCompanySize == '100-1000 employees'
                             ? 3
                             : 4));
-            User.cname = _companyNameController.text;
-            User.website = _websiteController.text;
-            User.description = _descriptionController.text;
-            _handleCprofileInput();
+            String cname = _companyNameController.text;
+            String website = _websiteController.text;
+            String description = _descriptionController.text;
+            postProfile(cname, nstaff, website, description);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Welcome()),
@@ -159,24 +178,5 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
         _companyNameController.text.isNotEmpty &&
         _websiteController.text.isNotEmpty &&
         _descriptionController.text.isNotEmpty;
-  }
-
-  void _handleCprofileInput() async {
-    // Handle company profile input
-    var data = {
-      'companyName': User.cname,
-      'size': User.nstaff,
-      'website': User.website,
-      'description': User.description,
-    };
-    String url = '/api/profile/company';
-
-    var response = await Connection.postRequest(url, data);
-    var responseDecoded = jsonDecode(response);
-    if (responseDecoded['statusCode'] == 401) {
-      print('Company profile input failed');
-    } else {
-      print('Company profile input successful');
-    }
   }
 }

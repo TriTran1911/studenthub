@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // May be needed if using REST API
+import 'package:studenthub/connection/http.dart'; // May be needed if using REST API
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -52,6 +54,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 const SizedBox(height: 16),
                 // add show password icon
                 TextFormField(
+                  controller: _currentPasswordController,
                   obscureText: _obscureTextCurrent,
                   decoration: InputDecoration(
                     labelText: 'Current Password',
@@ -134,26 +137,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     if (_formKey.currentState!.validate()) {
       // Validate the form
       if (_newPasswordController.text == _confirmPasswordController.text) {
-        // Passwords match
-        // Send a request to the server to update the password
-        final response = await http.post(
-          Uri.parse('http://localhost:4400/api/user/changePassword'),
-          body: {
-            'oldPassword': _currentPasswordController.text,
-            'newPassword': _newPasswordController.text,
-          },
-        );
+        var data = {
+          'oldPassword': _currentPasswordController.text,
+          'newPassword': _newPasswordController.text,
+        };
 
-        if (response.statusCode == 200) {
+        String url = '/api/user/changePassword';
+        var response = await Connection.putRequest(url, data);
+        var responseDecoded = jsonDecode(response);
+        if (responseDecoded != null) {
           // Password updated successfully
           // Show a success message
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Password updated successfully')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Password updated')));
         } else {
           // Password update failed
           // Show an error message
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to update password')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Password update failed')));
         }
       } else {
         // Passwords do not match
