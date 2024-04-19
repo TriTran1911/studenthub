@@ -86,7 +86,7 @@ class _Signup2State extends State<SignUp2> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildTitleText(),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ChatBubble(
               textEditingController: _userNameController,
               label: 'Username',
@@ -100,11 +100,11 @@ class _Signup2State extends State<SignUp2> {
               label: 'Password (8 or more characters)',
               isPassword: true,
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             _buildAgreementRow(),
-            SizedBox(height: 15.0),
+            const SizedBox(height: 15.0),
             _buildElevatedButton('Create my account', _handleOnPressed),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             _buildToggleUserTypeRow(context),
           ],
         ),
@@ -116,7 +116,7 @@ class _Signup2State extends State<SignUp2> {
     return Text(
       User.isCompany ? 'Sign up as Company' : 'Sign up as Student',
       textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
     );
   }
 
@@ -127,7 +127,7 @@ class _Signup2State extends State<SignUp2> {
           value: _agreedToTerms,
           onChanged: (value) => setState(() => _agreedToTerms = value!),
         ),
-        Text('Yes, I understand and agree to StudetHub'),
+        const Text('Yes, I understand and agree to StudetHub'),
       ],
     );
   }
@@ -146,7 +146,7 @@ class _Signup2State extends State<SignUp2> {
         ),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16.0,
           ),
@@ -176,7 +176,7 @@ class _Signup2State extends State<SignUp2> {
           child: Text(
             User.isCompany ? "Apply as a student" : "Apply as a company",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.blue,
             ),
           ),
@@ -244,7 +244,7 @@ class _Signup2State extends State<SignUp2> {
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Please fill in all the required fields."),
         ),
       );
@@ -253,7 +253,7 @@ class _Signup2State extends State<SignUp2> {
 
     if (_passwordController.text.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Password must be at least 8 characters."),
         ),
       );
@@ -262,7 +262,7 @@ class _Signup2State extends State<SignUp2> {
 
     if (!_agreedToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Please agree to the terms to continue"),
         ),
       );
@@ -297,7 +297,7 @@ class ChatBubble extends StatelessWidget {
             obscureText: isPassword,
             decoration: InputDecoration(
               labelText: label,
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
           ),
         ],
