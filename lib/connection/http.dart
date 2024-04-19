@@ -18,7 +18,13 @@ class Connection {
       },
       body: json.encode(body),
     );
-    return response.body;
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      print("Connect server successful");
+      return response.body;
+    } else {
+      print("Connect server failed");
+      return response.body;
+    }
   }
 
   static Future<dynamic> getRequest(String api, Map<String, dynamic> json) async {

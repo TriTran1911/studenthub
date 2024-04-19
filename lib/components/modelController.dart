@@ -18,6 +18,15 @@ class Company {
   static String? description;
 }
 
+class Project {
+  static int? companyId;
+  static int? proprojectScopeFlag;
+  static String? title;
+  static int? numberOfStudents;
+  static String? description;
+  static int? typeFlag;
+}
+
 class Student {
   static int? id;
   static DateTime? createAt;
@@ -101,4 +110,12 @@ class Experience {
   static String? endMonth;
   static String? description;
   static List<SkillSet>? skillSet;
+}
+
+Widget loadingDialog() {
+  return AlertDialog(
+    content: const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
 }

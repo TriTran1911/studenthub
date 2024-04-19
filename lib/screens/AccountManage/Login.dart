@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/loading.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
 import '/connection/http.dart';
+import '../Action/forgotPassword.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -33,7 +36,7 @@ class _LoginState extends State<Login> {
   SingleChildScrollView _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -46,6 +49,23 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 20.0),
             _buildTextField(_passwordController, 'Password',
                 obscureText: _obscureText),
+            const SizedBox(height: 10.0),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                );
+              },
+              child: const Text(
+                'Forgot password?',
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             const SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               if (_isInputValid()) {
@@ -88,7 +108,7 @@ class _LoginState extends State<Login> {
       obscureText: obscureText,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         suffixIcon: label.toLowerCase() == 'password'
             ? IconButton(
                 icon: Icon(
@@ -140,19 +160,48 @@ class _LoginState extends State<Login> {
   }
 
   void _handleSingIn(BuildContext context) async {
+    showDialog(context: context, builder: (context) => LoadingPage());
+
     var body = {
       'email': _usernameController.text,
       'password': _passwordController.text,
     };
-    var response = await Connection.postRequest('/api/auth/sign-in', body);
 
-    var responseDecoded = jsonDecode(response);
-    if (responseDecoded['result'] != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', responseDecoded['result']['token']);
-      print('Sign in successful');
-      navigateToPagePushReplacement(TabsPage(index: 0), context);
-    } else {
+    try {
+      var response = await Connection.postRequest('/api/auth/sign-in', body);
+      var responseDecoded = jsonDecode(response);
+
+      if (responseDecoded['result'] != null) {
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.of(context).pop();
+
+        var authorization = await Connection.getRequest('/api/auth/me/', {});
+        var authorizationDecoded = jsonDecode(authorization);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', responseDecoded['result']['token']);
+        prefs.setInt(
+            'companyId', authorizationDecoded['result']['company']['id']);
+
+        print('Sign in successful');
+        navigateToPagePushReplacement(TabsPage(index: 0), context);
+      } else {
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.of(context).pop();
+        print('Sign in failed');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Invalid email or password."),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("An error occurred. Please try again."),
+        ),
+      );
     }
   }
 }

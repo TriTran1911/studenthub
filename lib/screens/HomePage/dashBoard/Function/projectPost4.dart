@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/components/appbar.dart';
-import '/components/project.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
+import '/connection/http.dart';
+import '/components/modelController.dart';
 
 class ProjectPost4 extends StatefulWidget {
   final String title;
   final List<String> descriptionLines; // Changed type to List<String>
-  final String selectedDuration;
+  final int selectedDuration;
   final int numberOfStudents;
 
   ProjectPost4({
@@ -38,37 +42,19 @@ class _ProjectPost4State extends State<ProjectPost4> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16),
-          Text(
-            '4/4    Project details',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          SizedBox(height: 16),
-          Divider(height: 17, thickness: 2, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'Students are looking for',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
+          _Text('4/4    Project details', 16),
+          const SizedBox(height: 16),
+          _Text(widget.title, 16),
+          const SizedBox(height: 16),
+          const Divider(height: 17, thickness: 2, color: Colors.grey),
+          const SizedBox(height: 16),
+          _Text('Students are looking for', 16),
+          const SizedBox(height: 16),
           // Use a ListView to display multiple lines of the description
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.descriptionLines.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
@@ -77,58 +63,55 @@ class _ProjectPost4State extends State<ProjectPost4> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    _Text(
                       widget.descriptionLines[index].isEmpty ? '' : '• ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      16,
                     ),
                     Expanded(
                       child: Text(widget.descriptionLines[index],
-                          style: TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16)),
                     ),
                   ],
                 ),
               );
             },
           ),
-          SizedBox(height: 16),
-          Divider(height: 17, thickness: 2, color: Colors.grey),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
+          const Divider(height: 17, thickness: 2, color: Colors.grey),
+          const SizedBox(height: 16),
           Row(
             children: [
-              Icon(Icons.access_time),
-              SizedBox(width: 10),
+              const Icon(Icons.access_time),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _Text('Project scope', 16),
                   Text(
-                    'Project scope',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    widget.selectedDuration == 0
+                        ? 'Less than 1 month'
+                        : widget.selectedDuration == 1
+                            ? '1 to 3 months'
+                            : widget.selectedDuration == 2
+                                ? '3 to 6 months'
+                                : 'More than 6 months',
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  Text(widget.selectedDuration, style: TextStyle(fontSize: 16)),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
-              Icon(Icons.group),
-              SizedBox(width: 10),
+              const Icon(Icons.group),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  _Text(
                     'Students required',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    16,
                   ),
                   Text(widget.numberOfStudents.toString(),
                       style: TextStyle(fontSize: 16)),
@@ -146,18 +129,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Project.addProject(
-                    Project(
-                      widget.title,
-                      widget.selectedDuration == '1-3 months'
-                          ? ProjectDuration.oneToThreeMonths
-                          : ProjectDuration.threeToSixMonths,
-                      widget.descriptionLines,
-                      'onBoarding',
-                      DateTime.now(),
-                      studentsNeeded: widget.numberOfStudents,
-                    ),
-                  );
+                  _handlePostProject();
                   // pop until the first route
                   Navigator.popUntil(context, (route) => route.isFirst);
                   navigateToPagePushReplacement(TabsPage(index: 1), context);
@@ -177,6 +149,64 @@ class _ProjectPost4State extends State<ProjectPost4> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _handlePostProject() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var data = {
+      'companyId' : prefs.getInt('companyId'),
+      'projectScopeFlag' : widget.selectedDuration,
+      'title' : widget.title,
+      'numberOfStudents' : widget.numberOfStudents,
+      'description' : widget.descriptionLines.join('\n'),
+      'typeFlag' : null,
+    };
+    
+    String url = '/api/project/';
+
+    try
+    {
+      var response = await Connection.postRequest(url, data);
+      var responseDecoded = jsonDecode(response);
+      print(responseDecoded);
+      if (responseDecoded['result'] != null) {
+        print('Project posted successfully');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Project posted successfully'),
+          ),
+        );
+      } else {
+        print('Project post failed');
+        dynamic errorDetails = responseDecoded['errorDetails'];
+        String errorMessage = '';
+        if (errorDetails is List) {
+          errorMessage = errorDetails.first.toString();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Project post failed: $errorMessage'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error occurred: $e'),
+        ),
+      );
+    }
+  }
+
+  Text _Text(String title, double fontSize) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize,
       ),
     );
   }

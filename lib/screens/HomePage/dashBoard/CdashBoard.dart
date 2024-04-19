@@ -13,7 +13,6 @@ class _DashboardPageState extends State<DashboardPage> {
   late List<Project> onBoardingProjects;
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -142,80 +141,91 @@ class _DashboardPageState extends State<DashboardPage> {
         final daysSinceCreation =
             DateTime.now().difference(projects[index].creationDate).inDays;
 
-        return Column(
-          children: [
-            ListTile(
-              title: Text(
-                projects[index].title,
-                style: TextStyle(color: Colors.green),
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: Offset(0, 1),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Created $daysSinceCreation days ago'),
-                  Text(
-                    'Students are looking for:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: projects[index]
-                          .description
-                          .map((descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
-                              ))
-                          .toList(),
+            ],
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  projects[index].title,
+                  style: TextStyle(color: Colors.green),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Created $daysSinceCreation days ago'),
+                    Text(
+                      'Students are looking for:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text('${projects[index].proposals}'),
-                          Text('Proposals'),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: projects[index]
+                            .description
+                            .map((descriptionItem) => Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: Text('• $descriptionItem'),
+                                ))
+                            .toList(),
                       ),
-                      Column(
-                        children: [
-                          Text('${projects[index].messages}'),
-                          Text('Messages'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('${projects[index].hiredCount}'),
-                          Text('Hired'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.more_horiz),
-                onPressed: () {
-                  _showBottomSheet(context, projects[index]);
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text('${projects[index].proposals}'),
+                            Text('Proposals'),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text('${projects[index].messages}'),
+                            Text('Messages'),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text('${projects[index].hiredCount}'),
+                            Text('Hired'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.more_horiz),
+                  onPressed: () {
+                    _showBottomSheet(context, projects[index]);
+                  },
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProposalsPage(project: projects[index]),
+                    ),
+                  );
                 },
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ProposalsPage(project: projects[index]),
-                  ),
-                );
-              },
-            ),
-            Divider(
-              height: 17,
-              color: Colors.grey,
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -12,7 +12,7 @@ class ProjectPost2 extends StatefulWidget {
 }
 
 class _ProjectPost2State extends State<ProjectPost2> {
-  String selectedDuration = '';
+  int selectedDuration = 0;
   int numberOfStudents = 0;
 
   @override
@@ -50,8 +50,18 @@ class _ProjectPost2State extends State<ProjectPost2> {
           Text('How long will your project take?',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           RadioListTile(
+            title: Text('Less than 1 month'),
+            value: 0,
+            groupValue: selectedDuration,
+            onChanged: (value) {
+              setState(() {
+                selectedDuration = value!;
+              });
+            },
+          ),
+          RadioListTile(
             title: Text('1 to 3 months'),
-            value: '1 to 3 months',
+            value: 1,
             groupValue: selectedDuration,
             onChanged: (value) {
               setState(() {
@@ -61,7 +71,17 @@ class _ProjectPost2State extends State<ProjectPost2> {
           ),
           RadioListTile(
             title: Text('3 to 6 months'),
-            value: '3 to 6 months',
+            value: 2,
+            groupValue: selectedDuration,
+            onChanged: (value) {
+              setState(() {
+                selectedDuration = value!;
+              });
+            },
+          ),
+          RadioListTile(
+            title: Text('6 to 12 months'),
+            value: 3,
             groupValue: selectedDuration,
             onChanged: (value) {
               setState(() {

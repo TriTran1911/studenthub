@@ -4,7 +4,7 @@ import 'projectPost4.dart';
 
 class ProjectPost3 extends StatefulWidget {
   final String title;
-  final String selectedDuration;
+  final int selectedDuration;
   final int numberOfStudents;
 
   ProjectPost3({

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
@@ -138,9 +139,22 @@ class _AccountControllerState extends State<AccountController> {
     );
   }
 
-  void _handleLogoutButtonPress(BuildContext context) {
+  void _handleLogoutButtonPress(BuildContext context) async {
     appBarIcon.isSelected = !appBarIcon.isSelected;
     appBarIcon.isBlocked = true;
+
+    var response = await Connection.postRequest('/api/auth/logout', {});
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('token');
+      
+      print('Logout successful');
+    } else {
+      print('Logout failed');
+    }
+
     navigateToPagePushReplacement(Home(), context);
   }
 
