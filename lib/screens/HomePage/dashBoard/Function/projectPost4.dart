@@ -136,46 +136,46 @@ class _ProjectPost4State extends State<ProjectPost4> {
               ),
             ],
           ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Project.addProject(
-                    Project(
-                      widget.title,
-                      widget.selectedDuration == '1-3 months'
-                          ? ProjectDuration.oneToThreeMonths
-                          : ProjectDuration.threeToSixMonths,
-                      widget.descriptionLines,
-                      'onBoarding',
-                      DateTime.now(),
-                      studentsNeeded: widget.numberOfStudents,
-                    ),
-                  );
-                  // pop until the first route
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                  navigateToPagePushReplacement(TabsPage(index: 1), context);
-                },
-                child: Text(
-                  'Post job',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   alignment: Alignment.centerRight,
+          //   child: Container(
+          //     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          //     decoration: BoxDecoration(
+          //       color: Colors.blue,
+          //       borderRadius: BorderRadius.circular(20.0),
+          //     ),
+          //     child: ElevatedButton(
+          //       onPressed: () {
+          //         Project.addProject(
+          //           Project(
+          //             widget.title,
+          //             widget.selectedDuration == '1-3 months'
+          //                 ? ProjectDuration.oneToThreeMonths
+          //                 : ProjectDuration.threeToSixMonths,
+          //             widget.descriptionLines,
+          //             'onBoarding',
+          //             DateTime.now(),
+          //             studentsNeeded: widget.numberOfStudents,
+          //           ),
+          //         );
+          //         // pop until the first route
+          //         Navigator.popUntil(context, (route) => route.isFirst);
+          //         navigateToPagePushReplacement(TabsPage(index: 1), context);
+          //       },
+          //       child: Text(
+          //         'Post job',
+          //         style: TextStyle(
+          //             fontSize: 16,
+          //             fontWeight: FontWeight.bold,
+          //             color: Colors.white),
+          //       ),
+          //       style: ElevatedButton.styleFrom(
+          //         backgroundColor: Colors.transparent,
+          //         shadowColor: Colors.transparent,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

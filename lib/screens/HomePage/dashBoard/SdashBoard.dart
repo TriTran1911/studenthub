@@ -73,10 +73,10 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
   void _updateProjectsList() {
     workingProjects = Project.projects
-        .where((project) => project.status == 'Working')
+        .where((project) => project.typeFlag == 0)
         .toList();
     achievedProjects = Project.projects
-        .where((project) => project.status == 'Achieved')
+        .where((project) => project.typeFlag == 1)
         .toList();
   }
 
@@ -101,7 +101,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
           children: [
             ListTile(
               title: Text(
-                project.title,
+                project.title ?? 'No title available',
                 style: TextStyle(color: Colors.green),
               ),
               subtitle: Column(
@@ -116,30 +116,30 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: project
-                          .description
-                          .map((descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      descriptionItem.isEmpty ? '• No description' : '• ',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(descriptionItem,
-                                          style: TextStyle(fontSize: 16)),
-                                    ),
-                                  ],
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                project.description ?? '• No description •',
+                                style: TextStyle(
+                                  fontSize: 16,
                                 ),
-                              ))
-                          .toList(),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  project.description ?? 'No description',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
                 ],
               ),
               onTap: () {
@@ -177,7 +177,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     final daysSinceSubmit = DateTime.now().difference(submittedProject.sentTime).inDays;
     return ListTile(
       title: Text(
-        project.title,
+        project.title ?? "",
         style: TextStyle(color: Colors.green),
       ),
       subtitle: Column(
@@ -192,23 +192,28 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: project.description.map((descriptionItem) => Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      descriptionItem.isEmpty ? '• No description' : '• ',
-                      style: TextStyle(
-                        fontSize: 16,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        project.description ?? 'No description' ,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(descriptionItem, style: TextStyle(fontSize: 16)),
-                    ),
-                  ],
+                      Expanded(
+                        child: Text(
+                          project.description ?? 'No description',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )).toList(),
+              ],
             ),
           ),
         ],

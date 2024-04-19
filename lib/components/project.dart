@@ -1,3 +1,6 @@
+import 'dart:convert';
+import '/connection/http.dart';
+
 enum ProjectTool { Edit, Remove }
 
 class SubmittedProject {
@@ -27,41 +30,80 @@ class SubmittedProjects {
     return submittedProjects.any((submittedProject) => submittedProject.project == project);
   }
 }
+class Project {
+  int? id;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  DateTime? deletedAt;
+  String? companyId;
+  int? projectScopeFlag;
+  String? title;
+  String? description;
+  int? numberOfStudents;
+  int? typeFlag;
+  int? countProposals;
 
-enum ProjectDuration {
-  oneToThreeMonths,
-  threeToSixMonths,
+  Project({
+    this.id,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.companyId,
+    this.projectScopeFlag,
+    this.title,
+    this.description,
+    this.numberOfStudents,
+    this.typeFlag,
+    this.countProposals,
+  });
+
+ factory Project.fromMap(Map<String, dynamic> map) {
+  return Project(
+    id: map['projectId'] as int?,
+    createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt'] as String) : DateTime.now(),
+    updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt'] as String) : null,
+    deletedAt: map['deletedAt'] != null ? DateTime.parse(map['deletedAt'] as String) : null,
+    companyId: map['companyId'] as String?,
+    projectScopeFlag: map['projectScopeFlag'] as int?,
+    title: map['title'] as String,
+    description: map['description'] as String,
+    numberOfStudents: map['numberOfStudents'] as int?,
+    typeFlag: map['typeFlag'] as int?,
+    countProposals: map['countProposals'] as int?,
+  );
 }
 
-class Project {
-  String title;
-  ProjectDuration duration;
-  List<String> description;
-  String status;
-  DateTime creationDate;
-  int proposals; // Integer representing the number of proposals
-  int messages; // Integer representing the number of messages
-  int hiredCount; // Integer representing the number of times hired
-  int studentsNeeded; // Number of students needed for the project
-  String timeNeeded; // Time needed for the project
 
-  Project(
-    this.title,
-    this.duration,
-    this.description,
-    this.status,
-    this.creationDate, {
-    this.proposals = 0,
-    this.messages = 0,
-    this.hiredCount = 0,
-    this.studentsNeeded = 0,
-    this.timeNeeded = '',
-  });
+
+  String getProjectScopeAsString() {
+    switch (projectScopeFlag) {
+      case 0:
+        return "Less than 1 month";
+      case 1:
+        return "1 to 3 months";
+      case 2:
+        return "3 to 6 months";
+      case 3:
+        return "More than 6 months";
+      default:
+        return "Unknown";
+    }
+  }
+
+  String getProjectTypeFlagAsString() {
+    switch (typeFlag) {
+      case 0:
+        return "Working";
+      case 1:
+        return "Archieved";
+      default:
+        return "Unknown";
+    }
+  }
 
   static List<Project> projects = [];
   static List<Project> favoriteProjects = [];
 
-  // Add a project to the list of projects
   static void addProject(Project project) {
     projects.add(project);
   }
@@ -81,81 +123,51 @@ class Project {
       favoriteProjects.add(project);
     }
   }
+
+  static List<Project> fromListMapAllProject(List<dynamic> list) {
+    List<Project> result = list.map((map) => Project.fromMap(map)).toList();
+    print(result.length);
+    return list.map((map) => Project.fromMap(map)).toList();
+  }
+
+  static Future<List<Project>> getAllProjectsData() async {
+    print('Get All Projects Data');
+    try {
+      var response = await Connection.getRequest('/api/project', {});
+      var responseDecode = jsonDecode(response);
+      if (responseDecode['result'] != null) {
+        print("Connected to the server successfully");
+        print("Connect server successful");
+        print(responseDecode['result']);
+        List<Project> projectList =
+            Project.fromListMapAllProject(responseDecode['result']);
+        for (Project project in projectList){
+          print(project.id);
+        }
+        return projectList;
+      } else {
+        print("Failed");
+        print(responseDecode);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
+
+  void initialProjects() async {
+    try {
+      List<Project> projects = await getAllProjectsData();
+      Project.projects.addAll(projects);
+    } catch (e) {
+      print('Error initializing projects: $e');
+    }
+  }
 }
 
-// initial projects
-void initialProjects() {
-  Project.projects = [
-    Project(
-      'Javis - AI Copilot',
-      ProjectDuration.oneToThreeMonths,
-      [
-        'A.I. Copilot for software development',
-        'A.I. pair programming',
-        'A.I. code review',
-      ],
-      'onBoarding',
-      DateTime.now().subtract(Duration(days: 1)),
-      proposals: 3,
-      messages: 2,
-      hiredCount: 1,
-      studentsNeeded: 2,
-      timeNeeded: '1-3 months',
-    ),
-    // different project name
-    Project(
-      'Senior frontend developer (Fintech)',
-      ProjectDuration.threeToSixMonths,
-      [
-        'We are looking for a senior frontend developer to join our team',
-        'You will be responsible for building the client-side of our web applications',
-        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
-      ],
-      'onBoarding',
-      DateTime.now().subtract(Duration(days: 2)),
-      proposals: 5,
-      messages: 3,
-      hiredCount: 2,
-      studentsNeeded: 3,
-      timeNeeded: '3-6 months',
-    ),
-    Project(
-      'Senior backend developer (Fintech)',
-      ProjectDuration.threeToSixMonths,
-      [
-        'We are looking for a senior backend developer to join our team',
-        'You will be responsible for building the server-side of our web applications',
-        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
-      ],
-      'onBoarding',
-      DateTime.now().subtract(Duration(days: 3)),
-      proposals: 4,
-      messages: 4,
-      hiredCount: 3,
-      studentsNeeded: 4,
-      timeNeeded: '3-6 months',
-    ),
-    Project(
-      'Senior fullstack developer (Fintech)',
-      ProjectDuration.threeToSixMonths,
-      [
-        'We are looking for a senior fullstack developer to join our team',
-        'You will be responsible for building the client-side and server-side of our web applications',
-        'You should be able to translate our company and customer needs into functional and appealing interactive applications',
-      ],
-      'Working',
-      DateTime.now().subtract(Duration(days: 4)),
-      proposals: 6,
-      messages: 5,
-      hiredCount: 4,
-      studentsNeeded: 5,
-      timeNeeded: '3-6 months',
-    ),
-  ];
-}
 
 // initial submitted projects
 void initialSubmittedProjects() {
-  SubmittedProjects().addSubmittedProject(Project.projects[0], DateTime.now().subtract(Duration(days: 1)), 'unread');
-  SubmittedProjects().addSubmittedProject(Project.projects[3], DateTime.now().subtract(Duration(days: 4)), 'unread');
+  // SubmittedProjects().addSubmittedProject(Project.projects[0], DateTime.now().subtract(Duration(days: 1)), 'unread');
+  // SubmittedProjects().addSubmittedProject(Project.projects[3], DateTime.now().subtract(Duration(days: 4)), 'unread');
 }

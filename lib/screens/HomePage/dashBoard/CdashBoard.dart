@@ -13,7 +13,6 @@ class _DashboardPageState extends State<DashboardPage> {
   late List<Project> onBoardingProjects;
   late List<Project> workingProjects;
   late List<Project> achievedProjects;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +113,13 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void _updateProjectsList() {
     onBoardingProjects = Project.projects
-        .where((project) => project.status == 'onBoarding')
+        .where((project) => project.typeFlag == 0 || project.typeFlag == 1)
         .toList();
     workingProjects = Project.projects
-        .where((project) => project.status == 'Working')
+        .where((project) => project.typeFlag == 0)
         .toList();
     achievedProjects = Project.projects
-        .where((project) => project.status == 'Achieved')
+        .where((project) => project.typeFlag == 1)
         .toList();
   }
 
@@ -135,91 +134,81 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget buildProjectsList(List<Project> projects) {
-    return ListView.builder(
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        // Calculate days since creation
-        final daysSinceCreation =
-            DateTime.now().difference(projects[index].creationDate).inDays;
+  return ListView.builder(
+    itemCount: projects.length,
+    itemBuilder: (context, index) {
+      // Calculate days since creation
+      final daysSinceCreation = DateTime.now().difference(projects[index].createdAt!).inDays;
 
-        return Column(
-          children: [
-            ListTile(
-              title: Text(
-                projects[index].title,
-                style: TextStyle(color: Colors.green),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Created $daysSinceCreation days ago'),
-                  Text(
-                    'Students are looking for:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: projects[index]
-                          .description
-                          .map((descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
-                              ))
-                          .toList(),
+      return Column(
+        children: [
+          ListTile(
+            title: Text(
+              projects[index].title!,
+              style: TextStyle(color: Colors.green),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Created $daysSinceCreation days ago'),
+                Text(
+                  'Students are looking for:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(projects[index].description!), // Assuming description is a non-null field
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text('${projects[index].countProposals ?? 0}'),
+                        Text('Proposals'),
+                      ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text('${projects[index].proposals}'),
-                          Text('Proposals'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('${projects[index].messages}'),
-                          Text('Messages'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text('${projects[index].hiredCount}'),
-                          Text('Hired'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.more_horiz),
-                onPressed: () {
-                  _showBottomSheet(context, projects[index]);
-                },
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ProposalsPage(project: projects[index]),
-                  ),
-                );
+                    Column(
+                      children: [
+                        Text('0'), // Placeholder for Messages
+                        Text('Messages'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text('0'), // Placeholder for Hired
+                        Text('Hired'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.more_horiz),
+              onPressed: () {
+                _showBottomSheet(context, projects[index]);
               },
             ),
-            Divider(
-              height: 17,
-              color: Colors.grey,
-            ),
-          ],
-        );
-      },
-    );
-  }
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProposalsPage(project: projects[index]),
+                ),
+              );
+            },
+          ),
+          Divider(
+            height: 17,
+            color: Colors.grey,
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void _removeProject(Project project) {
     setState(() {
@@ -283,12 +272,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void _editPosting(BuildContext context, Project project) {
     TextEditingController titleController =
-        TextEditingController(text: project.title);
-    int selectedDurationIndex =
-        project.duration == ProjectDuration.oneToThreeMonths ? 0 : 1;
-    int studentsNeeded = project.studentsNeeded;
+        TextEditingController(text: project.title!);
+    int selectedDurationIndex = project.projectScopeFlag!;
+    int studentsNeeded = project.numberOfStudents!;
     TextEditingController descriptionController =
-        TextEditingController(text: project.description.join('\n'));
+        TextEditingController(text: project.description!);
 
     showDialog(
       context: context,
@@ -317,7 +305,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Text("Duration: "),
                         RadioListTile(
-                          title: Text("1 to 3 months"),
+                          title: Text("Less than 1 month"),
                           value: 0,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -328,8 +316,30 @@ class _DashboardPageState extends State<DashboardPage> {
                           activeColor: Colors.blue,
                         ),
                         RadioListTile(
-                          title: Text("4 to 6 months"),
+                          title: Text("1 to 3 months"),
                           value: 1,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                        ),
+                        RadioListTile(
+                          title: Text("3 to 6 months"),
+                          value: 2,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                        ),
+                        RadioListTile(
+                          title: Text("More than 6 months"),
+                          value: 3,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
                             setState(() {
@@ -378,8 +388,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     initialValue: studentsNeeded.toString(),
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) {
-                                      updatedStudentsNeeded =
-                                          int.tryParse(value) ?? 0;
+                                      updatedStudentsNeeded = int.tryParse(value) ?? 0;
                                     },
                                   ),
                                   actions: [
@@ -398,20 +407,15 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          studentsNeeded =
-                                              updatedStudentsNeeded;
+                                          studentsNeeded = updatedStudentsNeeded;
                                         });
                                         Navigator.pop(context);
                                       },
                                       style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.blue),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
+                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
+                                            borderRadius: BorderRadius.circular(5.0),
                                           ),
                                         ),
                                       ),
@@ -482,40 +486,38 @@ class _DashboardPageState extends State<DashboardPage> {
                   onPressed: () {
                     setState(() {
                       project.title = titleController.text;
-                      project.duration = selectedDurationIndex == 0
-                          ? ProjectDuration.oneToThreeMonths
-                          : ProjectDuration.threeToSixMonths;
-                      project.studentsNeeded = studentsNeeded;
-                      project.description =
-                          descriptionController.text.split('\n');
-                    });
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
+                    project.projectScopeFlag = selectedDurationIndex;
+                    project.numberOfStudents = studentsNeeded;
+                    project.description = descriptionController.text;
+                  });
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+
 
   void _showBottomSheet(BuildContext context, Project project) {
     showModalBottomSheet(
@@ -633,7 +635,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   setState(() {
-                    project.status = 'Working';
+                    project.projectScopeFlag = 1; // Set project scope flag to working
                   });
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -43,13 +43,12 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
       itemCount: projects.length,
       itemBuilder: (context, index) {
         final daysSinceCreation =
-            DateTime.now().difference(projects[index].creationDate).inDays;
-
+            DateTime.now().difference(projects[index].createdAt ?? DateTime.now()).inDays;
         return Column(
           children: [
             ListTile(
               title: Text(
-                projects[index].title,
+                projects[index].title ?? "No title",
                 style: TextStyle(color: Colors.green),
               ),
               subtitle: Column(
@@ -61,18 +60,20 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                      'Time: ${projects[index].timeNeeded}, ${projects[index].studentsNeeded} students needed'),
+                      'Time: ${projects[index].getProjectScopeAsString()}, ${projects[index].numberOfStudents} students needed'),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: projects[index]
-                          .description
-                          .map((descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
-                              ))
-                          .toList(),
+                      children: (projects[index].description ?? '')
+                      .split('\n') 
+                      .map(
+                          (descriptionItem) => Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text('• $descriptionItem'),
+                          ),
+                      )
+                      .toList(),
                     ),
                   ),
                   Row(
@@ -81,7 +82,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                       Column(
                         children: [
                           Text(
-                              'Proposals: less than ${projects[index].proposals}'),
+                              'Proposals: less than ${projects[index].countProposals}'),
                         ],
                       ),
                     ],

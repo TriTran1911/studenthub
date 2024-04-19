@@ -34,7 +34,7 @@ class ProposalsPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                 child: Text(
-                  project.title,
+                  project.title ?? "No title",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -228,7 +228,7 @@ class _ProposalsTabState extends State<ProposalsTab>
               onPressed: () {
                 notifications.add({
                   'type':
-                      'You have offder to join project ' + widget.project.title,
+                      'You have offder to join project ${widget.project.title}',
                   'date': DateFormat('dd/MM/yyyy').format(DateTime.now()),
                   'icon': Icons.settings,
                 });
