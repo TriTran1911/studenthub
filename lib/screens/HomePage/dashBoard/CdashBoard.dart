@@ -113,14 +113,12 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void _updateProjectsList() {
     onBoardingProjects = Project.projects
-        .where((project) => project.status == 'onBoarding')
+        .where((project) => project.typeFlag == 0 || project.typeFlag == 1)
         .toList();
-    workingProjects = Project.projects
-        .where((project) => project.status == 'Working')
-        .toList();
-    achievedProjects = Project.projects
-        .where((project) => project.status == 'Achieved')
-        .toList();
+    workingProjects =
+        Project.projects.where((project) => project.typeFlag == 0).toList();
+    achievedProjects =
+        Project.projects.where((project) => project.typeFlag == 1).toList();
   }
 
   Widget buildTextField(TextEditingController controller, String hintText) {
@@ -139,7 +137,7 @@ class _DashboardPageState extends State<DashboardPage> {
       itemBuilder: (context, index) {
         // Calculate days since creation
         final daysSinceCreation =
-            DateTime.now().difference(projects[index].creationDate).inDays;
+            DateTime.now().difference(projects[index].createdAt!).inDays;
 
         return Container(
           decoration: BoxDecoration(
@@ -159,7 +157,7 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               ListTile(
                 title: Text(
-                  projects[index].title,
+                  projects[index].title!,
                   style: TextStyle(color: Colors.green),
                 ),
                 subtitle: Column(
@@ -172,35 +170,27 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: projects[index]
-                            .description
-                            .map((descriptionItem) => Padding(
-                                  padding: const EdgeInsets.only(left: 16.0),
-                                  child: Text('• $descriptionItem'),
-                                ))
-                            .toList(),
-                      ),
+                      child: Text(projects[index]
+                          .description!), // Assuming description is a non-null field
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           children: [
-                            Text('${projects[index].proposals}'),
+                            Text('${projects[index].countProposals ?? 0}'),
                             Text('Proposals'),
                           ],
                         ),
                         Column(
                           children: [
-                            Text('${projects[index].messages}'),
+                            Text('0'), // Placeholder for Messages
                             Text('Messages'),
                           ],
                         ),
                         Column(
                           children: [
-                            Text('${projects[index].hiredCount}'),
+                            Text('0'), // Placeholder for Hired
                             Text('Hired'),
                           ],
                         ),
@@ -223,6 +213,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   );
                 },
+              ),
+              Divider(
+                height: 17,
+                color: Colors.grey,
               ),
             ],
           ),
@@ -293,12 +287,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void _editPosting(BuildContext context, Project project) {
     TextEditingController titleController =
-        TextEditingController(text: project.title);
-    int selectedDurationIndex =
-        project.duration == ProjectDuration.oneToThreeMonths ? 0 : 1;
-    int studentsNeeded = project.studentsNeeded;
+        TextEditingController(text: project.title!);
+    int selectedDurationIndex = project.projectScopeFlag!;
+    int studentsNeeded = project.numberOfStudents!;
     TextEditingController descriptionController =
-        TextEditingController(text: project.description.join('\n'));
+        TextEditingController(text: project.description!);
 
     showDialog(
       context: context,
@@ -327,7 +320,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         Text("Duration: "),
                         RadioListTile(
-                          title: Text("1 to 3 months"),
+                          title: Text("Less than 1 month"),
                           value: 0,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -338,8 +331,30 @@ class _DashboardPageState extends State<DashboardPage> {
                           activeColor: Colors.blue,
                         ),
                         RadioListTile(
-                          title: Text("4 to 6 months"),
+                          title: Text("1 to 3 months"),
                           value: 1,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                        ),
+                        RadioListTile(
+                          title: Text("3 to 6 months"),
+                          value: 2,
+                          groupValue: selectedDurationIndex,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedDurationIndex = value!;
+                            });
+                          },
+                          activeColor: Colors.blue,
+                        ),
+                        RadioListTile(
+                          title: Text("More than 6 months"),
+                          value: 3,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
                             setState(() {
@@ -492,12 +507,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   onPressed: () {
                     setState(() {
                       project.title = titleController.text;
-                      project.duration = selectedDurationIndex == 0
-                          ? ProjectDuration.oneToThreeMonths
-                          : ProjectDuration.threeToSixMonths;
-                      project.studentsNeeded = studentsNeeded;
-                      project.description =
-                          descriptionController.text.split('\n');
+                      project.projectScopeFlag = selectedDurationIndex;
+                      project.numberOfStudents = studentsNeeded;
+                      project.description = descriptionController.text;
                     });
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -643,7 +655,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   setState(() {
-                    project.status = 'Working';
+                    project.projectScopeFlag =
+                        1; // Set project scope flag to working
                   });
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(

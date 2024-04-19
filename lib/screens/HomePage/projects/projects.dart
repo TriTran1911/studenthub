@@ -13,16 +13,21 @@ class ProjectsPage extends StatefulWidget {
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  late List<Project> projects;
+  late List<Project> projects=[];
   late TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
-    projects = Project.projects;
+    intitialData();
     _searchController = TextEditingController();
   }
-
+  Future<void> intitialData() async {
+    List<Project> tmp = await fetchDataProjects();
+    setState(() {
+      projects = tmp;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +43,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 IconButton(
                   icon: Icon(Icons.filter_list),
                   onPressed: () {
-                    _showFilterOptions(context);
+                   // _showFilterOptions(context);
                   },
                 ),
               ],
@@ -84,14 +89,17 @@ class _ProjectsPageState extends State<ProjectsPage> {
     return ListView.builder(
       itemCount: projects.length,
       itemBuilder: (context, index) {
-        final daysSinceCreation =
-            DateTime.now().difference(projects[index].creationDate).inDays;
+        final createdAt = projects[index].createdAt;
+        final daysSinceCreation = createdAt != null
+            ? DateTime.now().difference(createdAt).inDays
+            : 0; // Default value if createdAt is null
+
 
         return Column(
           children: [
             ListTile(
               title: Text(
-                projects[index].title,
+                projects[index].title ?? "No title",
                 style: TextStyle(color: Colors.green),
               ),
               subtitle: Column(
@@ -104,27 +112,32 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                      'Time: ${projects[index].timeNeeded}, ${projects[index].studentsNeeded} students needed'),
+                    'Time: ${projects[index].getProjectScopeAsString()}, ${projects[index].numberOfStudents} students needed',
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: projects[index]
-                          .description
-                          .map((descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
-                              ))
+                      children: (projects[index].description ?? '')
+                          .split('\n')
+                          .map(
+                            (descriptionItem) => Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text('• $descriptionItem'),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
                           Text(
-                              'Proposals: less than ${projects[index].proposals}'),
+                              'Proposals: less than ${projects[index].countProposals}'),
                         ],
                       ),
                     ],
@@ -159,10 +172,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _filterProjects(String query) {
     setState(() {
-      projects = Project.projects
-          .where((project) =>
-              project.title.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      projects = Project.projects.where((project) =>
+        project.title?.toLowerCase()?.contains(query.toLowerCase()) ?? false
+      ).toList();
     });
   }
 
@@ -216,44 +228,57 @@ class _ProjectsPageState extends State<ProjectsPage> {
     });
   }
 
-  void _showFilterOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return FilterProjectsPage(
-          applyFilters: _applyFilters,
-        );
-      },
-    );
-  }
+  // void _applyFilters(
+  //   int? projectScopeFlag,
+  //   int? studentsNeeded,
+  //   int? proposalsLessThan,
+  // ) {
+  //   setState(() {
+  //     projects = Project.projects.where((project) {
+  //       bool passFilter = true;
+  //       if (projectScopeFlag != null) {
+  //         switch (projectScopeFlag) {
+  //           case 0:
+  //             passFilter = passFilter && project.projectScopeFlag == 0;
+  //             break;
+  //           case 1:
+  //             passFilter = passFilter && project.projectScopeFlag == 1;
+  //             break;
+  //           case 2:
+  //             passFilter = passFilter && project.projectScopeFlag == 2;
+  //             break;
+  //           case 3:
+  //             passFilter = passFilter && project.projectScopeFlag == 3;
+  //             break;
+  //           default:
+  //             passFilter = false; // Assuming other cases should be filtered out
+  //             break;
+  //         }
+  //       }
+  //       if (studentsNeeded != null) {
+  //         passFilter = passFilter && project.numberOfStudents! >= studentsNeeded;
+  //       }
+  //       if (proposalsLessThan != null) {
+  //         passFilter = passFilter && project.countProposals! < proposalsLessThan;
+  //       }
+  //       return passFilter;
+  //     }).toList();
+  //   });
+  // }
 
-  void _applyFilters(
-      Duration? projectDuration, int? studentsNeeded, int? proposalsLessThan) {
-    setState(() {
-      projects = Project.projects.where((project) {
-        bool passFilter = true;
-        if (projectDuration != null) {
-          switch (project.duration) {
-            case ProjectDuration.oneToThreeMonths:
-              passFilter = passFilter && projectDuration.inDays <= 90;
-              break;
-            case ProjectDuration.threeToSixMonths:
-              passFilter= passFilter &&
-                  projectDuration.inDays > 90 &&
-                  projectDuration.inDays <= 180;
-              break;
-          }
-        }
-        if (studentsNeeded != null) {
-          passFilter = passFilter && project.studentsNeeded >= studentsNeeded;
-        }
-        if (proposalsLessThan != null) {
-          passFilter = passFilter && project.proposals < proposalsLessThan;
-        }
-        return passFilter;
-      }).toList();
-    });
-  }
+
+  // void _showFilterOptions(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) {
+  //       return FilterProjectsPage(
+  //         applyFilters: _applyFilters,
+  //       );
+  //     },
+  //   );
+  // }
+
+
 
   void _handleProjectTool(ProjectTool result, Project project) {
     switch (result) {
@@ -273,24 +298,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
   void _removeProject(Project project) {
     // Your implementation to remove a project goes here
   }
-}
 
-void main() {
-  initialProposers();
-  initialProjects();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Home(),
-    );
+  Future<List<Project>> fetchDataProjects() async { 
+    return await Project.getAllProjectsData();
   }
 }
+

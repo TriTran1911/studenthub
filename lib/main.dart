@@ -10,7 +10,6 @@ import 'package:studenthub/components/chatController.dart';
 void main() {
   initialNotifications();
   initialProposers();
-  initialProjects();
   initialSubmittedProjects();
 
   runApp(

@@ -20,13 +20,17 @@ class DetailTab extends StatelessWidget {
         SizedBox(height: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: project.description
-              .map((descriptionItem) => Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text('• $descriptionItem'),
-                  ))
+          children: (project.description ?? '')
+              .split('\n')
+              .map(
+                (descriptionItem) => Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text('• $descriptionItem'),
+                ),
+              )
               .toList(),
         ),
+
         SizedBox(height: 16),
         Divider(color: Colors.grey, height: 1),
         SizedBox(height: 16),
@@ -39,7 +43,7 @@ class DetailTab extends StatelessWidget {
               children: [
                 Text('Project scope: '),
                 Text(
-                    '\t\t\t• ${project.duration == ProjectDuration.oneToThreeMonths ? "1 to 3 months" : "3 to 6 months"}'),
+                    '\t\t\t• ${project.getProjectScopeAsString()}'),
               ],
             ),
           ],
@@ -53,7 +57,7 @@ class DetailTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    'Student required: \n\t\t\t• ${project.studentsNeeded} students'),
+                    'Student required: \n\t\t\t• ${project.numberOfStudents} students'),
               ],
             ),
           ],

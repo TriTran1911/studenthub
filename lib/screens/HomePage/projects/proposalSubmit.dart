@@ -72,10 +72,11 @@ class CoverLetterPage extends StatelessWidget {
       SubmittedProjects().addSubmittedProject(project, sentTime, "Submitted");
     }
     notifications.add({
-      'type': 'You have submitted to join project '+ project.title,
+      'type': 'You have submitted to join project ${project.title}',
       'icon': Icons.assignment_turned_in,
       'date': DateFormat('dd/MM/yyyy').format(DateTime.now()),
-    	});
+    });
+
     Navigator.pop(context);
     Navigator.pop(context);
   }
