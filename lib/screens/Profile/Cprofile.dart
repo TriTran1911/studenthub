@@ -73,7 +73,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: TextField(
           maxLines: null,
           keyboardType: TextInputType.multiline,

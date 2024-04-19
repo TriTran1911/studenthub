@@ -148,6 +148,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         if (responseDecoded != null) {
           // Password updated successfully
           // Show a success message
+          // clear the text fields
+          _currentPasswordController.clear();
+          _newPasswordController.clear();
+          _confirmPasswordController.clear();
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Password updated')));
         } else {
