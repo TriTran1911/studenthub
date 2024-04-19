@@ -156,28 +156,29 @@ class _ProjectPost4State extends State<ProjectPost4> {
   void _handlePostProject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var data = {
-      'companyId' : prefs.getInt('companyId'),
-      'projectScopeFlag' : widget.selectedDuration,
-      'title' : widget.title,
-      'numberOfStudents' : widget.numberOfStudents,
-      'description' : widget.descriptionLines.join('\n'),
-      'typeFlag' : null,
+      'companyId': prefs.getInt('companyId'),
+      'projectScopeFlag': widget.selectedDuration,
+      'title': widget.title,
+      'numberOfStudents': widget.numberOfStudents,
+      'description': widget.descriptionLines.join('\n'),
+      'typeFlag': 0,
     };
-    
+
     String url = '/api/project/';
 
-    try
-    {
+    try {
       var response = await Connection.postRequest(url, data);
       var responseDecoded = jsonDecode(response);
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
         print('Project posted successfully');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Project posted successfully'),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Project posted successfully'),
+            ),
+          );
+        }
       } else {
         print('Project post failed');
         dynamic errorDetails = responseDecoded['errorDetails'];
@@ -185,19 +186,23 @@ class _ProjectPost4State extends State<ProjectPost4> {
         if (errorDetails is List) {
           errorMessage = errorDetails.first.toString();
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Project post failed: $errorMessage'),
-          ),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Project post failed: $errorMessage'),
+            ),
+          );
+        }
       }
     } catch (e) {
       print('Error occurred: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error occurred: $e'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error occurred: $e'),
+          ),
+        );
+      }
     }
   }
 

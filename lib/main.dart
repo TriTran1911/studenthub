@@ -30,8 +30,10 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
         ),
+        initialRoute: '/',
         routes: {
           '/': (context) => Home(),
+          'chatDetailPage': (context) => ChatDetailPage(),
         });
   }
 }

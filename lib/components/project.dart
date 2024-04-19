@@ -6,7 +6,7 @@ enum ProjectTool { Edit, Remove }
 class SubmittedProject {
   Project project;
   DateTime sentTime;
-  String messageStatus; 
+  String messageStatus;
 
   SubmittedProject(this.project, this.sentTime, this.messageStatus);
 }
@@ -22,14 +22,17 @@ class SubmittedProjects {
 
   List<SubmittedProject> submittedProjects = [];
 
-  void addSubmittedProject(Project project, DateTime sentTime, String messageStatus) {
+  void addSubmittedProject(
+      Project project, DateTime sentTime, String messageStatus) {
     submittedProjects.add(SubmittedProject(project, sentTime, messageStatus));
   }
 
   bool isProjectSubmitted(Project project) {
-    return submittedProjects.any((submittedProject) => submittedProject.project == project);
+    return submittedProjects
+        .any((submittedProject) => submittedProject.project == project);
   }
 }
+
 class Project {
   int? id;
   DateTime? createdAt;
@@ -57,23 +60,27 @@ class Project {
     this.countProposals,
   });
 
- factory Project.fromMap(Map<String, dynamic> map) {
-  return Project(
-    id: map['projectId'] as int?,
-    createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt'] as String) : DateTime.now(),
-    updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt'] as String) : null,
-    deletedAt: map['deletedAt'] != null ? DateTime.parse(map['deletedAt'] as String) : null,
-    companyId: map['companyId'] as String?,
-    projectScopeFlag: map['projectScopeFlag'] as int?,
-    title: map['title'] as String,
-    description: map['description'] as String,
-    numberOfStudents: map['numberOfStudents'] as int?,
-    typeFlag: map['typeFlag'] as int?,
-    countProposals: map['countProposals'] as int?,
-  );
-}
-
-
+  factory Project.fromMap(Map<String, dynamic> map) {
+    return Project(
+      id: map['projectId'] as int?,
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'] as String)
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] != null
+          ? DateTime.parse(map['updatedAt'] as String)
+          : null,
+      deletedAt: map['deletedAt'] != null
+          ? DateTime.parse(map['deletedAt'] as String)
+          : null,
+      companyId: map['companyId'] as String?,
+      projectScopeFlag: map['projectScopeFlag'] as int?,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      numberOfStudents: map['numberOfStudents'] as int?,
+      typeFlag: map['typeFlag'] as int?,
+      countProposals: map['countProposals'] as int?,
+    );
+  }
 
   String getProjectScopeAsString() {
     switch (projectScopeFlag) {
@@ -137,11 +144,10 @@ class Project {
       var responseDecode = jsonDecode(response);
       if (responseDecode['result'] != null) {
         print("Connected to the server successfully");
-        print("Connect server successful");
         print(responseDecode['result']);
         List<Project> projectList =
             Project.fromListMapAllProject(responseDecode['result']);
-        for (Project project in projectList){
+        for (Project project in projectList) {
           print(project.id);
         }
         return projectList;
@@ -164,7 +170,6 @@ class Project {
     }
   }
 }
-
 
 // initial submitted projects
 void initialSubmittedProjects() {
