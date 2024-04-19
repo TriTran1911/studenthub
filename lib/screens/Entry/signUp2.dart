@@ -11,11 +11,63 @@ class SignUp2 extends StatefulWidget {
   _Signup2State createState() => _Signup2State();
 }
 
+class ChatBubbleWithVisibilityToggle extends StatefulWidget {
+  final TextEditingController textEditingController;
+  final String label;
+  final bool isPassword;
+
+  const ChatBubbleWithVisibilityToggle({
+    required this.textEditingController,
+    required this.label,
+    this.isPassword = false,
+  });
+
+  @override
+  _ChatBubbleWithVisibilityToggleState createState() => _ChatBubbleWithVisibilityToggleState();
+}
+
+class _ChatBubbleWithVisibilityToggleState extends State<ChatBubbleWithVisibilityToggle> {
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: widget.textEditingController,
+            obscureText: widget.isPassword && _obscureText,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              border: OutlineInputBorder(),
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Signup2State extends State<SignUp2> {
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
+  String _errorDetails = '';
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +77,7 @@ class _Signup2State extends State<SignUp2> {
       body: _buildBody(context),
     );
   }
-
+  
   SingleChildScrollView _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
@@ -43,7 +95,7 @@ class _Signup2State extends State<SignUp2> {
               textEditingController: _emailController,
               label: 'Work email address',
             ),
-            ChatBubble(
+            ChatBubbleWithVisibilityToggle( 
               textEditingController: _passwordController,
               label: 'Password (8 or more characters)',
               isPassword: true,
@@ -133,9 +185,9 @@ class _Signup2State extends State<SignUp2> {
     );
   }
 
-  void _handleOnPressed() {
+  void _handleOnPressed() { 
     if (_checkSignup()) {
-      _handleSignup();
+      _handleSignup(); 
       appBarIcon.isBlocked = false;
     }
   }
@@ -155,15 +207,37 @@ class _Signup2State extends State<SignUp2> {
 
     String url = '/api/auth/sign-up';
 
-    var response = await Connection.postRequest(url, data);
-    var responseDecoded = jsonDecode(response);
-    if (responseDecoded['statusCode'] == 201) {
-      print('User signed up failed');
-    } else {
-      print('User signed up successfully');
-      navigateToPagePushReplacement(TabsPage(index: 0), context);
+    try {
+      var response = await Connection.postRequest(url, data);
+      var responseDecoded = jsonDecode(response);
+      if (responseDecoded['statusCode'] == 201) {
+        print('User signed up successfully');
+        navigateToPagePushReplacement(TabsPage(index: 0), context);
+      } else {
+        print('User signed up failed');
+        dynamic errorDetails = responseDecoded['errorDetails'];
+        String errorMessage = '';
+        if (errorDetails is List) {
+          errorMessage = errorDetails.first.toString();
+        } else {
+          errorMessage = errorDetails ?? 'Unknown error occurred';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred while processing your request.'),
+        ),
+      );
     }
   }
+
 
   bool _checkSignup() {
     if (_userNameController.text.isEmpty ||
@@ -197,6 +271,7 @@ class _Signup2State extends State<SignUp2> {
 
     return true;
   }
+  
 }
 
 class ChatBubble extends StatelessWidget {
