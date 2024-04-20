@@ -9,6 +9,7 @@ import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/screens/Profile/SprofileInput1.dart';
+import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'home.dart';
 import 'package:studenthub/screens/Action/changeLanguage.dart';
@@ -64,29 +65,25 @@ class _AccountControllerState extends State<AccountController> {
     });
   }
 
-  
-
   void _handleProfilesButtonPress(BuildContext context) async {
-    final respone = await Connection.getRequest('/api/auth/me', {} );
+    final respone = await Connection.getRequest('/api/auth/me', {});
     final data = jsonDecode(respone);
 
     if (data['result'] != null) {
       var result = data['result'];
+      User.roles = List<int>.from(
+          result['roles'].map((item) => int.parse(item.toString())));
       if (result['roles'].length == 1) {
         if (result['roles'][0] == 1) {
           result['company'] == null
               ? navigateToPagePushReplacement(CWithoutProfile(), context)
               : navigateToPagePushReplacement(CompanyProfile(), context);
-        }
-        else {
+        } else {
           result['student'] == null
               ? navigateToPagePushReplacement(StudentInfoScreen(), context)
               : navigateToPagePushReplacement(StudentInfoScreen(), context);
         }
-      }
-      else {
-        
-      }
+      } else {}
       print(result);
     }
   }
@@ -149,7 +146,7 @@ class _AccountControllerState extends State<AccountController> {
     if (responseDecoded != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('token');
-      
+
       print('Logout successful');
     } else {
       print('Logout failed');
@@ -159,9 +156,29 @@ class _AccountControllerState extends State<AccountController> {
   }
 
   Widget _buildListView(
-    void Function(String? selectedCompany, IconData companyIcon)
-        handleCompanySelection,
-  ) {
+      void Function(String? selectedCompany, IconData companyIcon)
+          handleCompanySelection) {
+    List<int> roles;
+    String roleNames = '';
+    var result;
+
+    void _handleListRoles() async {
+      final respone = await Connection.getRequest('/api/auth/me', {});
+      final data = jsonDecode(respone);
+
+      if (data['result'] != null) {
+        result = data['result'];
+        roles = List<int>.from(
+            result['roles'].map((item) => int.parse(item.toString())));
+        // set roleNames to the result['fullname'] of the user
+        roleNames = result['fullname'];
+        // print(roleNames);
+      }
+    }
+
+    _handleListRoles();
+    print(roleNames);
+
     return ExpansionTile(
       leading: Icon(selectedAccountIcon),
       title: Text(selectedAccount ?? 'Select an account',

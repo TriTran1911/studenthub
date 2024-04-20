@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/appbar.dart';
 import '/components/controller.dart';
+import 'package:studenthub/components/modelController.dart';
 import '/connection/http.dart';
 
 class SignUp2 extends StatefulWidget {
@@ -23,10 +24,12 @@ class ChatBubbleWithVisibilityToggle extends StatefulWidget {
   });
 
   @override
-  _ChatBubbleWithVisibilityToggleState createState() => _ChatBubbleWithVisibilityToggleState();
+  _ChatBubbleWithVisibilityToggleState createState() =>
+      _ChatBubbleWithVisibilityToggleState();
 }
 
-class _ChatBubbleWithVisibilityToggleState extends State<ChatBubbleWithVisibilityToggle> {
+class _ChatBubbleWithVisibilityToggleState
+    extends State<ChatBubbleWithVisibilityToggle> {
   bool _obscureText = true;
 
   @override
@@ -77,7 +80,7 @@ class _Signup2State extends State<SignUp2> {
       body: _buildBody(context),
     );
   }
-  
+
   SingleChildScrollView _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
@@ -95,7 +98,7 @@ class _Signup2State extends State<SignUp2> {
               textEditingController: _emailController,
               label: 'Work email address',
             ),
-            ChatBubbleWithVisibilityToggle( 
+            ChatBubbleWithVisibilityToggle(
               textEditingController: _passwordController,
               label: 'Password (8 or more characters)',
               isPassword: true,
@@ -114,7 +117,7 @@ class _Signup2State extends State<SignUp2> {
 
   Text _buildTitleText() {
     return Text(
-      User.isCompany ? 'Sign up as Company' : 'Sign up as Student',
+      User.roles[0] == 1 ? 'Sign up as Company' : 'Sign up as Student',
       textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
     );
@@ -160,21 +163,20 @@ class _Signup2State extends State<SignUp2> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          User.isCompany
+          User.roles[0] == 1
               ? "Looking for a project?  "
               : "Want to offer projects?  ",
           textAlign: TextAlign.center,
         ),
         GestureDetector(
           onTap: () {
-            User.isCompany = !User.isCompany; // Toggle user type
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => SignUp2()),
             );
           },
           child: Text(
-            User.isCompany ? "Apply as a student" : "Apply as a company",
+            User.roles[0] == 1 ? "Apply as a student" : "Apply as a company",
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.blue,
@@ -185,24 +187,23 @@ class _Signup2State extends State<SignUp2> {
     );
   }
 
-  void _handleOnPressed() { 
+  void _handleOnPressed() {
     if (_checkSignup()) {
-      _handleSignup(); 
+      _handleSignup();
       appBarIcon.isBlocked = false;
     }
   }
 
   void _handleSignup() async {
-    User.username = _userNameController.text;
+    User.fullname = _userNameController.text;
     User.email = _emailController.text;
     User.password = _passwordController.text;
-    User.role = User.isCompany ? 1 : 0;
 
     var data = {
-      'fullname': User.username,
+      'fullname': User.fullname,
       'email': User.email,
       'password': User.password,
-      'role': User.role,
+      'role': User.roles[0],
     };
 
     String url = '/api/auth/sign-up';
@@ -238,7 +239,6 @@ class _Signup2State extends State<SignUp2> {
     }
   }
 
-
   bool _checkSignup() {
     if (_userNameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -271,7 +271,6 @@ class _Signup2State extends State<SignUp2> {
 
     return true;
   }
-  
 }
 
 class ChatBubble extends StatelessWidget {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import 'signUp2.dart';
 import 'login.dart';
+import '/components/modelController.dart';
 import '/components/controller.dart';
 
 class SignUp1 extends StatefulWidget {
@@ -37,7 +38,6 @@ class _SignUpState1 extends State<SignUp1> {
           () {
             setState(() {
               _isCompany = !_isCompany;
-              _isStudent = false;
             });
           },
         ),
@@ -49,7 +49,6 @@ class _SignUpState1 extends State<SignUp1> {
           () {
             setState(() {
               _isStudent = !_isStudent;
-              _isCompany = false;
             });
           },
         ),
@@ -145,8 +144,14 @@ class _SignUpState1 extends State<SignUp1> {
   }
 
   void _handleOnPressed() {
+    print(_isCompany);
     if (_isCompany || _isStudent) {
-      User.isCompany = _isCompany;
+      if (_isCompany) {
+        User.roles.add(1);
+      }
+      if (_isStudent) {
+        User.roles.add(0);
+      }
       navigateToPagePushReplacement(SignUp2(), context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

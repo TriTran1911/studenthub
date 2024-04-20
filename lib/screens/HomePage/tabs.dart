@@ -5,6 +5,7 @@ import 'projects/projects.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
 import '/components/controller.dart';
+import '/components/modelController.dart';
 import '/components/appbar.dart';
 
 class TabsPage extends StatefulWidget {
@@ -24,10 +25,13 @@ class _TabsPageState extends State<TabsPage> {
     super.initState();
     _selectedIndex = widget.index;
   }
-   
+
   final List<TabInfo> _tabs = [
     TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.list_alt),
-    TabInfo(page: User.isCompany ? DashboardPage() : StudentDashboardPage(), label: 'Dashboard', icon: Icons.dashboard),
+    TabInfo(
+        page: User.roles[0] == 1 ? DashboardPage() : StudentDashboardPage(),
+        label: 'Dashboard',
+        icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
     TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
   ];

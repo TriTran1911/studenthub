@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/screens/AccountManage/Login.dart';
+import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,7 +23,8 @@ class Home extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 50),
           _buildTextColumn(),
-          Lottie.asset('assets/animation/home.json', height: 300, repeat: true, reverse: true),
+          Lottie.asset('assets/animation/home.json',
+              height: 300, repeat: true, reverse: true),
           SizedBox(height: 20),
           _buildElevatedButton(
             'Company',
@@ -34,7 +36,6 @@ class Home extends StatelessWidget {
           _buildElevatedButton(
             'Student',
             () {
-              User.isCompany = false;
               navigateToPagePushReplacement(Login(), context);
             },
           ),

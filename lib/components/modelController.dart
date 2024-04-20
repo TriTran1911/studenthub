@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class User {
-  static int? id;
-  static String? email;
-  static String? password;
-  static String? fullname;
-  static List<int>? roles;
-  static Company? company;
-  static Student? student;
+  static int id = 0;
+  static String email = '';
+  static String password = '';
+  static String fullname = '';
+  static List<int> roles = [];
+  static Company company = Company();
+  static Student student = Student();
 }
 
 class Company {

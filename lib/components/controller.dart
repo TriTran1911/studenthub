@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class User {
-  static String username = '';
-  static String email = '';
-  static String password = '';
-  static num role = 0;
-  static bool isCompany = true;
-  static num nstaff = 0;
-  static String cname = '';
-  static String website = '';
-  static String description = '';
-  static bool hasProfile = false;
-}
+// class User {
+//   static String username = '';
+//   static String email = '';
+//   static String password = '';
+//   static num role = 0;
+//   static bool isCompany = true;
+//   static num nstaff = 0;
+//   static String cname = '';
+//   static String website = '';
+//   static String description = '';
+//   static bool hasProfile = false;
+// }
 
 class appBarIcon {
   static bool isSelected = false;
