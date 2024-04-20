@@ -9,6 +9,7 @@ import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
+import '/components/modelController.dart';
 import '/connection/http.dart';
 import '../Action/forgotPassword.dart';
 import 'package:studenthub/components/modelController.dart';

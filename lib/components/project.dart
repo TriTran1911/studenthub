@@ -137,6 +137,16 @@ class Project {
     return list.map((map) => Project.fromMap(map)).toList();
   }
 
+  static List<Project> fromListMapByCompanyId(List<dynamic> list, String companyId) {
+    List<Project> result = list
+        .where((map) => map['companyId'] == companyId)
+        .map((map) => Project.fromMap(map))
+        .toList();
+    print(result.length);
+    return result;
+  }
+
+
   static Future<List<Project>> getAllProjectsData() async {
     print('Get All Projects Data');
     try {
@@ -164,11 +174,41 @@ class Project {
   void initialProjects() async {
     try {
       List<Project> projects = await getAllProjectsData();
+      Project.projects.clear();
       Project.projects.addAll(projects);
     } catch (e) {
       print('Error initializing projects: $e');
     }
   }
+
+  static Future<List<Project>> getProjectsByCompanyId(String companyId) async {
+    try {
+      var response = await Connection.getRequest('/api/project/company/$companyId', {});
+      var responseDecode = jsonDecode(response);
+      if (responseDecode['result'] != null) {
+        List<Project> projectList =
+            Project.fromListMapByCompanyId(responseDecode['result'], companyId);
+        return projectList;
+      } else {
+        print("Failed");
+        print(responseDecode);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
+
+  void fetchProjectsByCompanyId(String companyId) async {
+    try {
+      List<Project> projects = await Project.getProjectsByCompanyId(companyId);
+      Project.projects.clear();
+      Project.projects.addAll(projects);
+    } catch (e) {
+      print('Error fetching projects by company id: $e');
+    }
+  }
+  
 }
 
 // initial submitted projects
