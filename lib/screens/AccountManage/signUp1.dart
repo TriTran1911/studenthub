@@ -129,7 +129,7 @@ class _SignUpState1 extends State<SignUp1> {
         ),
         GestureDetector(
           onTap: () {
-            navigateToPagePushReplacement(Login(), context);
+            moveToPage(Login(), context);
           },
           child: Text(
             "Login",
@@ -152,7 +152,7 @@ class _SignUpState1 extends State<SignUp1> {
       if (_isStudent) {
         User.roles[0] = 0;
       }
-      navigateToPagePushReplacement(SignUp2(), context);
+      moveToPage(SignUp2(), context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

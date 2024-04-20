@@ -54,10 +54,7 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                );
+                moveToPage(ForgotPasswordPage(), context);
               },
               child: const Text(
                 'Forgot password?',
@@ -84,7 +81,7 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 120.0),
             _buildSignUpText(),
             _buildElevatedButton('Sign Up', () {
-              navigateToPagePushReplacement(SignUp1(), context);
+              moveToPage(SignUp1(), context);
             }),
           ],
         ),
@@ -193,12 +190,7 @@ class _LoginState extends State<Login> {
         }
         User.roles = List<int>.from(authorizationDecoded['result']['roles']);
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TabsPage(index: 0),
-          ),
-        );
+        moveToPage(TabsPage(index: 0), context);
       } else {
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();

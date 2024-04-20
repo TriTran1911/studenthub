@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import '/components/project.dart';
 import '/screens/Action/projectTab.dart';
 import '/screens/HomePage/dashBoard/Function/projectPost1.dart';
@@ -104,12 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _addProject() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectPost1(),
-      ),
-    );
+    moveToPage(ProjectPost1(), context);
   }
 
   Widget _buildTab(String title) {
@@ -219,18 +215,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProposalsPage(project: projects[index]),
-                    ),
-                  );
+                  moveToPage(ProposalsPage(project: projects[index]), context);
                 },
-              ),
-              Divider(
-                height: 17,
-                color: Colors.grey,
               ),
             ],
           ),
@@ -570,13 +556,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ProposalsPage(project: project, initialTabIndex: 0),
-                    ),
-                  );
+                  moveToPage(
+                      ProposalsPage(project: project, initialTabIndex: 0),
+                      context);
                 },
               ),
               ListTile(
@@ -588,14 +570,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProposalsPage(
-                          project: project,
-                          initialTabIndex: 2), // Pass initialTabIndex as 2
-                    ),
-                  );
+                  moveToPage(
+                      ProposalsPage(project: project, initialTabIndex: 2),
+                      context);
                 },
               ),
               ListTile(
@@ -607,14 +584,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     )),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProposalsPage(
-                          project: project,
-                          initialTabIndex: 3), // Pass initialTabIndex as 3
-                    ),
-                  );
+                  moveToPage(
+                      ProposalsPage(project: project, initialTabIndex: 3),
+                      context);
                 },
               ),
               Divider(height: 17, color: Colors.grey),
@@ -687,10 +659,10 @@ class _DashboardPageState extends State<DashboardPage> {
       },
     );
   }
+
   void fetchProjectsByCompanyId(String companyId) async {
     try {
-      List<Project> projects =
-          await Project.getProjectsByCompanyId(companyId);
+      List<Project> projects = await Project.getProjectsByCompanyId(companyId);
       setState(() {
         onBoardingProjects = projects;
         workingProjects =
@@ -703,11 +675,10 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  Future<List<Project>> fetchDataProjectsByID(String companyId) async { 
+  Future<List<Project>> fetchDataProjectsByID(String companyId) async {
     return await Project.getProjectsByCompanyId(companyId);
   }
 }
-
 
 void main() {
   runApp(MyApp());

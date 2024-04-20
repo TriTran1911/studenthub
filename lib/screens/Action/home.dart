@@ -29,14 +29,14 @@ class Home extends StatelessWidget {
           _buildElevatedButton(
             'Company',
             () {
-              navigateToPagePushReplacement(Login(), context);
+              moveToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),
           _buildElevatedButton(
             'Student',
             () {
-              navigateToPagePushReplacement(Login(), context);
+              moveToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),

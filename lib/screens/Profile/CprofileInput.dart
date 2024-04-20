@@ -142,7 +142,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             String website = _websiteController.text;
             String description = _descriptionController.text;
             postProfile(cname, nstaff, website, description);
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Welcome()),
             );

@@ -132,7 +132,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                   _handlePostProject();
                   // pop until the first route
                   Navigator.popUntil(context, (route) => route.isFirst);
-                  navigateToPagePushReplacement(TabsPage(index: 1), context);
+                  moveToPage(TabsPage(index: 1), context);
                 },
                 child: Text(
                   'Post job',

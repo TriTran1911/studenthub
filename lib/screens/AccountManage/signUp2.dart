@@ -170,10 +170,7 @@ class _Signup2State extends State<SignUp2> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => SignUp2()),
-            );
+            moveToPage(SignUp2(), context);
           },
           child: Text(
             User.roles[0] == 1 ? "Apply as a student" : "Apply as a company",
@@ -209,7 +206,7 @@ class _Signup2State extends State<SignUp2> {
       var responseDecoded = jsonDecode(response);
       if (responseDecoded['statusCode'] == 201) {
         print('User signed up successfully');
-        navigateToPagePushReplacement(TabsPage(index: 0), context);
+        moveToPage(TabsPage(index: 0), context);
       } else {
         print('User signed up failed');
         dynamic errorDetails = responseDecoded['errorDetails'];

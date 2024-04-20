@@ -76,12 +76,12 @@ class _AccountControllerState extends State<AccountController> {
       if (result['roles'].length == 1) {
         if (result['roles'][0] == 1) {
           result['company'] == null
-              ? navigateToPagePushReplacement(CWithoutProfile(), context)
-              : navigateToPagePushReplacement(CompanyProfile(), context);
+              ? moveToPage(CWithoutProfile(), context)
+              : moveToPage(CompanyProfile(), context);
         } else {
           result['student'] == null
-              ? navigateToPagePushReplacement(StudentInfoScreen(), context)
-              : navigateToPagePushReplacement(StudentInfoScreen(), context);
+              ? moveToPage(StudentInfoScreen(), context)
+              : moveToPage(StudentInfoScreen(), context);
         }
       } else {}
       print(result);
@@ -152,7 +152,7 @@ class _AccountControllerState extends State<AccountController> {
       print('Logout failed');
     }
 
-    navigateToPagePushReplacement(Home(), context);
+    moveToPage(Home(), context);
   }
 
   Widget _buildListView(

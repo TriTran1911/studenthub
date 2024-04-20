@@ -58,7 +58,7 @@ class Welcome extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         appBarIcon.isSelected = false;
-        navigateToPagePushReplacement(TabsPage(index: 0), context);
+        moveToPage(TabsPage(index: 0), context);
       },
       child: Text('Get started!'),
     );

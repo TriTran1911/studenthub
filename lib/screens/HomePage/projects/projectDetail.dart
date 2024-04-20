@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import '/components/project.dart';
 import '/components/appbar.dart';
 import 'proposalSubmit.dart';
@@ -59,20 +60,20 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     SizedBox(height: 8),
                     Text(
                       'Description:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: (widget.project.description ?? '')
-                      .split('\n')
-                      .map(
-                        (descriptionItem) => Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Text('• $descriptionItem'),
-                        ),
-                      )
-                      .toList(),
-
+                          .split('\n')
+                          .map(
+                            (descriptionItem) => Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text('• $descriptionItem'),
+                            ),
+                          )
+                          .toList(),
                     ),
                     SizedBox(height: 8),
                     Divider(), // Horizontal line
@@ -101,7 +102,9 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       'Time Needed: ${widget.project.getProjectScopeAsString()}',
                       style: TextStyle(fontSize: 16),
                     ),
-                    SizedBox(height: 16), // Add some spacing between the project details and buttons
+                    SizedBox(
+                        height:
+                            16), // Add some spacing between the project details and buttons
                   ],
                 ),
               ),
@@ -112,23 +115,30 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        _navigateToCoverLetterPage(context);
+                        moveToPage(
+                            CoverLetterPage(project: widget.project), context);
                       },
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                         // color blue
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white), 
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Apply Now',
-                          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -141,8 +151,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            isFavorite ? Color.fromARGB(255, 107, 167, 206) : Colors.blue),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            isFavorite
+                                ? Color.fromARGB(255, 107, 167, 206)
+                                : Colors.blue),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -152,7 +165,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           isFavorite ? 'Saved' : 'Save',
-                          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -176,12 +192,4 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       isFavorite = !isFavorite;
     });
   }
-
-  void _navigateToCoverLetterPage(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CoverLetterPage(project: widget.project)), 
-    );
-  }
-
 }

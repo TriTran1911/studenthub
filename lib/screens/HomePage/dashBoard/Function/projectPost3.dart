@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import '/components/appBar.dart';
 import 'projectPost4.dart';
 
@@ -87,18 +88,16 @@ class _ProjectPost3State extends State<ProjectPost3> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  List<String> descriptionLines = _descriptionController.text.split('\n');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProjectPost4(
+                  List<String> descriptionLines =
+                      _descriptionController.text.split('\n');
+                  moveToPage(
+                      ProjectPost4(
                         title: widget.title,
                         descriptionLines: descriptionLines,
                         selectedDuration: widget.selectedDuration,
                         numberOfStudents: widget.numberOfStudents,
                       ),
-                    ),
-                  );
+                      context);
                 },
                 child: Text(
                   'Review your post',

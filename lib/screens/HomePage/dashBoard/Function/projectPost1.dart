@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
+import 'package:studenthub/components/controller.dart';
 import 'projectPost2.dart';
 
 class ProjectPost1 extends StatefulWidget {
@@ -82,14 +83,11 @@ class _ProjectPost1State extends State<ProjectPost1> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProjectPost2(
+                  moveToPage(
+                      ProjectPost2(
                         title: _titleController.text,
                       ),
-                    ),
-                  );
+                      context);
                 },
                 child: Text(
                   'Next: Description',
