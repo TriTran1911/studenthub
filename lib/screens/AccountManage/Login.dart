@@ -9,6 +9,7 @@ import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
+import '/components/modelController.dart';
 import '/connection/http.dart';
 import '../Action/forgotPassword.dart';
 
@@ -182,8 +183,9 @@ class _LoginState extends State<Login> {
         prefs.setString('token', responseDecoded['result']['token']);
         prefs.setInt(
             'companyId', authorizationDecoded['result']['company']['id']);
-
+        User.roles = List<int>.from(authorizationDecoded['result']['roles']);
         print('Sign in successful');
+
         navigateToPagePushReplacement(TabsPage(index: 0), context);
       } else {
         await Future.delayed(const Duration(seconds: 2));
