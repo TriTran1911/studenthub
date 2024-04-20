@@ -41,7 +41,7 @@ class _DashboardPageState extends State<DashboardPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
@@ -78,7 +78,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildPostJobButton() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10.0),
       child: TextButton(
         onPressed: () => _addProject(),
         style: ButtonStyle(
@@ -89,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         ),
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: Text(
             'Post a job',
@@ -112,7 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Tab(
       child: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 16.0,
           color: Colors.blue,
@@ -136,7 +136,7 @@ class _DashboardPageState extends State<DashboardPage> {
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -158,23 +158,23 @@ class _DashboardPageState extends State<DashboardPage> {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 1,
-                offset: Offset(0, 1),
+                offset: const Offset(0, 1),
               ),
             ],
           ),
-          margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+          margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
           child: Column(
             children: [
               ListTile(
                 title: Text(
                   projects[index].title!,
-                  style: TextStyle(color: Colors.green),
+                  style: const TextStyle(color: Colors.green),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Created $daysSinceCreation days ago'),
-                    Text(
+                    const Text(
                       'Students are looking for:',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -189,16 +189,16 @@ class _DashboardPageState extends State<DashboardPage> {
                         Column(
                           children: [
                             Text('${projects[index].countProposals ?? 0}'),
-                            Text('Proposals'),
+                            const Text('Proposals'),
                           ],
                         ),
-                        Column(
+                        const Column(
                           children: [
                             Text('0'), // Placeholder for Messages
                             Text('Messages'),
                           ],
                         ),
-                        Column(
+                        const Column(
                           children: [
                             Text('0'), // Placeholder for Hired
                             Text('Hired'),
@@ -209,7 +209,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.more_horiz),
+                  icon: const Icon(Icons.more_horiz),
                   onPressed: () {
                     _showBottomSheet(context, projects[index]);
                   },
@@ -236,17 +236,17 @@ class _DashboardPageState extends State<DashboardPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Delete Posting",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: Text("Are you sure you want to delete this posting?"),
+          content: const Text("Are you sure you want to delete this posting?"),
           actions: <Widget>[
             TextButton(
-              child: Text(
+              child: const Text(
                 "Cancel",
                 style: TextStyle(
                   color: Colors.blue,
@@ -258,13 +258,6 @@ class _DashboardPageState extends State<DashboardPage> {
               },
             ),
             ElevatedButton(
-              child: Text(
-                "Delete",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                ),
-              ),
               onPressed: () {
                 _removeProject(project);
                 Navigator.of(context).pop();
@@ -276,6 +269,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
+                ),
+              ),
+              child: const Text(
+                "Delete",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
                 ),
               ),
             ),
@@ -299,7 +299,7 @@ class _DashboardPageState extends State<DashboardPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text(
+              title: const Text(
                 "Edit Posting",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -313,14 +313,14 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: InputDecoration(labelText: "Title"),
+                      decoration: const InputDecoration(labelText: "Title"),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Duration: "),
+                        const Text("Duration: "),
                         RadioListTile(
-                          title: Text("Less than 1 month"),
+                          title: const Text("Less than 1 month"),
                           value: 0,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -331,7 +331,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           activeColor: Colors.blue,
                         ),
                         RadioListTile(
-                          title: Text("1 to 3 months"),
+                          title: const Text("1 to 3 months"),
                           value: 1,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -342,7 +342,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           activeColor: Colors.blue,
                         ),
                         RadioListTile(
-                          title: Text("3 to 6 months"),
+                          title: const Text("3 to 6 months"),
                           value: 2,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -353,7 +353,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           activeColor: Colors.blue,
                         ),
                         RadioListTile(
-                          title: Text("More than 6 months"),
+                          title: const Text("More than 6 months"),
                           value: 3,
                           groupValue: selectedDurationIndex,
                           onChanged: (value) {
@@ -367,15 +367,15 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     Row(
                       children: [
-                        Text("Students Needed: "),
+                        const Text("Students Needed: "),
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 1.0, vertical: 1.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                             onPressed: () {
                               if (studentsNeeded > 0) {
                                 setState(() {
@@ -392,7 +392,7 @@ class _DashboardPageState extends State<DashboardPage> {
                               builder: (context) {
                                 int updatedStudentsNeeded = studentsNeeded;
                                 return AlertDialog(
-                                  title: Text(
+                                  title: const Text(
                                     "Edit Students Needed",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -412,7 +412,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Cancel',
                                         style: TextStyle(
                                           color: Colors.blue,
@@ -440,7 +440,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                           ),
                                         ),
                                       ),
-                                      child: Text(
+                                      child: const Text(
                                         'Save',
                                         style: TextStyle(
                                           color: Colors.white,
@@ -454,9 +454,9 @@ class _DashboardPageState extends State<DashboardPage> {
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 15.0, vertical: 15.0),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border(
                                 top: BorderSide(color: Colors.black),
                                 bottom: BorderSide(color: Colors.black),
@@ -466,7 +466,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 1.0, vertical: 1.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
@@ -484,7 +484,8 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     TextField(
                       controller: descriptionController,
-                      decoration: InputDecoration(labelText: "Description"),
+                      decoration:
+                          const InputDecoration(labelText: "Description"),
                       maxLines: null,
                     ),
                   ],
@@ -492,7 +493,7 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text(
+                  child: const Text(
                     "Cancel",
                     style: TextStyle(
                       color: Colors.blue,
@@ -523,7 +524,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Save',
                     style: TextStyle(
                       color: Colors.white,
@@ -548,7 +549,7 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             children: [
               ListTile(
-                title: Text('View Proposals',
+                title: const Text('View Proposals',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -562,7 +563,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               ListTile(
-                title: Text('View Messages',
+                title: const Text('View Messages',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -576,7 +577,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               ListTile(
-                title: Text('View Hired',
+                title: const Text('View Hired',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -589,9 +590,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       context);
                 },
               ),
-              Divider(height: 17, color: Colors.grey),
+              const Divider(height: 17, color: Colors.grey),
               ListTile(
-                title: Text('View job posting',
+                title: const Text('View job posting',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -600,7 +601,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 onTap: () {},
               ),
               ListTile(
-                title: Text('Edit posting',
+                title: const Text('Edit posting',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -609,14 +610,14 @@ class _DashboardPageState extends State<DashboardPage> {
                 onTap: () {
                   _editPosting(context, project);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("You have edited the posting."),
                     ),
                   );
                 },
               ),
               ListTile(
-                title: Text('Remove posting',
+                title: const Text('Remove posting',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -625,15 +626,15 @@ class _DashboardPageState extends State<DashboardPage> {
                 onTap: () {
                   _showDeleteConfirmationDialog(context, project);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("You have removed the posting."),
                     ),
                   );
                 },
               ),
-              Divider(height: 17, color: Colors.grey),
+              const Divider(height: 17, color: Colors.grey),
               ListTile(
-                title: Text('Start working this project',
+                title: const Text('Start working this project',
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -646,7 +647,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   });
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content:
                           Text("You have started working on this project."),
                     ),

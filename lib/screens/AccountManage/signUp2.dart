@@ -70,7 +70,6 @@ class _Signup2State extends State<SignUp2> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
-  String _errorDetails = '';
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +224,7 @@ class _Signup2State extends State<SignUp2> {
     } catch (e) {
       print('Error occurred: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('An error occurred while processing your request.'),
         ),
       );

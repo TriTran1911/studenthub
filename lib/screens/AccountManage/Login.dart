@@ -12,7 +12,6 @@ import '/components/controller.dart';
 import '/components/modelController.dart';
 import '/connection/http.dart';
 import '../Action/forgotPassword.dart';
-import 'package:studenthub/components/modelController.dart';
 
 class Login extends StatefulWidget {
   @override

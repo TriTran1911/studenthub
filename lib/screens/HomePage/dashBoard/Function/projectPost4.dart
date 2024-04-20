@@ -6,7 +6,6 @@ import '/components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
 import '/connection/http.dart';
-import '/components/modelController.dart';
 
 class ProjectPost4 extends StatefulWidget {
   final String title;

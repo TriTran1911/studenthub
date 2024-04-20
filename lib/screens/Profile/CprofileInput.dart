@@ -1,12 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
-import '/components/controller.dart';
 import '/connection/http.dart';
-import '/components/modelController.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override

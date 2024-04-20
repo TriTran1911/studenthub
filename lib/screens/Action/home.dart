@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/screens/AccountManage/Login.dart';
-import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'package:lottie/lottie.dart';
 

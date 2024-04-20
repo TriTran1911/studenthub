@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import '/components/project.dart';
 import 'projectDetail.dart';
 import 'favoriteList.dart';
-import 'filterProject.dart';
-
-import '/components/proposer.dart';
-import '/screens/Action/home.dart';
 
 class ProjectsPage extends StatefulWidget {
   @override
@@ -183,7 +179,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     setState(() {
       projects = Project.projects
           .where((project) =>
-              project.title?.toLowerCase()?.contains(query.toLowerCase()) ??
+              project.title?.toLowerCase().contains(query.toLowerCase()) ??
               false)
           .toList();
     });
