@@ -15,6 +15,20 @@ class _DashboardPageState extends State<DashboardPage> {
   late List<Project> achievedProjects;
 
   @override
+  void initState() {
+    super.initState();
+    intitialData();
+  }
+
+  Future<void> intitialData() async {
+    List<Project> tmp = await fetchDataProjectsByID('8');
+    setState(() {
+      onBoardingProjects = tmp;
+      workingProjects = tmp;
+      achievedProjects = tmp;
+    });
+  }
+
   Widget build(BuildContext context) {
     _updateProjectsList();
 
@@ -671,6 +685,40 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         );
       },
+    );
+  }
+  void fetchProjectsByCompanyId(String companyId) async {
+    try {
+      List<Project> projects =
+          await Project.getProjectsByCompanyId(companyId);
+      setState(() {
+        onBoardingProjects = projects;
+        workingProjects =
+            projects.where((project) => project.typeFlag == 0).toList();
+        achievedProjects =
+            projects.where((project) => project.typeFlag == 1).toList();
+      });
+    } catch (e) {
+      print('Error fetching projects by company id: $e');
+    }
+  }
+
+  Future<List<Project>> fetchDataProjectsByID(String companyId) async { 
+    return await Project.getProjectsByCompanyId(companyId);
+  }
+}
+
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DashboardPage(),
     );
   }
 }
