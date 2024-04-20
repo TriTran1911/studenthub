@@ -195,14 +195,10 @@ class _Signup2State extends State<SignUp2> {
   }
 
   void _handleSignup() async {
-    User.fullname = _userNameController.text;
-    User.email = _emailController.text;
-    User.password = _passwordController.text;
-
     var data = {
-      'fullname': User.fullname,
-      'email': User.email,
-      'password': User.password,
+      'fullname': _userNameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
       'role': User.roles[0],
     };
 

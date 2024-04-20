@@ -147,10 +147,10 @@ class _SignUpState1 extends State<SignUp1> {
     print(_isCompany);
     if (_isCompany || _isStudent) {
       if (_isCompany) {
-        User.roles.add(1);
+        User.roles[0] = 1;
       }
       if (_isStudent) {
-        User.roles.add(0);
+        User.roles[0] = 0;
       }
       navigateToPagePushReplacement(SignUp2(), context);
     } else {

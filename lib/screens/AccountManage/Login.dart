@@ -11,6 +11,7 @@ import '/screens/HomePage/tabs.dart';
 import '/components/controller.dart';
 import '/connection/http.dart';
 import '../Action/forgotPassword.dart';
+import 'package:studenthub/components/modelController.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -170,25 +171,37 @@ class _LoginState extends State<Login> {
     try {
       var response = await Connection.postRequest('/api/auth/sign-in', body);
       var responseDecoded = jsonDecode(response);
-
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      
       if (responseDecoded['result'] != null) {
+        prefs.setString('token', responseDecoded['result']['token']);
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
+        print('Sign in successful');
 
         var authorization = await Connection.getRequest('/api/auth/me/', {});
         var authorizationDecoded = jsonDecode(authorization);
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', responseDecoded['result']['token']);
-        prefs.setInt(
-            'companyId', authorizationDecoded['result']['company']['id']);
+        if (authorizationDecoded['result']['company'] != null) {
+          prefs.setInt(
+              'companyId', authorizationDecoded['result']['company']['id']);
+        }
+        if (authorizationDecoded['result']['student'] != null) {
+          prefs.setInt(
+              'studentId', authorizationDecoded['result']['student']['id']);
+        }
+        User.roles = List<int>.from(authorizationDecoded['result']['roles']);
 
-        print('Sign in successful');
-        navigateToPagePushReplacement(TabsPage(index: 0), context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TabsPage(index: 0),
+          ),
+        );
       } else {
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
-        print('Sign in failed');
+        print(responseDecoded['errorDetails']);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Invalid email or password."),
