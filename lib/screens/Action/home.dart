@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/screens/AccountManage/Login.dart';
-import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'package:lottie/lottie.dart';
 
@@ -29,14 +28,14 @@ class Home extends StatelessWidget {
           _buildElevatedButton(
             'Company',
             () {
-              navigateToPagePushReplacement(Login(), context);
+              moveToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),
           _buildElevatedButton(
             'Student',
             () {
-              navigateToPagePushReplacement(Login(), context);
+              moveToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),

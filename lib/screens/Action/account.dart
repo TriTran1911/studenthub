@@ -23,7 +23,8 @@ class AccountController extends StatefulWidget {
 
 class _AccountControllerState extends State<AccountController> {
   String? selectedAccount;
-  IconData selectedAccountIcon = Icons.business;
+  IconData selectedAccountIcon =
+      User.roles[0] == 1 ? Icons.business : Icons.school;
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +77,12 @@ class _AccountControllerState extends State<AccountController> {
       if (result['roles'].length == 1) {
         if (result['roles'][0] == 1) {
           result['company'] == null
-              ? navigateToPagePushReplacement(CWithoutProfile(), context)
-              : navigateToPagePushReplacement(CompanyProfile(), context);
+              ? moveToPage(CWithoutProfile(), context)
+              : moveToPage(CompanyProfile(), context);
         } else {
           result['student'] == null
-              ? navigateToPagePushReplacement(StudentInfoScreen(), context)
-              : navigateToPagePushReplacement(StudentInfoScreen(), context);
+              ? moveToPage(StudentInfoScreen(), context)
+              : moveToPage(StudentInfoScreen(), context);
         }
       } else {}
       print(result);
@@ -152,61 +153,132 @@ class _AccountControllerState extends State<AccountController> {
       print('Logout failed');
     }
 
-    navigateToPagePushReplacement(Home(), context);
+    moveToPage(Home(), context);
+  }
+
+  void _handleAddRole(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Add Role',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Do you want to add a role as a ${User.roles[0] == 1 ? 'Student' : 'Company'}?',
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Spacer(),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: Colors.blue, fontSize: 16.0),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        User.roles.add(User.roles[0] == 1 ? 0 : 1);
+                      });
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Role added successfully."),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.white, fontSize: 16.0),
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildListView(
       void Function(String? selectedCompany, IconData companyIcon)
           handleCompanySelection) {
-    List<int> roles;
-    String roleNames = '';
-    var result;
-
-    void _handleListRoles() async {
-      final respone = await Connection.getRequest('/api/auth/me', {});
-      final data = jsonDecode(respone);
-
-      if (data['result'] != null) {
-        result = data['result'];
-        roles = List<int>.from(
-            result['roles'].map((item) => int.parse(item.toString())));
-        // set roleNames to the result['fullname'] of the user
-        roleNames = result['fullname'];
-        // print(roleNames);
-      }
-    }
-
-    _handleListRoles();
-    print(roleNames);
+    print(User.fullname);
 
     return ExpansionTile(
       leading: Icon(selectedAccountIcon),
-      title: Text(selectedAccount ?? 'Select an account',
+      title: Text(selectedAccount ?? User.fullname,
           style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       children: [
         ListView(
           shrinkWrap: true,
           children: [
             ListTile(
-              leading: const Icon(Icons.business),
-              title: const Text(
-                'Hai Pham',
+              leading: Icon(User.roles[0] == 1 ? Icons.business : Icons.school),
+              title: Text(
+                User.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text('Company'),
+              subtitle: Text(User.roles[0] == 1 ? 'Company' : 'Student'),
               onTap: () {
-                handleCompanySelection('Hai Pham', Icons.business);
+                handleCompanySelection(User.fullname,
+                    User.roles[0] == 1 ? Icons.business : Icons.school);
+                Navigator.of(context).pop();
               },
             ),
             ListTile(
-              leading: const Icon(Icons.school),
-              title: const Text(
-                'Hai Pham Student',
+              leading: User.roles.length == 1
+                  ? const Icon(Icons.add)
+                  : Icon(User.roles[1] == 1 ? Icons.business : Icons.school),
+              title: Text(
+                User.roles.length == 1
+                    ? 'Add Role'
+                    : User.roles[1] == 1
+                        ? User.fullname
+                        : User.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: const Text('Student'),
+              subtitle: Text(User.roles.length == 1
+                  ? ''
+                  : User.roles[1] == 1
+                      ? 'Company'
+                      : 'Student'),
               onTap: () {
-                handleCompanySelection('Hai Pham Student', Icons.school);
+                if (User.roles.length == 1) {
+                  _handleAddRole(context);
+                } else {
+                  handleCompanySelection(User.fullname,
+                      User.roles[1] == 1 ? Icons.business : Icons.school);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Change role successfully."),
+                    ),
+                  );
+                  // swap roles
+                  User.roles = [User.roles[1], User.roles[0]];
+                }
               },
             ),
           ],

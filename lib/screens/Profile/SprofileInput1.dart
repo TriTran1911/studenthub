@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'SprofileInput2.dart';
@@ -229,11 +230,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
               ElevatedButton(
                 onPressed: () {
                   _handleSprofileInput1();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StudentInfoScreen2()),
-                  );
+                  moveToPage(StudentInfoScreen2(), context);
                 },
                 child: Text(
                   'Next',
@@ -490,8 +487,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
       "education": educationList,
     };
 
-    var response =
-        await Connection.postRequest('/api/profile/student', data);
+    var response = await Connection.postRequest('/api/profile/student', data);
     var responseDecoded = jsonDecode(response);
     if (responseDecoded['result'] != null) {
       print('SprofileInput1 success');

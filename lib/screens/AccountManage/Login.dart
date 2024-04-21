@@ -53,10 +53,7 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                );
+                moveToPage(ForgotPasswordPage(), context);
               },
               child: const Text(
                 'Forgot password?',
@@ -83,7 +80,7 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 120.0),
             _buildSignUpText(),
             _buildElevatedButton('Sign Up', () {
-              navigateToPagePushReplacement(SignUp1(), context);
+              moveToPage(SignUp1(), context);
             }),
           ],
         ),
@@ -171,27 +168,35 @@ class _LoginState extends State<Login> {
     try {
       var response = await Connection.postRequest('/api/auth/sign-in', body);
       var responseDecoded = jsonDecode(response);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
       if (responseDecoded['result'] != null) {
+        prefs.setString('token', responseDecoded['result']['token']);
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
+        print('Sign in successful');
 
         var authorization = await Connection.getRequest('/api/auth/me/', {});
         var authorizationDecoded = jsonDecode(authorization);
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', responseDecoded['result']['token']);
-        prefs.setInt(
-            'companyId', authorizationDecoded['result']['company']['id']);
+        if (authorizationDecoded['result']['company'] != null) {
+          prefs.setInt(
+              'companyId', authorizationDecoded['result']['company']['id']);
+        }
+        if (authorizationDecoded['result']['student'] != null) {
+          prefs.setInt(
+              'studentId', authorizationDecoded['result']['student']['id']);
+        }
         User.roles = List<int>.from(authorizationDecoded['result']['roles']);
+        User.fullname = authorizationDecoded['result']['fullname'];
         print('Sign in successful');
         print(User.roles.length);
 
-        navigateToPagePushReplacement(TabsPage(index: 0), context);
+        moveToPage(TabsPage(index: 0), context);
       } else {
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
-        print('Sign in failed');
+        print(responseDecoded['errorDetails']);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Invalid email or password."),

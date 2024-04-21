@@ -68,7 +68,7 @@ class _StudentProfileState extends State<StudentProfile> {
             SizedBox(height: 32.0),
             ElevatedButton(
               onPressed: () {
-                navigateToPagePushReplacement(TabsPage(index: 0), context);
+                moveToPage(TabsPage(index: 0), context);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),

@@ -63,7 +63,9 @@ class ProposalsPage extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                ProposalsTab(project: project,),
+                ProposalsTab(
+                  project: project,
+                ),
                 DetailTab(project: project),
                 MessageTab(),
                 HiredTab(),

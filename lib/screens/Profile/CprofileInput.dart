@@ -1,12 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
-import '/components/controller.dart';
 import '/connection/http.dart';
-import '/components/modelController.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override
@@ -142,7 +138,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             String website = _websiteController.text;
             String description = _descriptionController.text;
             postProfile(cname, nstaff, website, description);
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Welcome()),
             );

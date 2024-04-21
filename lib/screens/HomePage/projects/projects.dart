@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import '/components/project.dart';
 import 'projectDetail.dart';
 import 'favoriteList.dart';
-import 'filterProject.dart';
-
-import '/components/proposer.dart';
-import '/screens/Action/home.dart';
 
 class ProjectsPage extends StatefulWidget {
   @override
@@ -13,7 +9,7 @@ class ProjectsPage extends StatefulWidget {
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  late List<Project> projects=[];
+  late List<Project> projects = [];
   late TextEditingController _searchController;
 
   @override
@@ -22,12 +18,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
     intitialData();
     _searchController = TextEditingController();
   }
+
   Future<void> intitialData() async {
     List<Project> tmp = await fetchDataProjects();
     setState(() {
       projects = tmp;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +41,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 IconButton(
                   icon: Icon(Icons.filter_list),
                   onPressed: () {
-                   // _showFilterOptions(context);
+                    // _showFilterOptions(context);
                   },
                 ),
               ],
@@ -94,77 +92,84 @@ class _ProjectsPageState extends State<ProjectsPage> {
             ? DateTime.now().difference(createdAt).inDays
             : 0; // Default value if createdAt is null
 
-
-        return Column(
-          children: [
-            ListTile(
-              title: Text(
-                projects[index].title ?? "No title",
-                style: TextStyle(color: Colors.green),
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: Offset(0, 1),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                  [
-                  Text('Created $daysSinceCreation days ago'),
-                  Text(
-                    'Students are looking for:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Time: ${projects[index].getProjectScopeAsString()}, ${projects[index].numberOfStudents} students needed',
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: (projects[index].description ?? '')
-                          .split('\n')
-                          .map(
-                            (descriptionItem) => Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Text('• $descriptionItem'),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                              'Proposals: less than ${projects[index].countProposals}'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              trailing: IconButton(
-                icon: Icon(
-                  Project.isFavorite(projects[index])
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color:
-                      Project.isFavorite(projects[index]) ? Colors.red : null,
+            ],
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  projects[index].title ?? "No title",
+                  style: TextStyle(color: Colors.green),
                 ),
-                onPressed: () {
-                  _toggleFavorite(projects[index]);
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Created $daysSinceCreation days ago'),
+                    Text(
+                      'Students are looking for:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Time: ${projects[index].getProjectScopeAsString()}, ${projects[index].numberOfStudents} students needed',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: (projects[index].description ?? '')
+                            .split('\n')
+                            .map(
+                              (descriptionItem) => Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Text('• $descriptionItem'),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                                'Proposals: less than ${projects[index].countProposals}'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    Project.isFavorite(projects[index])
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color:
+                        Project.isFavorite(projects[index]) ? Colors.red : null,
+                  ),
+                  onPressed: () {
+                    _toggleFavorite(projects[index]);
+                  },
+                ),
+                onTap: () {
+                  _selectProject(projects[index]);
                 },
               ),
-              onTap: () {
-                _selectProject(projects[index]);
-              },
-            ),
-            Divider(
-              height: 17,
-              color: Colors.grey,
-            ), // Add a divider between projects
-          ],
+            ],
+          ),
         );
       },
     );
@@ -172,9 +177,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   void _filterProjects(String query) {
     setState(() {
-      projects = Project.projects.where((project) =>
-        project.title?.toLowerCase()?.contains(query.toLowerCase()) ?? false
-      ).toList();
+      projects = Project.projects
+          .where((project) =>
+              project.title?.toLowerCase().contains(query.toLowerCase()) ??
+              false)
+          .toList();
     });
   }
 
@@ -266,7 +273,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
   //   });
   // }
 
-
   // void _showFilterOptions(BuildContext context) {
   //   showModalBottomSheet(
   //     context: context,
@@ -277,8 +283,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
   //     },
   //   );
   // }
-
-
 
   void _handleProjectTool(ProjectTool result, Project project) {
     switch (result) {
@@ -299,8 +303,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     // Your implementation to remove a project goes here
   }
 
-  Future<List<Project>> fetchDataProjects() async { 
+  Future<List<Project>> fetchDataProjects() async {
     return await Project.getAllProjectsData();
   }
 }
-

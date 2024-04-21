@@ -70,7 +70,6 @@ class _Signup2State extends State<SignUp2> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _agreedToTerms = false;
-  String _errorDetails = '';
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +169,7 @@ class _Signup2State extends State<SignUp2> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => SignUp2()),
-            );
+            moveToPage(SignUp2(), context);
           },
           child: Text(
             User.roles[0] == 1 ? "Apply as a student" : "Apply as a company",
@@ -195,14 +191,10 @@ class _Signup2State extends State<SignUp2> {
   }
 
   void _handleSignup() async {
-    User.fullname = _userNameController.text;
-    User.email = _emailController.text;
-    User.password = _passwordController.text;
-
     var data = {
-      'fullname': User.fullname,
-      'email': User.email,
-      'password': User.password,
+      'fullname': _userNameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
       'role': User.roles[0],
     };
 
@@ -213,7 +205,7 @@ class _Signup2State extends State<SignUp2> {
       var responseDecoded = jsonDecode(response);
       if (responseDecoded['statusCode'] == 201) {
         print('User signed up successfully');
-        navigateToPagePushReplacement(TabsPage(index: 0), context);
+        moveToPage(TabsPage(index: 0), context);
       } else {
         print('User signed up failed');
         dynamic errorDetails = responseDecoded['errorDetails'];
@@ -232,7 +224,7 @@ class _Signup2State extends State<SignUp2> {
     } catch (e) {
       print('Error occurred: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('An error occurred while processing your request.'),
         ),
       );

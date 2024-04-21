@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/controller.dart';
 import '/components/appbar.dart';
 import 'projectPost3.dart';
 
@@ -116,16 +117,13 @@ class _ProjectPost2State extends State<ProjectPost2> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProjectPost3(
+                  moveToPage(
+                      ProjectPost3(
                         selectedDuration: selectedDuration,
                         numberOfStudents: numberOfStudents,
                         title: widget.title,
                       ),
-                    ),
-                  );
+                      context);
                 },
                 child: Text(
                   'Next: Description',

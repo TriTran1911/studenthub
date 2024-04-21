@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 
-// class User {
-//   static String username = '';
-//   static String email = '';
-//   static String password = '';
-//   static num role = 0;
-//   static bool isCompany = true;
-//   static num nstaff = 0;
-//   static String cname = '';
-//   static String website = '';
-//   static String description = '';
-//   static bool hasProfile = false;
-// }
-
 class appBarIcon {
   static bool isSelected = false;
   static bool isBlocked = true;
@@ -44,10 +31,6 @@ Route _createRoute(Widget page) {
   );
 }
 
-void navigateToPagePushReplacement(Widget page, BuildContext context) {
-  Navigator.of(context).pushReplacement(_createRoute(page));
-}
-
-void navigateToPagePush(Widget page, BuildContext context) {
-  Navigator.of(context).push(_createRoute(page));
+void moveToPage(Widget page, BuildContext context) {
+  Navigator.push(context, _createRoute(page));
 }
