@@ -185,6 +185,7 @@ class _LoginState extends State<Login> {
             'companyId', authorizationDecoded['result']['company']['id']);
         User.roles = List<int>.from(authorizationDecoded['result']['roles']);
         print('Sign in successful');
+        print(User.roles.length);
 
         navigateToPagePushReplacement(TabsPage(index: 0), context);
       } else {
