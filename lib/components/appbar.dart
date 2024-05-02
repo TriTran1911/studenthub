@@ -11,18 +11,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Color.fromARGB(255, 92, 92, 92),
+      backgroundColor: const Color.fromARGB(255, 92, 92, 92),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('StudentHub',
+          const Text('StudentHub',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
           !appBarIcon.isSelected
               ? IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.account_circle,
                     color: Colors.white,
                     size: 30,
@@ -34,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     }
                   })
               : IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.search,
                     color: Colors.white,
                     size: 30,
@@ -52,5 +52,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

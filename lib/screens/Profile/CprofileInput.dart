@@ -36,11 +36,11 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildText(
                 'Tell us about your company and you will be on your way connect with high-skilled students',
                 16),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildText('How many people are in your company?', 16),
             buildRadioListTile('It\'s just me', 'Just me'),
             buildRadioListTile('2-9 employees', '2-9 employees'),
@@ -48,13 +48,13 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             buildRadioListTile('100-1000 employees', '100-1000 employees'),
             buildRadioListTile(
                 'More than 1000 employees', 'More than 1000 employees'),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildTextField(_companyNameController, 'Company name'),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildTextField(_websiteController, 'Website'),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildTextField(_descriptionController, 'Description'),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             buildContinueButton(),
           ],
         ),
@@ -80,7 +80,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
 
   Widget buildRadioListTile(String title, String value) {
     return RadioListTile(
-      title: Text(title, style: TextStyle(fontSize: 14)),
+      title: Text(title, style: const TextStyle(fontSize: 14)),
       value: value,
       groupValue: _selectedCompanySize,
       onChanged: (value) {
@@ -96,7 +96,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -144,7 +144,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text("Please fill in all the required fields."),
               ),
             );
@@ -158,7 +158,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             ),
           ),
         ),
-        child: Text(
+        child: const Text(
           'Continue',
           style: TextStyle(
             color: Colors.white,

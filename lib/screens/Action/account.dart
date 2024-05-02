@@ -175,7 +175,7 @@ class _AccountControllerState extends State<AccountController> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Spacer(),
+                  const SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -188,20 +188,9 @@ class _AccountControllerState extends State<AccountController> {
                   const SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        User.roles.add(User.roles[0] == 1 ? 0 : 1);
-                      });
                       Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Role added successfully."),
-                        ),
-                      );
+                      moveToPage(User.roles[0] == 1 ? StudentInfoScreen() : CWithoutProfile(), context);
                     },
-                    child: const Text(
-                      'Yes',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
                     style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.blue),
@@ -210,6 +199,10 @@ class _AccountControllerState extends State<AccountController> {
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
+                    ),
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.white, fontSize: 16.0),
                     ),
                   ),
                 ],
@@ -224,8 +217,6 @@ class _AccountControllerState extends State<AccountController> {
   Widget _buildListView(
       void Function(String? selectedCompany, IconData companyIcon)
           handleCompanySelection) {
-    print(User.fullname);
-
     return ExpansionTile(
       leading: Icon(selectedAccountIcon),
       title: Text(selectedAccount ?? User.fullname,
@@ -259,11 +250,9 @@ class _AccountControllerState extends State<AccountController> {
                         : User.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(User.roles.length == 1
-                  ? ''
-                  : User.roles[1] == 1
-                      ? 'Company'
-                      : 'Student'),
+              subtitle: User.roles.length == 1
+                  ? null
+                  : Text(User.roles[1] == 1 ? 'Company' : 'Student'),
               onTap: () {
                 if (User.roles.length == 1) {
                   _handleAddRole(context);
@@ -278,6 +267,7 @@ class _AccountControllerState extends State<AccountController> {
                   );
                   // swap roles
                   User.roles = [User.roles[1], User.roles[0]];
+                  print(User.roles[0]);
                 }
               },
             ),

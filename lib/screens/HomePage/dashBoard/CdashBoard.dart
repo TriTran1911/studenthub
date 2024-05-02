@@ -41,6 +41,7 @@ class _DashboardPageState extends State<DashboardPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
