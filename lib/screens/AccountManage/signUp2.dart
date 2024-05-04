@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import '/screens/HomePage/tabs.dart';
 import '/components/appbar.dart';
 import '/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
-import '/connection/http.dart';
+import '/connection/server.dart';
+import 'login.dart';
 
 class SignUp2 extends StatefulWidget {
   @override
@@ -203,21 +203,20 @@ class _Signup2State extends State<SignUp2> {
     try {
       var response = await Connection.postRequest(url, data);
       var responseDecoded = jsonDecode(response);
-      if (responseDecoded['statusCode'] == 201) {
+      print(responseDecoded);
+      if (responseDecoded['result'] != null) {
         print('User signed up successfully');
-        moveToPage(TabsPage(index: 0), context);
-      } else {
-        print('User signed up failed');
-        dynamic errorDetails = responseDecoded['errorDetails'];
-        String errorMessage = '';
-        if (errorDetails is List) {
-          errorMessage = errorDetails.first.toString();
-        } else {
-          errorMessage = errorDetails ?? 'Unknown error occurred';
-        }
+        moveToPage(Login(), context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
+          const SnackBar(
+            content: Text('Please check your email to verify your account.'),
+          ),
+        );
+      } else {
+        print('Error occurred: ${responseDecoded['errorDetails']}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('An error occurred while processing your request.'),
           ),
         );
       }

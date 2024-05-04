@@ -19,7 +19,7 @@ class _SignUpState1 extends State<SignUp1> {
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: _buildBody(context),
       ),
     );
@@ -30,7 +30,7 @@ class _SignUpState1 extends State<SignUp1> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildTitleText(),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         _buildOptionContainer(
           Icons.business,
           'I am a company, find engineer for project',
@@ -41,7 +41,7 @@ class _SignUpState1 extends State<SignUp1> {
             });
           },
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         _buildOptionContainer(
           Icons.engineering,
           'I am a student, find job to apply',
@@ -52,16 +52,16 @@ class _SignUpState1 extends State<SignUp1> {
             });
           },
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         _buildElevatedButton('Create account', _handleOnPressed),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         _buildLoginRow(context),
       ],
     );
   }
 
   Text _buildTitleText() {
-    return Text(
+    return const Text(
       'Join as company or Student',
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -88,7 +88,7 @@ class _SignUpState1 extends State<SignUp1> {
           child: Row(
             children: [
               Icon(icon),
-              SizedBox(width: 8.0),
+              const SizedBox(width: 8.0),
               Expanded(child: Text(text)),
               if (isSelected) Icon(Icons.check),
             ],
@@ -111,7 +111,7 @@ class _SignUpState1 extends State<SignUp1> {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16.0,
         ),
@@ -123,7 +123,7 @@ class _SignUpState1 extends State<SignUp1> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Already have an account?  ",
           textAlign: TextAlign.center,
         ),
@@ -131,7 +131,7 @@ class _SignUpState1 extends State<SignUp1> {
           onTap: () {
             moveToPage(Login(), context);
           },
-          child: Text(
+          child: const Text(
             "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -147,15 +147,15 @@ class _SignUpState1 extends State<SignUp1> {
     print(_isCompany);
     if (_isCompany || _isStudent) {
       if (_isCompany) {
-        User.roles[0] = 1;
+        User.roles.add(1);
       }
       if (_isStudent) {
-        User.roles[0] = 0;
+        User.roles.add(0);
       }
       moveToPage(SignUp2(), context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Please select an option"),
         ),
       );

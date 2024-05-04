@@ -14,7 +14,8 @@ import '/components/controller.dart';
 import 'home.dart';
 import 'package:studenthub/screens/Action/changeLanguage.dart';
 import 'package:studenthub/screens/Action/changeTheme.dart';
-import 'package:studenthub/connection/http.dart';
+import 'package:studenthub/connection/server.dart';
+import '../../screens/Profile/SinputProfile1.dart';
 
 class AccountController extends StatefulWidget {
   @override
@@ -81,7 +82,7 @@ class _AccountControllerState extends State<AccountController> {
               : moveToPage(CompanyProfile(), context);
         } else {
           result['student'] == null
-              ? moveToPage(StudentInfoScreen(), context)
+              ? moveToPage(StudentInputProfile1(), context)
               : moveToPage(StudentInfoScreen(), context);
         }
       } else {}

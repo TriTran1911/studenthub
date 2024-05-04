@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
-import '/connection/http.dart';
+import '/connection/server.dart';
 
 class CWithoutProfile extends StatefulWidget {
   @override

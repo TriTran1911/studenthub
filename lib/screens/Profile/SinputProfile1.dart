@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'dart:convert';
-import '../../connection/http.dart';
+import '../../connection/server.dart';
+import 'SinputProfile2.dart';
+import 'package:studenthub/components/keyword.dart';
 
 class StudentInputProfile1 extends StatefulWidget {
   const StudentInputProfile1({super.key});
@@ -15,113 +17,107 @@ class StudentInputProfile1 extends StatefulWidget {
 }
 
 class _StudentInputProfile1State extends State<StudentInputProfile1> {
-  final List<TechStack> _TechStackList = [];
-  final List<SkillSet> _SkillSetList = [];
-  final List<String> _selectedSkillSet = [];
-  String? _selectedTechStack;
+  List<TechStack> _TechStackList = [];
+  List<SkillSet> _SkillSetList = [];
+
+  final List<SkillSet> _selectedSkillSet = [];
+  TechStack? _selectedTechStack;
   String? _selectedLanguage;
   String? _selectedLanguageLevel;
 
   final searchController = TextEditingController();
 
-  final List<String> _languages = [
-    'Afrikaans',
-    'Albanian',
-    'Arabic',
-    'Armenian',
-    'Basque',
-    'Bengali',
-    'Bulgarian',
-    'Catalan',
-    'Cambodian',
-    'Chinese (Mandarin)',
-    'Croatian',
-    'Czech',
-    'Danish',
-    'Dutch',
-    'English',
-    'Estonian',
-    'Fiji',
-    'Finnish',
-    'French',
-    'Georgian',
-    'German',
-    'Greek',
-    'Gujarati',
-    'Hebrew',
-    'Hindi',
-    'Hungarian',
-    'Icelandic',
-    'Indonesian',
-    'Irish',
-    'Italian',
-    'Japanese',
-    'Javanese',
-    'Korean',
-    'Latin',
-    'Latvian',
-    'Lithuanian',
-    'Macedonian',
-    'Malay',
-    'Malayalam',
-    'Maltese',
-    'Maori',
-    'Marathi',
-    'Mongolian',
-    'Nepali',
-    'Norwegian',
-    'Persian',
-    'Polish',
-    'Portuguese',
-    'Punjabi',
-    'Quechua',
-    'Romanian',
-    'Russian',
-    'Samoan',
-    'Serbian',
-    'Slovak',
-    'Slovenian',
-    'Spanish',
-    'Swahili',
-    'Swedish',
-    'Tamil',
-    'Tatar',
-    'Telugu',
-    'Thai',
-    'Tibetan',
-    'Tonga',
-    'Turkish',
-    'Ukrainian',
-    'Urdu',
-    'Uzbek',
-    'Vietnamese',
-    'Welsh',
-    'Xhosa',
-    'Yiddish',
-    'Yoruba',
-    'Zulu',
-  ];
-
-  // create a list of language levels to be displayed
-  final List<String> _languageLevels = [
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-    'Fluent',
-  ];
-
   @override
   void initState() {
     super.initState();
-    getTechStack();
-    getSkillSet();
+    _fectchData();
+  }
+
+  void _fectchData() async {
+    _TechStackList = await getTechStack();
+    _SkillSetList = await getSkillSet();
+    setState(() {});
+  }
+
+  Future<List<TechStack>> getTechStack() async {
+    var response =
+        await Connection.getRequest('/api/techstack/getAllTechStack', {});
+    var responseDecoded = jsonDecode(response);
+    // init a temp list to store the techstack
+    List<TechStack> list = [];
+
+    if (responseDecoded['result'] != null) {
+      print(responseDecoded['result']);
+      for (var tech in responseDecoded['result']) {
+        list.add(TechStack.fromJson(tech));
+      }
+      return list;
+    } else {
+      throw Exception('Failed to load techstack');
+    }
+  }
+
+  Future<List<SkillSet>> getSkillSet() async {
+    var response =
+        await Connection.getRequest('/api/skillset/getAllSkillSet', {});
+    var responseDecoded = jsonDecode(response);
+    // init a temp list to store the skillset
+    List<SkillSet> list = [];
+
+    if (responseDecoded['result'] != null) {
+      print(responseDecoded['result']);
+      for (var skill in responseDecoded['result']) {
+        list.add(SkillSet.fromJson(skill));
+      }
+      return list;
+    } else {
+      throw Exception('Failed to load skillset');
+    }
+  }
+
+  Future<void> fetchData() async {
+    await getTechStack();
+    await getSkillSet();
+  }
+
+  void postProfile() async {
+    var body = {
+      'techStack': _selectedTechStack?.id.toString(),
+      'skillSet': _selectedSkillSet.map((e) => e.id.toString()).toList(),
+    };
+    try {
+      var response = await Connection.postRequest('/api/profile/student', body);
+      var responseDecoded = jsonDecode(response);
+      print(responseDecoded);
+      if (responseDecoded['result'] != null) {
+        print('Post profile successful');
+        moveToPage(StudentInputProfile2(skillSetList: _SkillSetList), context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile posted successfully'),
+          ),
+        );
+      } else {
+        print('Post profile failed');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(responseDecoded['errorDetails']),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to post profile'),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -138,7 +134,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             const SizedBox(height: 16),
             buildText('Techstack', 20, FontWeight.bold),
             const SizedBox(height: 16),
-            buildDropdownMenu(),
+            buildTechstackDropdownMenu(),
             const SizedBox(height: 16),
             buildText('Skillset', 20, FontWeight.bold),
             const SizedBox(height: 16),
@@ -151,28 +147,22 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
         )),
       ),
       // 'Next' button to navigate to the next page at the bottom of the screen
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0), // adjust the padding as needed
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    const EdgeInsets.all(16.0),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue[400]!),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                ),
-                child: buildText('Next', 16, FontWeight.bold, Colors.white)),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(_selectedTechStack?.name);
+          for (var skill in _selectedSkillSet) {
+            print(skill.name);
+          }
+          // postProfile();
+          moveToPage(
+              StudentInputProfile2(skillSetList: _SkillSetList), context);
+        },
+        backgroundColor: Colors.blue[400],
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: buildText('Next', 16, FontWeight.bold),
       ),
     );
   }
@@ -187,7 +177,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             Row(
               children: [
                 buildAddButton('Language'),
-                buildEditButton('Edit'),
+                buildEditButton('Language'),
               ],
             )
           ],
@@ -198,11 +188,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   Widget buildLanguageList() {
-    return Column(
-      children: [
-        buildText('Add a language', 16, FontWeight.normal),
-      ],
-    );
+    return Container();
   }
 
   Widget buildEducation() {
@@ -362,7 +348,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             decoration: InputDecoration(
               labelText: 'Start year',
               contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                 borderRadius: BorderRadius.circular(5.0),
@@ -380,7 +367,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             decoration: InputDecoration(
               labelText: 'End year',
               contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                 borderRadius: BorderRadius.circular(5.0),
@@ -416,7 +404,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
-      items: _languages.map((String language) {
+      items: languages.map((String language) {
         return DropdownMenuItem<String>(
           value: language,
           child: Text(language),
@@ -449,7 +437,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
-      items: _languageLevels.map((String languageLevel) {
+      items: languageLevels.map((String languageLevel) {
         return DropdownMenuItem<String>(
           value: languageLevel,
           child: Text(languageLevel),
@@ -477,37 +465,112 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   Widget buildEditButton(String text) {
-    return IconButton(onPressed: () {}, icon: const Icon(Icons.edit_outlined));
+    return IconButton(
+        onPressed: () {
+          text == 'Language'
+              ? showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      child: Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              buildText('Edit $text', 20, FontWeight.bold),
+                              const SizedBox(height: 16),
+                              buildLanguageDropdown(),
+                              const SizedBox(height: 16),
+                              buildLanguageLevelDropdown(),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: buildButtonStyle(Colors.grey[400]!),
+                                    child: buildText('Cancel', 16,
+                                        FontWeight.bold, Colors.white),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: buildButtonStyle(Colors.blue[400]!),
+                                    child: buildText('Edit', 16,
+                                        FontWeight.bold, Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
+                    );
+                  },
+                )
+              : showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      child: Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              buildText('Edit $text', 20, FontWeight.bold),
+                              const SizedBox(height: 16),
+                              buildSchoolName(),
+                              const SizedBox(height: 16),
+                              buildStartAndEndYear(),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: buildButtonStyle(Colors.grey[400]!),
+                                    child: buildText('Cancel', 16,
+                                        FontWeight.bold, Colors.white),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: buildButtonStyle(Colors.blue[400]!),
+                                    child: buildText('Edit', 16,
+                                        FontWeight.bold, Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )),
+                    );
+                  },
+                );
+        },
+        icon: const Icon(Icons.edit_outlined));
   }
 
-  Widget buildCenterText(String text, double fontSize, FontWeight fontWeight) {
-    return Center(
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-        ),
-      ),
-    );
-  }
-
-  Widget buildText(String text, double fontSize, FontWeight fontWeight,
-      [Color? color]) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-      ),
-    );
-  }
-
-  // dropdownmenu widget
-  Widget buildDropdownMenu() {
+  Widget buildTechstackDropdownMenu() {
     return DropdownButtonFormField<String>(
-      value: _selectedTechStack,
+      value: _selectedTechStack?.name,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
@@ -519,7 +582,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       }).toList(),
       onChanged: (String? value) {
         setState(() {
-          _selectedTechStack = value!;
+          _selectedTechStack =
+              _TechStackList.firstWhere((element) => element.name == value);
         });
       },
       decoration: InputDecoration(
@@ -536,38 +600,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
         ),
       ),
     );
-  }
-
-  Future<List<TechStack>> getTechStack() async {
-    var response =
-        await Connection.getRequest('/api/techstack/getAllTechStack', {});
-    var responseDecoded = jsonDecode(response);
-
-    if (responseDecoded['result'] != null) {
-      print(responseDecoded['result']);
-      for (var tech in responseDecoded['result']) {
-        _TechStackList.add(TechStack.fromJson(tech));
-      }
-      return _TechStackList;
-    } else {
-      throw Exception('Failed to load techstack');
-    }
-  }
-
-  Future<List<SkillSet>> getSkillSet() async {
-    var response =
-        await Connection.getRequest('/api/skillset/getAllSkillSet', {});
-    var responseDecoded = jsonDecode(response);
-
-    if (responseDecoded['result'] != null) {
-      print(responseDecoded['result']);
-      for (var skill in responseDecoded['result']) {
-        _SkillSetList.add(SkillSet(name: skill['name']));
-      }
-      return _SkillSetList;
-    } else {
-      throw Exception('Failed to load skillset');
-    }
   }
 
   Widget buildSkillset() {
@@ -588,23 +620,22 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             spacing: 10.0,
             runSpacing: 10.0,
             children: _SkillSetList.map(
-                (skillset) => buildSkillsetButton(skillset.name!)).toList(),
+                (SkillSet skillSet) => buildSkillsetButton(skillSet)).toList(),
           ),
         ),
       ),
     );
   }
 
-  Widget buildSkillsetButton(String skillsetName) {
-    bool isSelected = false;
-
+  Widget buildSkillsetButton(SkillSet skillSet) {
+    bool isSelected = _selectedSkillSet.contains(skillSet);
     return TextButton(
       onPressed: () {
         isSelected = !isSelected;
         if (isSelected) {
-          _selectedSkillSet.add(skillsetName);
+          _selectedSkillSet.add(skillSet);
         } else {
-          _selectedSkillSet.remove(skillsetName);
+          _selectedSkillSet.remove(skillSet);
         }
       },
       style: ButtonStyle(
@@ -616,15 +647,15 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
             if (isSelected) {
-              return Colors.blue[400]!;
+              return Colors.grey[400]!;
             }
-            return Colors.grey[400]!;
+            return Colors.blue[400]!;
           },
         ),
         shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
       child: Text(
-        skillsetName,
+        skillSet.name!,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 16,

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:studenthub/connection/http.dart'; // May be needed if using REST API
+import 'package:studenthub/connection/server.dart'; // May be needed if using REST API
 
 class ChangePasswordPage extends StatefulWidget {
   @override

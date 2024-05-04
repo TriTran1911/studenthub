@@ -5,7 +5,7 @@ import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'SprofileInput2.dart';
-import 'package:studenthub/connection/http.dart';
+import 'package:studenthub/connection/server.dart';
 
 final List<String> languageList = [
   'English: Native or Bilingual',
