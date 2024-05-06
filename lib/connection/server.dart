@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '/components/modelController.dart';
 
-final String url_b =
-    Platform.isAndroid ? "http://10.0.2.2:4400" : "http://localhost:4400";
-
+const String url_b = "https://api.studenthub.dev";
 class Connection {
   static Future<dynamic> postRequest(String url, dynamic body) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,6 +61,35 @@ class Connection {
       print("Connect server failed");
       return response.body;
       //throw exception and catch it in UI
+    }
+  }
+
+  static Future<void> putLanguage(int studentId, List<Language> languageList) async {
+    print('Put Language');
+    String url = '/api/language/updateByStudentId/$studentId';
+    try {
+      var data = {
+        "languages": languageList
+            .map((language) => {
+                  "id": null,
+                  "languageName": language.languageName,
+                  "level": language.level,
+                })
+            .toList(),
+      };
+      var response = await putRequest(url, data);
+      var responseDecode = jsonDecode(response);
+      if (responseDecode['result'] != null) {
+        print("Connected to the server successfully");
+        print("Connect server successful");
+        print(response);
+        // Call a method to reload the page
+      } else {
+        print("Failed");
+        print(responseDecode);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -81,13 +81,111 @@ class SkillSet {
 }
 
 class Language {
-  static int? id;
-  static DateTime? createAt;
-  static DateTime? updateAt;
-  static DateTime? deleteAt;
-  static String? languageName;
-  static String? level;
+  final int? id;
+  final DateTime? createAt;
+  final DateTime? updateAt;
+  final DateTime? deleteAt;
+  final String? languageName;
+  final String? level;
+
+  Language(
+      {this.id,
+      this.createAt,
+      this.updateAt,
+      this.deleteAt,
+      this.languageName,
+      this.level});
 }
+
+// generate languageName and level
+class LanguageList {
+  static List<String> languageName = [
+    'Afrikaans',
+    'Albanian',
+    'Arabic',
+    'Armenian',
+    'Basque',
+    'Bengali',
+    'Bulgarian',
+    'Catalan',
+    'Cambodian',
+    'Chinese (Mandarin)',
+    'Croatian',
+    'Czech',
+    'Danish',
+    'Dutch',
+    'English',
+    'Estonian',
+    'Fiji',
+    'Finnish',
+    'French',
+    'Georgian',
+    'German',
+    'Greek',
+    'Gujarati',
+    'Hebrew',
+    'Hindi',
+    'Hungarian',
+    'Icelandic',
+    'Indonesian',
+    'Irish',
+    'Italian',
+    'Japanese',
+    'Javanese',
+    'Korean',
+    'Latin',
+    'Latvian',
+    'Lithuanian',
+    'Macedonian',
+    'Malay',
+    'Malayalam',
+    'Maltese',
+    'Maori',
+    'Marathi',
+    'Mongolian',
+    'Nepali',
+    'Norwegian',
+    'Persian',
+    'Polish',
+    'Portuguese',
+    'Punjabi',
+    'Quechua',
+    'Romanian',
+    'Russian',
+    'Samoan',
+    'Serbian',
+    'Slovak',
+    'Slovenian',
+    'Spanish',
+    'Swahili',
+    'Swedish',
+    'Tamil',
+    'Tatar',
+    'Telugu',
+    'Thai',
+    'Tibetan',
+    'Tonga',
+    'Turkish',
+    'Ukrainian',
+    'Urdu',
+    'Uzbek',
+    'Vietnamese',
+    'Welsh',
+    'Xhosa',
+    'Yiddish',
+    'Yoruba',
+    'Zulu',
+  ];
+  static List<String> level = [
+    'Beginner',
+    'Intermediate',
+    'Advanced',
+    'Fluent',
+  ];
+}
+
+List<String> get languages => LanguageList.languageName;
+List<String> get levels => LanguageList.level;
 
 class Education {
   static int? id;
@@ -113,8 +211,8 @@ class Experience {
 }
 
 Widget loadingDialog() {
-  return AlertDialog(
-    content: const Center(
+  return const AlertDialog(
+    content: Center(
       child: CircularProgressIndicator(),
     ),
   );

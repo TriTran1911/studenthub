@@ -22,8 +22,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   final List<SkillSet> _selectedSkillSet = [];
   TechStack? _selectedTechStack;
-  String? _selectedLanguage;
-  String? _selectedLanguageLevel;
+  List<Language> languageList = [];
+  String? selectedLanguage;
+  String? selectedLanguageLevel; 
 
   final searchController = TextEditingController();
 
@@ -74,6 +75,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       throw Exception('Failed to load skillset');
     }
   }
+  
 
   Future<void> fetchData() async {
     await getTechStack();
@@ -258,7 +260,12 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                                   ),
                                   const SizedBox(width: 16),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      languageList.add(Language(
+                                          languageName: selectedLanguage,
+                                          level: selectedLanguageLevel));
+                                      Navigator.of(context).pop();
+                                    },
                                     style: buildButtonStyle(Colors.blue[400]!),
                                     child: buildText('Add', 16, FontWeight.bold,
                                         Colors.white),
@@ -400,7 +407,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   Widget buildLanguageDropdown() {
     return DropdownButtonFormField<String>(
-      value: _selectedLanguage,
+      value: selectedLanguage,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
@@ -412,7 +419,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       }).toList(),
       onChanged: (String? value) {
         setState(() {
-          _selectedLanguage = value!;
+          selectedLanguage = value;
         });
       },
       decoration: InputDecoration(
@@ -433,11 +440,11 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   Widget buildLanguageLevelDropdown() {
     return DropdownButtonFormField<String>(
-      value: _selectedLanguageLevel,
+      value: selectedLanguageLevel,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
-      items: languageLevels.map((String languageLevel) {
+      items: levels.map((String languageLevel) {
         return DropdownMenuItem<String>(
           value: languageLevel,
           child: Text(languageLevel),
@@ -445,7 +452,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       }).toList(),
       onChanged: (String? value) {
         setState(() {
-          _selectedLanguageLevel = value!;
+          selectedLanguageLevel = value;
         });
       },
       decoration: InputDecoration(
