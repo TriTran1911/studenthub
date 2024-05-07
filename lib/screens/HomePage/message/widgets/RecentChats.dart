@@ -20,7 +20,7 @@ class _RecentChatsState extends State<RecentChats> {
     var response = await Connection.getRequest('/api/message', {});
     var responseDecoded = jsonDecode(response);
 
-    List<Message> messages = [];
+    // List<Message> messages = [];
     if (responseDecoded['result'] != null) {
       print('Success to load message');
       print('model id: ' + modelController.user.id.toString());
@@ -32,7 +32,7 @@ class _RecentChatsState extends State<RecentChats> {
           print("CreatAt: Value is null");
         }
         print("Sender: " + message['sender']['id'].toString());
-        print("Receiver: " + message['project']['id'].toString());
+        print("Project: " + message['project']['id'].toString());
       }
       return messages;
     } else {

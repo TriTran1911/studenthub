@@ -28,9 +28,9 @@ enum MessageType {
 }
 
 // Define a message model to represent different types of messages
-class Message {
+class MessageDetail {
   final String content;
   final MessageType type;
 
-  Message({required this.content, required this.type});
+  MessageDetail({required this.content, required this.type});
 }

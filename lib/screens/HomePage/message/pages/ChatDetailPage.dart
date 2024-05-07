@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:studenthub/components/chatController.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/connection/server.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatBottomSheet.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatReceivedMessage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentMessage.dart';
-import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentScheduleBox.dart';
 
 class ChatDetailPage extends StatefulWidget {
@@ -25,9 +29,48 @@ class ChatDetailPage extends StatefulWidget {
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  final List<Message> _messages = [
-    Message(content: 'Hey, how are you?', type: MessageType.receive)
+  List<MessageDetail> _messages = [
+    // MessageDetail(content: 'Hey, how are you?', type: MessageType.receive)
   ];
+
+  List<Message> messages = [];
+  late Future<List<MessageDetail>> listMessage;
+
+  Future<List<MessageDetail>> getDetailMessage() async {
+    var response = await Connection.getRequest(
+        '/api/message/${widget.projectId}/user/${widget.receiverId}', {});
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded['result'] != null) {
+      print('Success to load message');
+      List<MessageDetail> messageDetails =
+          responseDecoded['result'].map<MessageDetail>((message) {
+        messages.add(Message.fromJson(message));
+        return MessageDetail(
+          content: message['content'],
+          type: message['sender']['id'] == modelController.user.id
+              ? MessageType.send
+              : MessageType.receive,
+          // Add any other fields here
+        );
+      }).toList();
+      return messageDetails;
+    } else {
+      throw Exception('Failed to load message');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    listMessage = getDetailMessage();
+    listMessage.then((messageDetails) {
+      setState(() {
+        this._messages = messageDetails;
+      });
+      print('list mess: ${_messages[0].content}');
+    });
+  }
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
@@ -57,7 +100,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Cristiano',
+                        widget.receiverName,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -97,7 +140,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
         itemCount: _messages.length,
         itemBuilder: (context, index) {
-          Message message = _messages[index];
+          MessageDetail message = _messages[index];
 
           if (message.type == MessageType.send) {
             return ChatSentMessage(message: message.content);
@@ -119,7 +162,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   // Method to add a message to the chat
   void _addMessage(String message) {
     setState(() {
-      _messages.add(Message(content: "$message", type: MessageType.send));
+      _messages.add(MessageDetail(content: "$message", type: MessageType.send));
     });
   }
 
@@ -295,7 +338,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     String content = "Fan A7 wants to schedule a meeting\n";
                     setState(() {
                       _messages.add(
-                        Message(
+                        MessageDetail(
                           content: content,
                           type: MessageType.send,
                         ),
@@ -313,7 +356,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         "End time:      ${Schedule.endDateText}  ${Schedule.endTimeText}";
                     setState(() {
                       _messages.add(
-                        Message(
+                        MessageDetail(
                           content: content,
                           type: MessageType.scheduler,
                         ),

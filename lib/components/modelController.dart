@@ -323,7 +323,8 @@ class Message {
       sender: User.fromMessage(json['sender']),
       receiver: User.fromMessage(json['receiver']),
       interview: json['interview'],
-      project: Project.fromJson(json['project']),
+      project:
+          json['project'] != null ? Project.fromJson(json['project']) : null,
     );
   }
 }
