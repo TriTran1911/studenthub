@@ -116,7 +116,9 @@ class _Signup2State extends State<SignUp2> {
 
   Text _buildTitleText() {
     return Text(
-      User.roles[0] == 1 ? 'Sign up as Company' : 'Sign up as Student',
+      modelController.user.roles[0] == 1
+          ? 'Sign up as Company'
+          : 'Sign up as Student',
       textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
     );
@@ -162,7 +164,7 @@ class _Signup2State extends State<SignUp2> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          User.roles[0] == 1
+          modelController.user.roles[0] == 1
               ? "Looking for a project?  "
               : "Want to offer projects?  ",
           textAlign: TextAlign.center,
@@ -172,7 +174,9 @@ class _Signup2State extends State<SignUp2> {
             moveToPage(SignUp2(), context);
           },
           child: Text(
-            User.roles[0] == 1 ? "Apply as a student" : "Apply as a company",
+            modelController.user.roles[0] == 1
+                ? "Apply as a student"
+                : "Apply as a company",
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.blue,
@@ -195,7 +199,7 @@ class _Signup2State extends State<SignUp2> {
       'fullname': _userNameController.text,
       'email': _emailController.text,
       'password': _passwordController.text,
-      'role': User.roles[0],
+      'role': modelController.user.roles[0],
     };
 
     String url = '/api/auth/sign-up';

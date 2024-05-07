@@ -9,7 +9,6 @@ class Connection {
   static Future<dynamic> postRequest(String url, dynamic body) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print(url_b + url);
     var response = await http.post(
       Uri.parse(url_b + url),
       headers: <String, String>{
@@ -19,7 +18,6 @@ class Connection {
       },
       body: json.encode(body),
     );
-    print(response.body ?? 'null');
     if (response.statusCode == 201 || response.statusCode == 200) {
       print("Connect server successful");
       return response.body;

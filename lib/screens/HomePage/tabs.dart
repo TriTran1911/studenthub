@@ -29,7 +29,9 @@ class _TabsPageState extends State<TabsPage> {
   final List<TabInfo> _tabs = [
     TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.list_alt),
     TabInfo(
-        page: User.roles[0] == 1 ? DashboardPage() : StudentDashboardPage(),
+        page: modelController.user.roles[0] == 1
+            ? DashboardPage()
+            : StudentDashboardPage(),
         label: 'Dashboard',
         icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),

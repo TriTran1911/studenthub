@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/connection/server.dart';
 
 class RecentChats extends StatefulWidget {
   @override
@@ -7,6 +12,39 @@ class RecentChats extends StatefulWidget {
 }
 
 class _RecentChatsState extends State<RecentChats> {
+  List<Message> messages = [];
+  late Future<List<Message>> listMessage;
+
+  Future<List<Message>> getRecentChats() async {
+    var response = await Connection.getRequest('/api/message', {});
+    var responseDecoded = jsonDecode(response);
+
+    List<Message> messages = [];
+    if (responseDecoded['result'] != null) {
+      print('Success to load message');
+      for (var message in responseDecoded['result']) {
+        messages.add(Message.fromJson(message));
+      }
+      print("Messages:");
+      print(messages);
+      return messages;
+    } else {
+      throw Exception('Failed to load message');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    listMessage = getRecentChats();
+    listMessage.then((messages) {
+      setState(() {
+        this.messages = messages;
+      });
+      print('list mess: ${messages[0].id}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +67,7 @@ class _RecentChatsState extends State<RecentChats> {
       ),
       child: Column(
         children: [
-          for (int i = 0; i < 7; i++)
+          for (int i = 0; i < messages.length; i++)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 15),
               child: InkWell(
@@ -58,7 +96,9 @@ class _RecentChatsState extends State<RecentChats> {
                           children: [
                             SizedBox(height: 3),
                             Text(
-                              'Cristiano',
+                              messages[i].sender!.id == modelController.user.id
+                                  ? messages[i].receiver!.fullname
+                                  : messages[i].sender!.fullname,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -66,12 +106,14 @@ class _RecentChatsState extends State<RecentChats> {
                             ),
                             SizedBox(height: 7),
                             Text(
-                              'Hey, how are you?',
+                              messages[i].sender!.id == modelController.user.id
+                                  ? 'You: ' + (messages[i].content ?? '')
+                                  : (messages[i].content ?? ''),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),

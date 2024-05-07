@@ -25,7 +25,7 @@ class AccountController extends StatefulWidget {
 class _AccountControllerState extends State<AccountController> {
   String? selectedAccount;
   IconData selectedAccountIcon =
-      User.roles[0] == 1 ? Icons.business : Icons.school;
+      modelController.user.roles[0] == 1 ? Icons.business : Icons.school;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _AccountControllerState extends State<AccountController> {
 
     if (data['result'] != null) {
       var result = data['result'];
-      User.roles = List<int>.from(
+      modelController.user.roles = List<int>.from(
           result['roles'].map((item) => int.parse(item.toString())));
       if (result['roles'].length == 1) {
         if (result['roles'][0] == 1) {
@@ -171,7 +171,7 @@ class _AccountControllerState extends State<AccountController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Do you want to add a role as a ${User.roles[0] == 1 ? 'Student' : 'Company'}?',
+                'Do you want to add a role as a ${modelController.user.roles[0] == 1 ? 'Student' : 'Company'}?',
               ),
               const SizedBox(height: 16),
               Row(
@@ -190,7 +190,11 @@ class _AccountControllerState extends State<AccountController> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      moveToPage(User.roles[0] == 1 ? StudentInfoScreen() : CWithoutProfile(), context);
+                      moveToPage(
+                          modelController.user.roles[0] == 1
+                              ? StudentInfoScreen()
+                              : CWithoutProfile(),
+                          context);
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -220,46 +224,59 @@ class _AccountControllerState extends State<AccountController> {
           handleCompanySelection) {
     return ExpansionTile(
       leading: Icon(selectedAccountIcon),
-      title: Text(selectedAccount ?? User.fullname,
+      title: Text(selectedAccount ?? modelController.user.fullname,
           style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       children: [
         ListView(
           shrinkWrap: true,
           children: [
             ListTile(
-              leading: Icon(User.roles[0] == 1 ? Icons.business : Icons.school),
+              leading: Icon(modelController.user.roles[0] == 1
+                  ? Icons.business
+                  : Icons.school),
               title: Text(
-                User.fullname,
+                modelController.user.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(User.roles[0] == 1 ? 'Company' : 'Student'),
+              subtitle: Text(
+                  modelController.user.roles[0] == 1 ? 'Company' : 'Student'),
               onTap: () {
-                handleCompanySelection(User.fullname,
-                    User.roles[0] == 1 ? Icons.business : Icons.school);
+                handleCompanySelection(
+                    modelController.user.fullname,
+                    modelController.user.roles[0] == 1
+                        ? Icons.business
+                        : Icons.school);
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
-              leading: User.roles.length == 1
+              leading: modelController.user.roles.length == 1
                   ? const Icon(Icons.add)
-                  : Icon(User.roles[1] == 1 ? Icons.business : Icons.school),
+                  : Icon(modelController.user.roles[1] == 1
+                      ? Icons.business
+                      : Icons.school),
               title: Text(
-                User.roles.length == 1
+                modelController.user.roles.length == 1
                     ? 'Add Role'
-                    : User.roles[1] == 1
-                        ? User.fullname
-                        : User.fullname,
+                    : modelController.user.roles[1] == 1
+                        ? modelController.user.fullname
+                        : modelController.user.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
-              subtitle: User.roles.length == 1
+              subtitle: modelController.user.roles.length == 1
                   ? null
-                  : Text(User.roles[1] == 1 ? 'Company' : 'Student'),
+                  : Text(modelController.user.roles[1] == 1
+                      ? 'Company'
+                      : 'Student'),
               onTap: () {
-                if (User.roles.length == 1) {
+                if (modelController.user.roles.length == 1) {
                   _handleAddRole(context);
                 } else {
-                  handleCompanySelection(User.fullname,
-                      User.roles[1] == 1 ? Icons.business : Icons.school);
+                  handleCompanySelection(
+                      modelController.user.fullname,
+                      modelController.user.roles[1] == 1
+                          ? Icons.business
+                          : Icons.school);
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -267,8 +284,11 @@ class _AccountControllerState extends State<AccountController> {
                     ),
                   );
                   // swap roles
-                  User.roles = [User.roles[1], User.roles[0]];
-                  print(User.roles[0]);
+                  modelController.user.roles = [
+                    modelController.user.roles[1],
+                    modelController.user.roles[0]
+                  ];
+                  print(modelController.user.roles[0]);
                 }
               },
             ),

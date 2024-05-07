@@ -1,14 +1,59 @@
 import 'package:flutter/material.dart';
 
 class User {
-  static int id = 0;
-  static String email = '';
-  static String password = '';
-  static String fullname = '';
-  static List<int> roles = [];
-  static Company company = Company();
-  static Student student = Student();
+  int id;
+  String email;
+  String password;
+  String fullname;
+  List<int> roles;
+  Company company;
+  Student student;
+
+  User({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.fullname,
+    required this.roles,
+    required this.company,
+    required this.student,
+  });
+
+  User.fromMessage(Map<String, dynamic> json)
+      : id = json['id'],
+        fullname = json['fullname'],
+        email =
+            '', // You'll need to update these with actual values from the json map
+        password = '',
+        roles = [],
+        company =
+            Company(), // You'll need to update these with actual values from the json map
+        student =
+            Student(); // You'll need to update these with actual values from the json map
 }
+
+class ModelController {
+  late User user;
+  static final ModelController _instance = ModelController._internal();
+
+  factory ModelController() {
+    return _instance;
+  }
+
+  ModelController._internal() {
+    user = User(
+      id: 0,
+      email: '',
+      password: '',
+      fullname: '',
+      roles: [],
+      company: Company(),
+      student: Student(),
+    );
+  }
+}
+
+ModelController modelController = ModelController();
 
 class Company {
   static int? id;
@@ -19,12 +64,46 @@ class Company {
 }
 
 class Project {
-  static int? companyId;
-  static int? proprojectScopeFlag;
-  static String? title;
-  static int? numberOfStudents;
-  static String? description;
-  static int? typeFlag;
+  int? id;
+  DateTime? createAt;
+  DateTime? updateAt;
+  DateTime? deleteAt;
+  String? companyId;
+  int? proprojectScopeFlag;
+  String? title;
+  String? description;
+  int? numberOfStudents;
+  int? typeFlag;
+  int? statusFlag;
+
+  Project(
+      {this.id,
+      this.createAt,
+      this.updateAt,
+      this.deleteAt,
+      this.companyId,
+      this.proprojectScopeFlag,
+      this.title,
+      this.description,
+      this.numberOfStudents,
+      this.typeFlag,
+      this.statusFlag});
+
+  factory Project.fromJson(Map<String, dynamic> json) {
+    return Project(
+      id: json['id'],
+      createAt: json['createAt'],
+      updateAt: json['updateAt'],
+      deleteAt: json['deleteAt'],
+      companyId: json['companyId'],
+      proprojectScopeFlag: json['proprojectScopeFlag'],
+      title: json['title'],
+      description: json['description'],
+      numberOfStudents: json['numberOfStudents'],
+      typeFlag: json['typeFlag'],
+      statusFlag: json['statusFlag'],
+    );
+  }
 }
 
 class Student {
@@ -216,4 +295,35 @@ Widget loadingDialog() {
       child: CircularProgressIndicator(),
     ),
   );
+}
+
+class Message {
+  int? id;
+  DateTime? createAt;
+  String? content;
+  User? sender;
+  User? receiver;
+  bool? interview;
+  Project? project;
+
+  Message(
+      {this.id,
+      this.createAt,
+      this.content,
+      this.sender,
+      this.receiver,
+      this.interview,
+      this.project});
+
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      id: json['id'],
+      createAt: json['createAt'],
+      content: json['content'],
+      sender: User.fromMessage(json['sender']),
+      receiver: User.fromMessage(json['receiver']),
+      interview: json['interview'],
+      project: Project.fromJson(json['project']),
+    );
+  }
 }

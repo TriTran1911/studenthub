@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   file_picker: ^4.0.10
   intl: ^0.17.0
-  firebase_messaging: ^11.0.0
   custom_clippers: ^2.0.0
   provider: ^5.0.0
 
