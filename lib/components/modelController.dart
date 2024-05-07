@@ -299,7 +299,7 @@ Widget loadingDialog() {
 
 class Message {
   int? id;
-  DateTime? createAt;
+  String? createAt;
   String? content;
   User? sender;
   User? receiver;

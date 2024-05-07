@@ -7,6 +7,19 @@ import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentScheduleBox.dart';
 
 class ChatDetailPage extends StatefulWidget {
+  final int senderId;
+  final int receiverId;
+  final int projectId;
+  final String senderName;
+  final String receiverName;
+  const ChatDetailPage({
+    super.key,
+    required this.senderId,
+    required this.receiverId,
+    required this.projectId,
+    required this.senderName,
+    required this.receiverName,
+  });
   @override
   _ChatDetailPageState createState() => _ChatDetailPageState();
 }

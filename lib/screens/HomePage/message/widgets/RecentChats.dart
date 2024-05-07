@@ -1,10 +1,11 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
+import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
 
 class RecentChats extends StatefulWidget {
   @override
@@ -22,11 +23,17 @@ class _RecentChatsState extends State<RecentChats> {
     List<Message> messages = [];
     if (responseDecoded['result'] != null) {
       print('Success to load message');
+      print('model id: ' + modelController.user.id.toString());
       for (var message in responseDecoded['result']) {
         messages.add(Message.fromJson(message));
+        if (message['createAt'] != null) {
+          print("CreatAt: " + message['createAt']);
+        } else {
+          print("CreatAt: Value is null");
+        }
+        print("Sender: " + message['sender']['id'].toString());
+        print("Receiver: " + message['project']['id'].toString());
       }
-      print("Messages:");
-      print(messages);
       return messages;
     } else {
       throw Exception('Failed to load message');
@@ -72,7 +79,27 @@ class _RecentChatsState extends State<RecentChats> {
               padding: EdgeInsets.symmetric(vertical: 15),
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, "chatDetailPage");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatDetailPage(
+                        senderId:
+                            messages[i].sender!.id! == modelController.user.id
+                                ? messages[i].sender!.id!
+                                : messages[i].receiver!.id!,
+                        receiverId:
+                            messages[i].receiver!.id! == modelController.user.id
+                                ? messages[i].sender!.id!
+                                : messages[i].receiver!.id!,
+                        projectId: messages[i].project!.id!,
+                        senderName: modelController.user.fullname!,
+                        receiverName:
+                            messages[i].receiver!.id! == modelController.user.id
+                                ? messages[i].sender!.fullname!
+                                : messages[i].receiver!.fullname!,
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 65,
@@ -89,68 +116,57 @@ class _RecentChatsState extends State<RecentChats> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 3),
-                            Text(
-                              messages[i].sender!.id == modelController.user.id
-                                  ? messages[i].receiver!.fullname
-                                  : messages[i].sender!.fullname,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                messages[i].sender!.id ==
+                                        modelController.user.id
+                                    ? messages[i].receiver!.fullname
+                                    : messages[i].sender!.fullname,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 7),
-                            Text(
-                              messages[i].sender!.id == modelController.user.id
-                                  ? 'You: ' + (messages[i].content ?? '')
-                                  : (messages[i].content ?? ''),
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
+                              Text(
+                                messages[i].project?.title ?? 'Project Name',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.green,
+                                ),
                               ),
-                            )
-                          ],
+                              SizedBox(height: 5),
+                              Expanded(
+                                child: Text(
+                                  messages[i].sender!.id ==
+                                          modelController.user.id
+                                      ? 'You: ' + (messages[i].content ?? '')
+                                      : (messages[i].content ?? ''),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '10:00',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              width: 23,
-                              height: 23,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '1',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          messages[i].createAt ?? 'Time',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
                         ),
                       )
                     ],
