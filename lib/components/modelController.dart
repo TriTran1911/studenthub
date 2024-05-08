@@ -65,9 +65,9 @@ class Company {
 
 class Project {
   int? id;
-  DateTime? createAt;
-  DateTime? updateAt;
-  DateTime? deleteAt;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
   String? companyId;
   int? proprojectScopeFlag;
   String? title;
@@ -78,9 +78,9 @@ class Project {
 
   Project(
       {this.id,
-      this.createAt,
-      this.updateAt,
-      this.deleteAt,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
       this.companyId,
       this.proprojectScopeFlag,
       this.title,
@@ -92,9 +92,9 @@ class Project {
   factory Project.fromJson(Map<String, dynamic> json) {
     return Project(
       id: json['id'],
-      createAt: json['createAt'],
-      updateAt: json['updateAt'],
-      deleteAt: json['deleteAt'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
       companyId: json['companyId'],
       proprojectScopeFlag: json['proprojectScopeFlag'],
       title: json['title'],
@@ -108,9 +108,9 @@ class Project {
 
 class Student {
   static int? id;
-  static DateTime? createAt;
-  static DateTime? updateAt;
-  static DateTime? deleteAt;
+  static DateTime? createdAt;
+  static DateTime? updatedAt;
+  static DateTime? deletedAt;
   static List<TechStack>? techStack;
   static List<SkillSet>? skillSet;
   static List<dynamic>? proposals;
@@ -121,19 +121,20 @@ class Student {
 
 class TechStack {
   int? id;
-  DateTime? createAt;
-  DateTime? updateAt;
-  DateTime? deleteAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  DateTime? deletedAt;
   String? name;
 
-  TechStack({this.id, this.createAt, this.updateAt, this.deleteAt, this.name});
+  TechStack(
+      {this.id, this.createdAt, this.updatedAt, this.deletedAt, this.name});
 
   factory TechStack.fromJson(Map<String, dynamic> json) {
     return TechStack(
       id: json['id'],
-      createAt: json['createAt'],
-      updateAt: json['updateAt'],
-      deleteAt: json['deleteAt'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
       name: json['name'],
     );
   }
@@ -141,19 +142,20 @@ class TechStack {
 
 class SkillSet {
   int? id;
-  DateTime? createAt;
-  DateTime? updateAt;
-  DateTime? deleteAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  DateTime? deletedAt;
   String? name;
 
-  SkillSet({this.id, this.createAt, this.updateAt, this.deleteAt, this.name});
+  SkillSet(
+      {this.id, this.createdAt, this.updatedAt, this.deletedAt, this.name});
 
   factory SkillSet.fromJson(Map<String, dynamic> json) {
     return SkillSet(
       id: json['id'],
-      createAt: json['createAt'],
-      updateAt: json['updateAt'],
-      deleteAt: json['deleteAt'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
       name: json['name'],
     );
   }
@@ -161,17 +163,17 @@ class SkillSet {
 
 class Language {
   final int? id;
-  final DateTime? createAt;
-  final DateTime? updateAt;
-  final DateTime? deleteAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
   final String? languageName;
   final String? level;
 
   Language(
       {this.id,
-      this.createAt,
-      this.updateAt,
-      this.deleteAt,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
       this.languageName,
       this.level});
 }
@@ -268,9 +270,9 @@ List<String> get levels => LanguageList.level;
 
 class Education {
   static int? id;
-  static DateTime? createAt;
-  static DateTime? updateAt;
-  static DateTime? deleteAt;
+  static DateTime? createdAt;
+  static DateTime? updatedAt;
+  static DateTime? deletedAt;
   static String? schoolName;
   static int? startYear;
   static int? endYear;
@@ -278,9 +280,9 @@ class Education {
 
 class Experience {
   static int? id;
-  static DateTime? createAt;
-  static DateTime? updateAt;
-  static DateTime? deleteAt;
+  static DateTime? createdAt;
+  static DateTime? updatedAt;
+  static DateTime? deletedAt;
   static int? studentId;
   static String? title;
   static String? startMonth;
@@ -299,7 +301,7 @@ Widget loadingDialog() {
 
 class Message {
   int? id;
-  String? createAt;
+  String? createdAt;
   String? content;
   User? sender;
   User? receiver;
@@ -308,7 +310,7 @@ class Message {
 
   Message(
       {this.id,
-      this.createAt,
+      this.createdAt,
       this.content,
       this.sender,
       this.receiver,
@@ -318,7 +320,7 @@ class Message {
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       id: json['id'],
-      createAt: json['createAt'],
+      createdAt: json['createdAt'],
       content: json['content'],
       sender: User.fromMessage(json['sender']),
       receiver: User.fromMessage(json['receiver']),

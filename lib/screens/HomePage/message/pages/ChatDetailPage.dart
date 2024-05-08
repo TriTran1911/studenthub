@@ -1,10 +1,13 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
+import 'package:studenthub/connection/socket.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatBottomSheet.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatReceivedMessage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentMessage.dart';
@@ -29,10 +32,10 @@ class ChatDetailPage extends StatefulWidget {
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  List<MessageDetail> _messages = [
-    // MessageDetail(content: 'Hey, how are you?', type: MessageType.receive)
-  ];
+  final ScrollController _scrollController = ScrollController();
+  late IO.Socket socket;
 
+  List<MessageDetail> _messages = [];
   List<Message> messages = [];
   late Future<List<MessageDetail>> listMessage;
 
@@ -51,13 +54,52 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           type: message['sender']['id'] == modelController.user.id
               ? MessageType.send
               : MessageType.receive,
-          // Add any other fields here
         );
       }).toList();
       return messageDetails;
     } else {
       throw Exception('Failed to load message');
     }
+  }
+
+  void connect() {
+    socket = SocketService().connectSocket();
+
+    socket.io.options?['query'] = {'project_id': widget.projectId};
+    socket.connect();
+
+    socket.onConnect((data) => {
+          print('Connected'),
+        });
+
+    // socket.onDisconnect((data) => {
+    //       print('Disconnected'),
+    //     });
+
+    socket.onConnectError((data) => print('$data'));
+    socket.onError((data) => print(data));
+
+    socket.on('RECEIIVE_MESSAGE', (data) {
+      print("Chat detail: $data");
+      // print("Chat content: ${data['notification']['message']['content']}");
+      // print("Id sender: ${data['notification']['message']['sender']['id']}");
+      // setState(() {
+      //   _messages.add(MessageDetail(
+      //     content: data['notification']['message']['content'],
+      //     type: data['notification']['message']['sender']['id'] ==
+      //             modelController.user.id
+      //         ? MessageType.send
+      //         : MessageType.receive,
+      //   ));
+      //   _scrollToBottom();
+      // });
+    });
+    socket.on('NOTI_${modelController.user.id}', (data) {
+      print(data);
+    });
+    socket.on('ERROR', (data) {
+      print(data);
+    });
   }
 
   @override
@@ -67,9 +109,42 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     listMessage.then((messageDetails) {
       setState(() {
         this._messages = messageDetails;
+        _scrollToBottom();
       });
-      print('list mess: ${_messages[0].content}');
     });
+    print('Sender: ${widget.senderId}');
+    print('Receiver: ${widget.receiverId}');
+
+    connect();
+    print('Handle receive message');
+    socket.on('RECEIIVE_MESSAGE', (data) {
+      print("Chat content: ${data['notification']['message']['content']}");
+      print("Id sender: ${data['notification']['message']['sender']['id']}");
+      setState(() {
+        _messages.add(MessageDetail(
+          content: data['notification']['message']['content'],
+          type: data['notification']['message']['sender']['id'] ==
+                  modelController.user.id
+              ? MessageType.send
+              : MessageType.receive,
+        ));
+        _scrollToBottom();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    socket.disconnect();
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   DateTime startDate = DateTime.now();
@@ -136,34 +211,60 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           ),
         ),
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-        itemCount: _messages.length,
-        itemBuilder: (context, index) {
-          MessageDetail message = _messages[index];
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              controller: _scrollController,
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
 
-          if (message.type == MessageType.send) {
-            return ChatSentMessage(message: message.content);
-          } else if (message.type == MessageType.receive) {
-            return ChatReceivedMessage(message: message.content);
-          } else if (message.type == MessageType.scheduler) {
-            return ChatSentScheduleBox(content: message.content);
-          }
-
-          return SizedBox(); // Placeholder
-        },
-      ),
-      bottomSheet: ChatBottomSheet(
-        onMessageSent: _addMessage,
+                if (message.type == MessageType.send) {
+                  return ChatSentMessage(message: message.content);
+                } else if (message.type == MessageType.receive) {
+                  return ChatReceivedMessage(message: message.content);
+                } else if (message.type == MessageType.scheduler) {
+                  return ChatSentScheduleBox(content: message.content);
+                }
+              },
+            ),
+          ),
+          ChatBottomSheet(
+            onMessageSent: _addMessage,
+          ),
+        ],
       ),
     );
   }
 
   // Method to add a message to the chat
-  void _addMessage(String message) {
+  void _addMessage(String message) async {
+    var data = {
+      'projectId': widget.projectId,
+      'receiverId': widget.receiverId,
+      'senderId': widget.senderId,
+      'content': message,
+      'messageFlag': 0,
+    };
+
+    var response =
+        await Connection.postRequest('/api/message/sendMessage', data);
+    var responseDecoded = jsonDecode(response);
+    if (responseDecoded != null) {
+      print('Sent message successful');
+    } else {
+      print('Sent message failed');
+    }
+
     setState(() {
+      print('Message length: ${_messages.length}');
       _messages.add(MessageDetail(content: "$message", type: MessageType.send));
+      print('Message sent: $message');
+      print('Message length: ${_messages.length}');
     });
+    _scrollToBottom();
   }
 
   // Method to show video call dialog
@@ -329,7 +430,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close the dialog
+                    Navigator.pop(context);
                   },
                   child: Text("Cancel", style: TextStyle(color: Colors.blue)),
                 ),
@@ -344,7 +445,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         ),
                       );
                     });
-
                     // Prepare schedule information
                     Schedule.duration =
                         endDate.difference(startDate).inMinutes.toString();

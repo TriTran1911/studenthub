@@ -20,19 +20,10 @@ class _RecentChatsState extends State<RecentChats> {
     var response = await Connection.getRequest('/api/message', {});
     var responseDecoded = jsonDecode(response);
 
-    // List<Message> messages = [];
     if (responseDecoded['result'] != null) {
       print('Success to load message');
-      print('model id: ' + modelController.user.id.toString());
       for (var message in responseDecoded['result']) {
         messages.add(Message.fromJson(message));
-        if (message['createAt'] != null) {
-          print("CreatAt: " + message['createAt']);
-        } else {
-          print("CreatAt: Value is null");
-        }
-        print("Sender: " + message['sender']['id'].toString());
-        print("Project: " + message['project']['id'].toString());
       }
       return messages;
     } else {
@@ -48,7 +39,6 @@ class _RecentChatsState extends State<RecentChats> {
       setState(() {
         this.messages = messages;
       });
-      print('list mess: ${messages[0].id}');
     });
   }
 
@@ -162,7 +152,14 @@ class _RecentChatsState extends State<RecentChats> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: Text(
-                          messages[i].createAt ?? 'Time',
+                          isSameTime(DateTime.parse(messages[i].createdAt!)) ==
+                                  1
+                              ? "${DateFormat('HH:mm').format(DateTime.parse(messages[i].createdAt!))} "
+                              : (isSameTime(DateTime.parse(
+                                          messages[i].createdAt!)) ==
+                                      2
+                                  ? "${DateFormat('dd/MM').format(DateTime.parse(messages[i].createdAt!))} "
+                                  : "${DateFormat('dd/MM/yyyy').format(DateTime.parse(messages[i].createdAt!))} "),
                           style: TextStyle(
                             fontSize: 15,
                             color: Colors.black,
@@ -178,4 +175,15 @@ class _RecentChatsState extends State<RecentChats> {
       ),
     );
   }
+}
+
+int isSameTime(DateTime s) {
+  if (DateTime.now().year == s.year &&
+      DateTime.now().month == s.month &&
+      DateTime.now().day == s.day) {
+    return 1;
+  } else if (DateTime.now().year == s.year && DateTime.now().day != s.day) {
+    return 2;
+  }
+  return 0;
 }

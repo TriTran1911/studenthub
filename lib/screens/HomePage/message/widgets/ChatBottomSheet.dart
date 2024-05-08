@@ -68,6 +68,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet> {
                 String message = _textEditingController.text.trim();
                 if (message.isNotEmpty) {
                   widget.onMessageSent(message);
+                  print('Message sent: $message');
                   _textEditingController.clear();
                 }
               },
