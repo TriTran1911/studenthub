@@ -66,16 +66,17 @@ class _LoginState extends State<Login> {
             ),
             const SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
-              if (_isInputValid()) {
-                appBarIcon.isBlocked = false;
-                _handleSingIn(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Please fill in all the required fields."),
-                  ),
-                );
-              }
+              _handleSingIn(context);
+              // if (_isInputValid()) {
+              //   appBarIcon.isBlocked = false;
+              //   _handleSingIn(context);
+              // } else {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(
+              //       content: Text("Please fill in all the required fields."),
+              //     ),
+              //   );
+              // }
             }),
             const SizedBox(height: 120.0),
             _buildSignUpText(),
@@ -161,17 +162,21 @@ class _LoginState extends State<Login> {
     showDialog(context: context, builder: (context) => LoadingPage());
 
     var body = {
-      'email': _usernameController.text,
-      'password': _passwordController.text,
+      'email': 'killisdeath04@gmail.com',
+      'password': '123456Aa@',
     };
+    print(body);
 
     try {
       var response = await Connection.postRequest('/api/auth/sign-in', body);
+      print(response);
       var responseDecoded = jsonDecode(response);
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(responseDecoded);
 
       if (responseDecoded['result'] != null) {
         prefs.setString('token', responseDecoded['result']['token']);
+        // print('Token: ${responseDecoded['result']['token']}');
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
         print('Sign in successful');
