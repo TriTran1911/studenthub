@@ -191,6 +191,8 @@ class _LoginState extends State<Login> {
         User.fullname = authorizationDecoded['result']['fullname'];
         print('Sign in successful');
         print(User.roles.length);
+        // print id
+        print(authorizationDecoded['result']['id']);
 
         moveToPage(TabsPage(index: 0), context);
       } else {

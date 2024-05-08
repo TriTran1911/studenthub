@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
@@ -23,10 +24,15 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   final List<SkillSet> _selectedSkillSet = [];
   TechStack? _selectedTechStack;
   List<Language> languageList = [];
+  List<Education> educationList = [];
   String? selectedLanguage;
-  String? selectedLanguageLevel; 
+  String? selectedLanguageLevel;
+  String? selectedSchoolName;
+  DateTime? selectedStartYear;
+  DateTime? selectedEndYear;
 
-  final searchController = TextEditingController();
+  final _dateStartedController = TextEditingController();
+  final _dateEndedController = TextEditingController();
 
   @override
   void initState() {
@@ -75,7 +81,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       throw Exception('Failed to load skillset');
     }
   }
-  
 
   Future<void> fetchData() async {
     await getTechStack();
@@ -87,13 +92,17 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       'techStack': _selectedTechStack?.id.toString(),
       'skillSet': _selectedSkillSet.map((e) => e.id.toString()).toList(),
     };
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? studentId = prefs.getInt('studentId');
+    await Connection.putLanguage(studentId!, languageList);
+
     try {
       var response = await Connection.postRequest('/api/profile/student', body);
       var responseDecoded = jsonDecode(response);
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
         print('Post profile successful');
-        moveToPage(StudentInputProfile2(skillSetList: _SkillSetList), context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Profile posted successfully'),
@@ -145,27 +154,45 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             buildLanguage(),
             const SizedBox(height: 16),
             buildEducation(),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // postProfile();
+                    moveToPage(
+                        StudentInputProfile2(skillSetList: _SkillSetList),
+                        context);
+                  },
+                  style: buildButtonStyle(Colors.blue[400]!),
+                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
+                ),
+              ],
+            ),
           ],
         )),
       ),
       // 'Next' button to navigate to the next page at the bottom of the screen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(_selectedTechStack?.name);
-          for (var skill in _selectedSkillSet) {
-            print(skill.name);
-          }
-          // postProfile();
-          moveToPage(
-              StudentInputProfile2(skillSetList: _SkillSetList), context);
-        },
-        backgroundColor: Colors.blue[400],
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: buildText('Next', 16, FontWeight.bold),
-      ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     print(_selectedTechStack?.name);
+      //     for (var skill in _selectedSkillSet) {
+      //       print(skill.name);
+      //     }
+      //     // postProfile();
+      //     // put language
+      //     moveToPage(
+      //         StudentInputProfile2(skillSetList: _SkillSetList), context);
+      //   },
+      //   backgroundColor: Colors.blue[400],
+      //   foregroundColor: Colors.white,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(15.0),
+      //   ),
+      //   child: buildText('Next', 16, FontWeight.bold),
+      // ),
     );
   }
 
@@ -176,21 +203,56 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             buildText('Language', 20, FontWeight.bold),
-            Row(
-              children: [
-                buildAddButton('Language'),
-                buildEditButton('Language'),
-              ],
-            )
+            buildAddButton('Language'),
           ],
         ),
+        const SizedBox(height: 16),
         buildLanguageList(),
       ],
     );
   }
 
   Widget buildLanguageList() {
-    return Container();
+    // display the language list
+    return Column(
+      children: <Widget>[
+        for (var language in languageList)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildText(
+                          language.languageName ?? '', 16, FontWeight.bold),
+                      buildText(language.level ?? '', 16, FontWeight.normal,
+                          Colors.grey),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      buildEditButton(
+                          'Language', languageList.indexOf(language)),
+                      const SizedBox(width: 16),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              languageList.remove(language);
+                            });
+                          },
+                          icon: const Icon(Icons.delete_outline))
+                    ],
+                  )
+                ],
+              ),
+              // check if the language is the last element in the list
+              if (language != languageList.last) const SizedBox(height: 16),
+            ],
+          ),
+      ],
+    );
   }
 
   Widget buildEducation() {
@@ -200,11 +262,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             buildText('Education', 20, FontWeight.bold),
-            Row(
-              children: [
-                buildAddButton('Education'),
-              ],
-            )
+            buildAddButton('Education'),
           ],
         ),
         buildEducationList(),
@@ -214,8 +272,41 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   Widget buildEducationList() {
     return Column(
-      children: [
-        buildText('Add an education', 16, FontWeight.normal),
+      children: <Widget>[
+        for (var education in educationList)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildText(
+                          education.schoolName ?? '', 16, FontWeight.bold),
+                      buildText('${education.startYear} - ${education.endYear}',
+                          16, FontWeight.normal, Colors.grey),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      buildEditButton(
+                          'Education', educationList.indexOf(education)),
+                      const SizedBox(width: 16),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              educationList.remove(education);
+                            });
+                          },
+                          icon: const Icon(Icons.delete_outline))
+                    ],
+                  )
+                ],
+              ),
+              if (education != educationList.last) const SizedBox(height: 16),
+            ],
+          ),
       ],
     );
   }
@@ -243,9 +334,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                             children: [
                               buildText('Add a $text', 20, FontWeight.bold),
                               const SizedBox(height: 16),
-                              buildLanguageDropdown(),
+                              buildLanguageDropdown(-1),
                               const SizedBox(height: 16),
-                              buildLanguageLevelDropdown(),
+                              buildLanguageLevelDropdown(-1),
                               const SizedBox(height: 16),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -261,9 +352,11 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                                   const SizedBox(width: 16),
                                   ElevatedButton(
                                     onPressed: () {
-                                      languageList.add(Language(
-                                          languageName: selectedLanguage,
-                                          level: selectedLanguageLevel));
+                                      setState(() {
+                                        languageList.add(Language(
+                                            languageName: selectedLanguage,
+                                            level: selectedLanguageLevel));
+                                      });
                                       Navigator.of(context).pop();
                                     },
                                     style: buildButtonStyle(Colors.blue[400]!),
@@ -305,6 +398,12 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {
+                                      setState(() {
+                                        educationList.add(Education(
+                                            schoolName: selectedSchoolName,
+                                            startYear: selectedStartYear,
+                                            endYear: selectedEndYear));
+                                      });
                                       Navigator.of(context).pop();
                                     },
                                     style: buildButtonStyle(Colors.grey[400]!),
@@ -351,39 +450,79 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     return Row(
       children: [
         Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Start year',
-              contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.circular(5.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: TextFormField(
+              readOnly: true,
+              controller: _dateStartedController,
+              decoration: InputDecoration(
+                labelText: 'Start year',
+                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                ).then((DateTime? value) {
+                  setState(() {
+                    selectedStartYear = value;
+                    _dateStartedController.text = value == null
+                        ? ''
+                        : '${value.day}-${value.month}-${value.year}';
+                  });
+                });
+              },
             ),
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 6),
         Expanded(
-          child: TextFormField(
-            decoration: InputDecoration(
-              labelText: 'End year',
-              contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.circular(5.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: TextFormField(
+              readOnly: true,
+              controller: TextEditingController(
+                  text: selectedEndYear == null
+                      ? ''
+                      : '${selectedEndYear!.day}-${selectedEndYear!.month}-${selectedEndYear!.year}'),
+              decoration: InputDecoration(
+                labelText: 'End year',
+                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: selectedStartYear ?? DateTime(1900),
+                  lastDate: DateTime.now(),
+                ).then((DateTime? value) {
+                  setState(() {
+                    selectedEndYear = value;
+                  });
+                });
+              },
             ),
           ),
         ),
@@ -391,23 +530,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     );
   }
 
-  ButtonStyle buildButtonStyle(Color color) {
-    return ButtonStyle(
-      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-        const EdgeInsets.all(16.0),
-      ),
-      backgroundColor: MaterialStateProperty.all<Color>(color),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-      ),
-    );
-  }
-
-  Widget buildLanguageDropdown() {
+  Widget buildLanguageDropdown(int index) {
     return DropdownButtonFormField<String>(
-      value: selectedLanguage,
+      value: index != -1 ? languageList[index].languageName : null,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
@@ -438,9 +563,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     );
   }
 
-  Widget buildLanguageLevelDropdown() {
+  Widget buildLanguageLevelDropdown(int index) {
     return DropdownButtonFormField<String>(
-      value: selectedLanguageLevel,
+      value: index != -1 ? languageList[index].level : null,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
@@ -471,7 +596,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     );
   }
 
-  Widget buildEditButton(String text) {
+  Widget buildEditButton(String text, int index) {
     return IconButton(
         onPressed: () {
           text == 'Language'
@@ -494,9 +619,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                             children: [
                               buildText('Edit $text', 20, FontWeight.bold),
                               const SizedBox(height: 16),
-                              buildLanguageDropdown(),
+                              buildLanguageDropdown(index),
                               const SizedBox(height: 16),
-                              buildLanguageLevelDropdown(),
+                              buildLanguageLevelDropdown(index),
                               const SizedBox(height: 16),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -559,7 +684,15 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                                   ),
                                   const SizedBox(width: 16),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        educationList[index] = Education(
+                                            schoolName: selectedSchoolName,
+                                            startYear: selectedStartYear,
+                                            endYear: selectedEndYear);
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
                                     style: buildButtonStyle(Colors.blue[400]!),
                                     child: buildText('Edit', 16,
                                         FontWeight.bold, Colors.white),
@@ -576,25 +709,24 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   Widget buildTechstackDropdownMenu() {
-    return DropdownButtonFormField<String>(
-      value: _selectedTechStack?.name,
+    return DropdownButtonFormField<TechStack>(
+      value: _selectedTechStack,
       dropdownColor: Colors.white,
       isExpanded: true,
       icon: const Icon(Icons.arrow_drop_down),
       items: _TechStackList.map((TechStack techStack) {
-        return DropdownMenuItem<String>(
-          value: techStack.name,
+        return DropdownMenuItem<TechStack>(
+          value: techStack,
           child: Text(techStack.name!),
         );
       }).toList(),
-      onChanged: (String? value) {
+      onChanged: (TechStack? value) {
         setState(() {
-          _selectedTechStack =
-              _TechStackList.firstWhere((element) => element.name == value);
+          _selectedTechStack = value;
         });
       },
       decoration: InputDecoration(
-        labelText: "Select a position",
+        labelText: "Select a techstack",
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
         enabledBorder: OutlineInputBorder(

@@ -188,13 +188,22 @@ List<String> get languages => LanguageList.languageName;
 List<String> get levels => LanguageList.level;
 
 class Education {
-  static int? id;
-  static DateTime? createAt;
-  static DateTime? updateAt;
-  static DateTime? deleteAt;
-  static String? schoolName;
-  static int? startYear;
-  static int? endYear;
+  final int? id;
+  final DateTime? createAt;
+  final DateTime? updateAt;
+  final DateTime? deleteAt;
+  final String? schoolName;
+  final DateTime? startYear;
+  final DateTime? endYear;
+
+  Education(
+      {this.id,
+      this.createAt,
+      this.updateAt,
+      this.deleteAt,
+      this.schoolName,
+      this.startYear,
+      this.endYear});
 }
 
 class Experience {

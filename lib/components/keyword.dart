@@ -23,3 +23,17 @@ Widget buildCenterText(String text, double fontSize, FontWeight fontWeight) {
     ),
   );
 }
+
+ButtonStyle buildButtonStyle(Color color) {
+  return ButtonStyle(
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+      const EdgeInsets.all(16.0),
+    ),
+    backgroundColor: MaterialStateProperty.all<Color>(color),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+    ),
+  );
+}

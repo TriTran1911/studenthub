@@ -101,6 +101,20 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
               const SizedBox(height: 16.0),
               projectCards(),
               const SizedBox(height: 16.0),
+              Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // postProfile();
+                    moveToPage(
+                        const StudentInputProfile3(), context);
+                  },
+                  style: buildButtonStyle(Colors.blue[400]!),
+                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
+                ),
+              ],
+            ),
             ],
           ),
         ),
