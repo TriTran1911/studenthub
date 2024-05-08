@@ -8,7 +8,8 @@ import '../../components/appbar.dart';
 import 'dart:convert';
 import '../../connection/server.dart';
 import 'SinputProfile2.dart';
-import 'package:studenthub/components/keyword.dart';
+import 'package:studenthub/components/decoration.dart';
+import 'package:studenthub/components/loading.dart';
 
 class StudentInputProfile1 extends StatefulWidget {
   const StudentInputProfile1({super.key});
@@ -25,14 +26,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   TechStack? _selectedTechStack;
   List<Language> languageList = [];
   List<Education> educationList = [];
-  String? selectedLanguage;
-  String? selectedLanguageLevel;
-  String? selectedSchoolName;
-  DateTime? selectedStartYear;
-  DateTime? selectedEndYear;
-
-  final _dateStartedController = TextEditingController();
-  final _dateEndedController = TextEditingController();
 
   @override
   void initState() {
@@ -88,41 +81,65 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   void postProfile() async {
-    var body = {
-      'techStack': _selectedTechStack?.id.toString(),
-      'skillSet': _selectedSkillSet.map((e) => e.id.toString()).toList(),
-    };
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? studentId = prefs.getInt('studentId');
-    await Connection.putLanguage(studentId!, languageList);
+    print(studentId);
 
-    try {
-      var response = await Connection.postRequest('/api/profile/student', body);
-      var responseDecoded = jsonDecode(response);
-      print(responseDecoded);
-      if (responseDecoded['result'] != null) {
-        print('Post profile successful');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile posted successfully'),
-          ),
-        );
-      } else {
-        print('Post profile failed');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responseDecoded['errorDetails']),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to post profile'),
-        ),
-      );
+    var datats = {
+      'techStackId': _selectedTechStack?.id.toString(),
+      'skillSets': _selectedSkillSet.map((e) => e.id.toString()).toList(),
+    };
+    var datal = {
+      "languages": languageList
+          .map((language) => {
+                "id": null,
+                "languageName": language.languageName,
+                "level": language.level,
+              })
+          .toList(),
+    };
+    var datae = {
+      "educations": educationList
+          .map((education) => {
+                "id": null,
+                "schoolName": education.schoolName,
+                "startYear": education.startYear,
+                "endYear": education.endYear,
+              })
+          .toList(),
+    };
+    for (var Education in educationList) {
+      print(Education.schoolName);
+      print(Education.startYear);
+      print(Education.endYear);
     }
+    await Connection.putRequest(
+        '/api/education/updateByStudentID/$studentId', datae);
+    // try {
+    //   var response = await Connection.postRequest('/api/profile/student', datats);
+    //   var responseDecoded = jsonDecode(response);
+    //   print(responseDecoded);
+    //   if (responseDecoded['result'] != null) {
+    //     print('Post profile successful');
+    //     await Connection.putRequest(
+    //         '/api/language/updateByStudentID/$studentId', datal);
+    //     await Connection.putRequest(
+    //         '/api/education/updateByStudentID/$studentId', datae);
+    //   } else {
+    //     print('Post profile failed');
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text(responseDecoded['errorDetails']),
+    //       ),
+    //     );
+    //   }
+    // } catch (e) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('Failed to post profile'),
+    //     ),
+    //   );
+    // }
   }
 
   @override
@@ -160,10 +177,10 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // postProfile();
-                    moveToPage(
-                        StudentInputProfile2(skillSetList: _SkillSetList),
-                        context);
+                    postProfile();
+                    // moveToPage(
+                    //     StudentInputProfile2(skillSetList: _SkillSetList),
+                    //     context);
                   },
                   style: buildButtonStyle(Colors.blue[400]!),
                   child: buildText('Next', 16, FontWeight.bold, Colors.white),
@@ -173,26 +190,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
           ],
         )),
       ),
-      // 'Next' button to navigate to the next page at the bottom of the screen
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     print(_selectedTechStack?.name);
-      //     for (var skill in _selectedSkillSet) {
-      //       print(skill.name);
-      //     }
-      //     // postProfile();
-      //     // put language
-      //     moveToPage(
-      //         StudentInputProfile2(skillSetList: _SkillSetList), context);
-      //   },
-      //   backgroundColor: Colors.blue[400],
-      //   foregroundColor: Colors.white,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(15.0),
-      //   ),
-      //   child: buildText('Next', 16, FontWeight.bold),
-      // ),
     );
   }
 
@@ -284,8 +281,11 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                     children: [
                       buildText(
                           education.schoolName ?? '', 16, FontWeight.bold),
-                      buildText('${education.startYear} - ${education.endYear}',
-                          16, FontWeight.normal, Colors.grey),
+                      buildText(
+                          '${education.startYear!.year} - ${education.endYear!.year}',
+                          16,
+                          FontWeight.normal,
+                          Colors.grey[600]!),
                     ],
                   ),
                   Row(
@@ -314,398 +314,288 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   Widget buildAddButton(String text) {
     return IconButton(
         onPressed: () {
-          text == 'Language'
-              ? showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildText('Add a $text', 20, FontWeight.bold),
-                              const SizedBox(height: 16),
-                              buildLanguageDropdown(-1),
-                              const SizedBox(height: 16),
-                              buildLanguageLevelDropdown(-1),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.grey[400]!),
-                                    child: buildText('Cancel', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        languageList.add(Language(
-                                            languageName: selectedLanguage,
-                                            level: selectedLanguageLevel));
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.blue[400]!),
-                                    child: buildText('Add', 16, FontWeight.bold,
-                                        Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                )
-              : showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildText('Add an $text', 20, FontWeight.bold),
-                              const SizedBox(height: 16),
-                              buildSchoolName(),
-                              const SizedBox(height: 16),
-                              buildStartAndEndYear(),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        educationList.add(Education(
-                                            schoolName: selectedSchoolName,
-                                            startYear: selectedStartYear,
-                                            endYear: selectedEndYear));
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.grey[400]!),
-                                    child: buildText('Cancel', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: buildButtonStyle(Colors.blue[400]!),
-                                    child: buildText('Add', 16, FontWeight.bold,
-                                        Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                );
+          text == 'Language' ? showLanguageDialog() : showEducationDialog();
         },
         icon: const Icon(Icons.add_circle_outline));
-  }
-
-  Widget buildSchoolName() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'School name',
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-      ),
-    );
-  }
-
-  Widget buildStartAndEndYear() {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            width: double.infinity,
-            child: TextFormField(
-              readOnly: true,
-              controller: _dateStartedController,
-              decoration: InputDecoration(
-                labelText: 'Start year',
-                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-              onTap: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                ).then((DateTime? value) {
-                  setState(() {
-                    selectedStartYear = value;
-                    _dateStartedController.text = value == null
-                        ? ''
-                        : '${value.day}-${value.month}-${value.year}';
-                  });
-                });
-              },
-            ),
-          ),
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: SizedBox(
-            width: double.infinity,
-            child: TextFormField(
-              readOnly: true,
-              controller: TextEditingController(
-                  text: selectedEndYear == null
-                      ? ''
-                      : '${selectedEndYear!.day}-${selectedEndYear!.month}-${selectedEndYear!.year}'),
-              decoration: InputDecoration(
-                labelText: 'End year',
-                contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-              onTap: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: selectedStartYear ?? DateTime(1900),
-                  lastDate: DateTime.now(),
-                ).then((DateTime? value) {
-                  setState(() {
-                    selectedEndYear = value;
-                  });
-                });
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildLanguageDropdown(int index) {
-    return DropdownButtonFormField<String>(
-      value: index != -1 ? languageList[index].languageName : null,
-      dropdownColor: Colors.white,
-      isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down),
-      items: languages.map((String language) {
-        return DropdownMenuItem<String>(
-          value: language,
-          child: Text(language),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          selectedLanguage = value;
-        });
-      },
-      decoration: InputDecoration(
-        labelText: "Select a language",
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-      ),
-    );
-  }
-
-  Widget buildLanguageLevelDropdown(int index) {
-    return DropdownButtonFormField<String>(
-      value: index != -1 ? languageList[index].level : null,
-      dropdownColor: Colors.white,
-      isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down),
-      items: levels.map((String languageLevel) {
-        return DropdownMenuItem<String>(
-          value: languageLevel,
-          child: Text(languageLevel),
-        );
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          selectedLanguageLevel = value;
-        });
-      },
-      decoration: InputDecoration(
-        labelText: "Select a language level",
-        contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.blue, width: 2.0),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-      ),
-    );
   }
 
   Widget buildEditButton(String text, int index) {
     return IconButton(
         onPressed: () {
           text == 'Language'
-              ? showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildText('Edit $text', 20, FontWeight.bold),
-                              const SizedBox(height: 16),
-                              buildLanguageDropdown(index),
-                              const SizedBox(height: 16),
-                              buildLanguageLevelDropdown(index),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.grey[400]!),
-                                    child: buildText('Cancel', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: buildButtonStyle(Colors.blue[400]!),
-                                    child: buildText('Edit', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                )
-              : showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildText('Edit $text', 20, FontWeight.bold),
-                              const SizedBox(height: 16),
-                              buildSchoolName(),
-                              const SizedBox(height: 16),
-                              buildStartAndEndYear(),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.grey[400]!),
-                                    child: buildText('Cancel', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        educationList[index] = Education(
-                                            schoolName: selectedSchoolName,
-                                            startYear: selectedStartYear,
-                                            endYear: selectedEndYear);
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: buildButtonStyle(Colors.blue[400]!),
-                                    child: buildText('Edit', 16,
-                                        FontWeight.bold, Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )),
-                    );
-                  },
-                );
+              ? showLanguageDialog(language: languageList[index])
+              : showEducationDialog(education: educationList[index]);
         },
         icon: const Icon(Icons.edit_outlined));
+  }
+
+  Future<void> showEducationDialog({Education? education}) async {
+    final schoolNameController = TextEditingController();
+    final dateStartedController = TextEditingController();
+    final dateEndedController = TextEditingController();
+    DateTime? selectedStartYear = education?.startYear;
+    DateTime? selectedEndYear = education?.endYear;
+
+    if (education != null) {
+      schoolNameController.text = education.schoolName!;
+      dateStartedController.text =
+          '${education.startYear!.day}-${education.startYear!.month}-${education.startYear!.year}';
+      dateEndedController.text =
+          '${education.endYear!.day}-${education.endYear!.month}-${education.endYear!.year}';
+    }
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText(
+                    education == null
+                        ? 'Add an Education'
+                        : 'Edit and Education',
+                    20,
+                    FontWeight.bold),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: schoolNameController,
+                  decoration: buildDecoration('School name'),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: dateStartedController,
+                          decoration: buildDecoration('Date started'),
+                          onTap: () {
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            ).then((DateTime? value) {
+                              setState(() {
+                                dateStartedController.text =
+                                    '${value!.day}-${value.month}-${value.year}';
+                                selectedStartYear = value;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: dateEndedController,
+                          decoration: buildDecoration('Date ended'),
+                          onTap: () {
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: selectedStartYear ?? DateTime(1900),
+                              lastDate: DateTime.now(),
+                            ).then((DateTime? value) {
+                              setState(() {
+                                dateEndedController.text =
+                                    '${value!.day}-${value.month}-${value.year}';
+                                selectedEndYear = value;
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (schoolNameController.text.isNotEmpty &&
+                            selectedEndYear != null &&
+                            selectedStartYear != null &&
+                            selectedEndYear!.isAfter(selectedStartYear!)) {
+                          setState(() {
+                            if (education == null) {
+                              educationList.add(Education(
+                                schoolName: schoolNameController.text,
+                                startYear: selectedStartYear,
+                                endYear: selectedEndYear,
+                              ));
+                            } else {
+                              education.schoolName = schoolNameController.text;
+                              education.startYear = selectedStartYear;
+                              education.endYear = selectedEndYear;
+                            }
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please fill all fields correctly'),
+                            ),
+                          );
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Add', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showLanguageDialog({Language? language}) async {
+    String? selectedLanguage = language?.languageName;
+    String? selectedLanguageLevel = language?.level;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText(
+                    language == null ? 'Add a Language' : 'Edit a Language',
+                    20,
+                    FontWeight.bold),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedLanguage,
+                  dropdownColor: Colors.white,
+                  isExpanded: true,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: languages.map((String language) {
+                    return DropdownMenuItem<String>(
+                      value: language,
+                      child: Text(language),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedLanguage = value;
+                    });
+                  },
+                  decoration: buildDecoration("Select a language"),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedLanguageLevel,
+                  dropdownColor: Colors.white,
+                  isExpanded: true,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  items: levels.map((String languageLevel) {
+                    return DropdownMenuItem<String>(
+                      value: languageLevel,
+                      child: Text(languageLevel),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedLanguageLevel = value;
+                    });
+                  },
+                  decoration: buildDecoration(
+                    "Select a language level",
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (selectedLanguage != null &&
+                            selectedLanguageLevel != null) {
+                          setState(() {
+                            if (language == null) {
+                              languageList.add(Language(
+                                languageName: selectedLanguage,
+                                level: selectedLanguageLevel,
+                              ));
+                            } else {
+                              language.languageName = selectedLanguage;
+                              language.level = selectedLanguageLevel;
+                            }
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text('Please choose a language and level'),
+                            ),
+                          );
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Add', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget buildTechstackDropdownMenu() {
@@ -793,13 +683,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
         ),
         shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
-      child: Text(
-        skillSet.name!,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-      ),
+      child: buildText(skillSet.name!, 16, FontWeight.normal, Colors.white),
     );
   }
 }

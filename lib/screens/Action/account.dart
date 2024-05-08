@@ -83,7 +83,7 @@ class _AccountControllerState extends State<AccountController> {
         } else {
           result['student'] == null
               ? moveToPage(StudentInputProfile1(), context)
-              : moveToPage(StudentInfoScreen(), context);
+              : moveToPage(StudentInputProfile1(), context);
         }
       } else {}
       print(result);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:studenthub/components/controller.dart';
-import 'package:studenthub/components/keyword.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 
 class StudentInputProfile3 extends StatefulWidget {

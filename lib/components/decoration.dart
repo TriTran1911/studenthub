@@ -37,3 +37,19 @@ ButtonStyle buildButtonStyle(Color color) {
     ),
   );
 }
+
+InputDecoration buildDecoration(String text) {
+    return InputDecoration(
+      labelText: text,
+      contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+    );
+  }

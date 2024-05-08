@@ -9,7 +9,6 @@ class Connection {
   static Future<dynamic> postRequest(String url, dynamic body) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    print(url_b + url);
     var response = await http.post(
       Uri.parse(url_b + url),
       headers: <String, String>{
@@ -19,12 +18,11 @@ class Connection {
       },
       body: json.encode(body),
     );
-    print(response.body ?? 'null');
     if (response.statusCode == 201 || response.statusCode == 200) {
-      print("Connect server successful");
+      print("Post request successful");
       return response.body;
     } else {
-      print("Connect server failed");
+      print("Post request failed");
       return response.body;
     }
   }
@@ -41,61 +39,38 @@ class Connection {
 
     var response = await http.get(url, headers: _headers);
     if (response.statusCode == 200) {
-      print("Connect server successful");
+      print("Get request successful");
       return response.body;
     } else {
-      print("Connect server failed");
+      print("Get request failed");
       return response.body;
     }
   }
 
   static Future<dynamic> putRequest(String api, dynamic object) async {
     var url = Uri.parse(url_b + api);
-    var payload = json.encode(object);
+    String jsonBody = jsonEncode(object, toEncodable: myJsonEncode);
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     var headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
-    var response = await http.put(url, headers: headers, body: payload);
+    var response = await http.put(url, headers: headers, body: jsonBody);
     if (response.statusCode == 200) {
-      print("Connect server successful");
+      print("PUT request successful");
       return response.body;
     } else {
-      print("Connect server failed");
+      print("PUT request failed with status: ${response.statusCode}");
       return response.body;
-      //throw exception and catch it in UI
     }
   }
+}
 
-  static Future<void> putLanguage(
-      int studentId, List<Language> languageList) async {
-    print('Put Language');
-    String url = '/api/language/updateByStudentId/$studentId';
-    try {
-      var data = {
-        "languages": languageList
-            .map((language) => {
-                  "id": null,
-                  "languageName": language.languageName,
-                  "level": language.level,
-                })
-            .toList(),
-      };
-      var response = await putRequest(url, data);
-      var responseDecode = jsonDecode(response);
-      if (responseDecode['result'] != null) {
-        print("Connected to the server successfully");
-        print("Connect server successful");
-        print(response);
-        // Call a method to reload the page
-      } else {
-        print("Failed");
-        print(responseDecode);
-      }
-    } catch (e) {
-      print(e);
-    }
+dynamic myJsonEncode(dynamic item) {
+  if (item is DateTime) {
+    return item.toIso8601String();
   }
+  return item.toJson();
 }

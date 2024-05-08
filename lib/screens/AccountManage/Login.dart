@@ -162,8 +162,8 @@ class _LoginState extends State<Login> {
     showDialog(context: context, builder: (context) => LoadingPage());
 
     var body = {
-      'email': 'killisdeath04@gmail.com',
-      'password': '123456Aa@',
+      'email': _usernameController.text,
+      'password': _passwordController.text,
     };
     print(body);
 
@@ -176,13 +176,12 @@ class _LoginState extends State<Login> {
 
       if (responseDecoded['result'] != null) {
         prefs.setString('token', responseDecoded['result']['token']);
-        // print('Token: ${responseDecoded['result']['token']}');
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.of(context).pop();
-        print('Sign in successful');
 
         var authorization = await Connection.getRequest('/api/auth/me/', {});
         var authorizationDecoded = jsonDecode(authorization);
+
+        Navigator.of(context).pop();
+        print('Sign in successful');
 
         if (authorizationDecoded['result']['company'] != null) {
           prefs.setInt(
@@ -195,13 +194,10 @@ class _LoginState extends State<Login> {
         User.roles = List<int>.from(authorizationDecoded['result']['roles']);
         User.fullname = authorizationDecoded['result']['fullname'];
         print('Sign in successful');
-        print(User.roles.length);
-        // print id
         print(authorizationDecoded['result']['id']);
 
         moveToPage(TabsPage(index: 0), context);
       } else {
-        await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
         print(responseDecoded['errorDetails']);
         ScaffoldMessenger.of(context).showSnackBar(

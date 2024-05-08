@@ -85,8 +85,8 @@ class Language {
   final DateTime? createAt;
   final DateTime? updateAt;
   final DateTime? deleteAt;
-  final String? languageName;
-  final String? level;
+  String? languageName;
+  String? level;
 
   Language(
       {this.id,
@@ -192,9 +192,9 @@ class Education {
   final DateTime? createAt;
   final DateTime? updateAt;
   final DateTime? deleteAt;
-  final String? schoolName;
-  final DateTime? startYear;
-  final DateTime? endYear;
+  String? schoolName;
+  DateTime? startYear;
+  DateTime? endYear;
 
   Education(
       {this.id,

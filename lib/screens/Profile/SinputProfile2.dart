@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/modelController.dart';
-import 'package:studenthub/components/keyword.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'SinputProfile3.dart';
 import 'package:studenthub/components/controller.dart';
 
