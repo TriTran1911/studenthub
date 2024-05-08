@@ -67,16 +67,16 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 20.0),
             _buildElevatedButton('Sign In', () {
               _handleSingIn(context);
-              // if (_isInputValid()) {
-              //   appBarIcon.isBlocked = false;
-              //   _handleSingIn(context);
-              // } else {
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     const SnackBar(
-              //       content: Text("Please fill in all the required fields."),
-              //     ),
-              //   );
-              // }
+              if (_isInputValid()) {
+                appBarIcon.isBlocked = false;
+                _handleSingIn(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Please fill in all the required fields."),
+                  ),
+                );
+              }
             }),
             const SizedBox(height: 120.0),
             _buildSignUpText(),

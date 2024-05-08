@@ -15,7 +15,7 @@ class Connection {
       headers: <String, String>{
         'accept': '*/*', // 'application/json
         'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $token',
       },
       body: json.encode(body),
     );
