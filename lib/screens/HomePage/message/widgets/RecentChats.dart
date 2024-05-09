@@ -3,8 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
+import 'package:studenthub/connection/socket.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
 
 class RecentChats extends StatefulWidget {
@@ -15,6 +18,8 @@ class RecentChats extends StatefulWidget {
 class _RecentChatsState extends State<RecentChats> {
   List<Message> messages = [];
   late Future<List<Message>> listMessage;
+  late IO.Socket socket;
+  late MessageNotification messageNotification;
 
   Future<List<Message>> getRecentChats() async {
     var response = await Connection.getRequest('/api/message', {});
@@ -31,6 +36,44 @@ class _RecentChatsState extends State<RecentChats> {
     }
   }
 
+  void connect() {
+    socket = SocketService().connectSocket();
+
+    socket.connect();
+
+    socket.onConnect((data) => {
+          print('Connected'),
+        });
+
+    socket.on('RECEIVE_MESSAGE', (data) {
+      print("New chat: $data");
+      messageNotification = MessageNotification.fromJson(data['notification']);
+      print('Sender: ${messageNotification.senderId}');
+      print('Receiver: ${messageNotification.receiverId}');
+      // check who is the sender in list of users in messages
+      for (int i = 0; i < messages.length; i++) {
+        if ((messageNotification.senderId == modelController.user.id &&
+                messageNotification.receiverId == messages[i].receiver!.id) ||
+            (messageNotification.senderId == messages[i].receiver!.id &&
+                messageNotification.receiverId == modelController.user.id)) {
+          setState(() {
+            messages[i].content = messageNotification.content;
+            messages[i].createdAt = messageNotification.createdAt;
+            messages[i].sender =
+                messageNotification.senderId == modelController.user.id
+                    ? modelController.user
+                    : messages[i].receiver;
+            messages[i].receiver =
+                messageNotification.receiverId == modelController.user.id
+                    ? modelController.user
+                    : messages[i].receiver;
+          });
+          break;
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +83,15 @@ class _RecentChatsState extends State<RecentChats> {
         this.messages = messages;
       });
     });
+
+    connect();
+    print('Hanlde new message');
+  }
+
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
   }
 
   @override

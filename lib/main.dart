@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
 import '/components/project.dart';
 import '/components/proposer.dart';
 import '/components/notifications.dart';

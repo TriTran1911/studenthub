@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studenthub/components/chatController.dart';
 
 class User {
   int id;
@@ -24,6 +25,17 @@ class User {
         fullname = json['fullname'],
         email =
             '', // You'll need to update these with actual values from the json map
+        password = '',
+        roles = [],
+        company =
+            Company(), // You'll need to update these with actual values from the json map
+        student =
+            Student(); // You'll need to update these with actual values from the json map
+
+  User.fromNotification(Map<String, dynamic> json)
+      : id = json['id'],
+        fullname = '',
+        email = '',
         password = '',
         roles = [],
         company =
@@ -305,7 +317,7 @@ class Message {
   String? content;
   User? sender;
   User? receiver;
-  bool? interview;
+  Interview? interview;
   Project? project;
 
   Message(
@@ -324,7 +336,9 @@ class Message {
       content: json['content'],
       sender: User.fromMessage(json['sender']),
       receiver: User.fromMessage(json['receiver']),
-      interview: json['interview'],
+      interview: json['interview'] != null
+          ? Interview.fromJson(json['interview'])
+          : null,
       project:
           json['project'] != null ? Project.fromJson(json['project']) : null,
     );
