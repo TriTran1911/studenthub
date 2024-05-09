@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
@@ -48,15 +49,15 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 20.0),
             _buildTextField(_usernameController, 'Email'),
             const SizedBox(height: 20.0),
-            _buildTextField(_passwordController, 'Password',
+            _buildTextField(_passwordController, "login_password".tr(),
                 obscureText: _obscureText),
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () {
                 moveToPage(ForgotPasswordPage(), context);
               },
-              child: const Text(
-                'Forgot password?',
+              child: Text(
+                "login_password1".tr(),
                 textAlign: TextAlign.end,
                 style: TextStyle(
                   color: Colors.black,
@@ -65,21 +66,21 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(height: 20.0),
-            _buildElevatedButton('Sign In', () {
+            _buildElevatedButton("login_button1".tr(), () {
               if (_isInputValid()) {
                 appBarIcon.isBlocked = false;
                 _handleSingIn(context);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Please fill in all the required fields."),
+                  SnackBar(
+                    content: Text("login_text2".tr()),
                   ),
                 );
               }
             }),
             const SizedBox(height: 120.0),
             _buildSignUpText(),
-            _buildElevatedButton('Sign Up', () {
+            _buildElevatedButton("login_button2".tr(), () {
               moveToPage(SignUp1(), context);
             }),
           ],
@@ -89,8 +90,8 @@ class _LoginState extends State<Login> {
   }
 
   Text _buildTitleText() {
-    return const Text(
-      'Login with StudentHub',
+    return Text(
+      "login_title1".tr(),
       textAlign: TextAlign.center,
       style: TextStyle(
         fontWeight: FontWeight.bold,
@@ -146,8 +147,8 @@ class _LoginState extends State<Login> {
   }
 
   Text _buildSignUpText() {
-    return const Text(
-      "Don't have a Student Hub account?",
+    return Text(
+      "login_text1".tr(),
       textAlign: TextAlign.center,
     );
   }
@@ -174,7 +175,7 @@ class _LoginState extends State<Login> {
         prefs.setString('token', responseDecoded['result']['token']);
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
-        print('Sign in successful');
+        print("login_text3".tr());
 
         var authorization = await Connection.getRequest('/api/auth/me/', {});
         var authorizationDecoded = jsonDecode(authorization);
@@ -192,23 +193,23 @@ class _LoginState extends State<Login> {
             List<int>.from(authorizationDecoded['result']['roles']);
         modelController.user.fullname =
             authorizationDecoded['result']['fullname'];
-        print('Sign in successful');
+        print("login_text3".tr());
         moveToPage(TabsPage(index: 0), context);
       } else {
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
         print(responseDecoded['errorDetails']);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Invalid email or password."),
+          SnackBar(
+            content: Text("login_text4".tr()),
           ),
         );
       }
     } catch (e) {
       print('Error occurred: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("An error occurred. Please try again."),
+        SnackBar(
+          content: Text("login_text5".tr()),
         ),
       );
     }

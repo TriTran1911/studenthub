@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import 'signUp2.dart';
@@ -33,7 +34,7 @@ class _SignUpState1 extends State<SignUp1> {
         const SizedBox(height: 20.0),
         _buildOptionContainer(
           Icons.business,
-          'I am a company, find engineer for project',
+          "signup_title2".tr(),
           _isCompany,
           () {
             setState(() {
@@ -44,7 +45,7 @@ class _SignUpState1 extends State<SignUp1> {
         const SizedBox(height: 8.0),
         _buildOptionContainer(
           Icons.engineering,
-          'I am a student, find job to apply',
+          "signup_title3".tr(),
           _isStudent,
           () {
             setState(() {
@@ -53,7 +54,7 @@ class _SignUpState1 extends State<SignUp1> {
           },
         ),
         const SizedBox(height: 20.0),
-        _buildElevatedButton('Create account', _handleOnPressed),
+        _buildElevatedButton("signup_button1".tr(), _handleOnPressed),
         const SizedBox(height: 20.0),
         _buildLoginRow(context),
       ],
@@ -61,8 +62,8 @@ class _SignUpState1 extends State<SignUp1> {
   }
 
   Text _buildTitleText() {
-    return const Text(
-      'Join as company or Student',
+    return Text(
+      "signup_title1".tr(),
       textAlign: TextAlign.center,
       style: TextStyle(
         fontWeight: FontWeight.bold,
@@ -123,16 +124,16 @@ class _SignUpState1 extends State<SignUp1> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          "Already have an account?  ",
+        Text(
+          "signup_text1".tr(),
           textAlign: TextAlign.center,
         ),
         GestureDetector(
           onTap: () {
             moveToPage(Login(), context);
           },
-          child: const Text(
-            "Login",
+          child: Text(
+            "signup_text2".tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.blue,

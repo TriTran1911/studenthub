@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/components/controller.dart';
@@ -91,21 +92,21 @@ class _Signup2State extends State<SignUp2> {
             const SizedBox(height: 20.0),
             ChatBubble(
               textEditingController: _userNameController,
-              label: 'Username',
+              label: "signup_text6".tr(),
             ),
             ChatBubble(
               textEditingController: _emailController,
-              label: 'Work email address',
+              label: "signup_text7".tr(),
             ),
             ChatBubbleWithVisibilityToggle(
               textEditingController: _passwordController,
-              label: 'Password (8 or more characters)',
+              label: "signup_text8".tr(),
               isPassword: true,
             ),
             const SizedBox(height: 10.0),
             _buildAgreementRow(),
             const SizedBox(height: 15.0),
-            _buildElevatedButton('Create my account', _handleOnPressed),
+            _buildElevatedButton("signup_button2".tr(), _handleOnPressed),
             const SizedBox(height: 10.0),
             _buildToggleUserTypeRow(context),
           ],
@@ -117,8 +118,8 @@ class _Signup2State extends State<SignUp2> {
   Text _buildTitleText() {
     return Text(
       modelController.user.roles[0] == 1
-          ? 'Sign up as Company'
-          : 'Sign up as Student',
+          ? "signup_title4".tr()
+          : "signup_title5".tr(),
       textAlign: TextAlign.center,
       style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
     );
@@ -131,7 +132,7 @@ class _Signup2State extends State<SignUp2> {
           value: _agreedToTerms,
           onChanged: (value) => setState(() => _agreedToTerms = value!),
         ),
-        const Text('Yes, I understand and agree to StudetHub'),
+        Text("signup_text9".tr()),
       ],
     );
   }
@@ -165,8 +166,8 @@ class _Signup2State extends State<SignUp2> {
       children: [
         Text(
           modelController.user.roles[0] == 1
-              ? "Looking for a project?  "
-              : "Want to offer projects?  ",
+              ? "signup_text10".tr()
+              : "signup_text11".tr(),
           textAlign: TextAlign.center,
         ),
         GestureDetector(
@@ -175,8 +176,8 @@ class _Signup2State extends State<SignUp2> {
           },
           child: Text(
             modelController.user.roles[0] == 1
-                ? "Apply as a student"
-                : "Apply as a company",
+                ? "signup_text12".tr()
+                : "signup_text13".tr(),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.blue,
@@ -209,26 +210,26 @@ class _Signup2State extends State<SignUp2> {
       var responseDecoded = jsonDecode(response);
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
-        print('User signed up successfully');
+        print("signup_noti1".tr());
         moveToPage(Login(), context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please check your email to verify your account.'),
+          SnackBar(
+            content: Text("signup_noti2".tr()),
           ),
         );
       } else {
-        print('Error occurred: ${responseDecoded['errorDetails']}');
+        print("signup_noti7".tr() + '${responseDecoded['errorDetails']}');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An error occurred while processing your request.'),
+          SnackBar(
+            content: Text("signup_noti3".tr()),
           ),
         );
       }
     } catch (e) {
-      print('Error occurred: $e');
+      print("signup_noti7".tr() + '$e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred while processing your request.'),
+        SnackBar(
+          content: Text("signup_noti3".tr()),
         ),
       );
     }
@@ -239,8 +240,8 @@ class _Signup2State extends State<SignUp2> {
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please fill in all the required fields."),
+        SnackBar(
+          content: Text("signup_noti4".tr()),
         ),
       );
       return false;
@@ -248,8 +249,8 @@ class _Signup2State extends State<SignUp2> {
 
     if (_passwordController.text.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Password must be at least 8 characters."),
+        SnackBar(
+          content: Text("signup_noti5".tr()),
         ),
       );
       return false;
@@ -257,8 +258,8 @@ class _Signup2State extends State<SignUp2> {
 
     if (!_agreedToTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please agree to the terms to continue"),
+        SnackBar(
+          content: Text("signup_noti6".tr()),
         ),
       );
       return false;

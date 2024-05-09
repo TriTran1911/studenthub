@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '/components/appbar.dart';
 import '/screens/AccountManage/Login.dart';
@@ -26,14 +27,14 @@ class Home extends StatelessWidget {
               height: 300, repeat: true, reverse: true),
           SizedBox(height: 20),
           _buildElevatedButton(
-            'Company',
+            "home_button1".tr(),
             () {
               moveToPage(Login(), context);
             },
           ),
           SizedBox(height: 20),
           _buildElevatedButton(
-            'Student',
+            "home_button2".tr(),
             () {
               moveToPage(Login(), context);
             },
@@ -50,7 +51,7 @@ class Home extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Build your product with high-skilled student',
+          "home_title1".tr(),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -58,7 +59,7 @@ class Home extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          'StudentHub is university marketplace to connect high-skilled student and company on a real-world project',
+          "home_title2".tr(),
           textAlign: TextAlign.center,
         ),
       ],
