@@ -11,7 +11,6 @@ class SocketService {
             .build());
     SharedPreferences.getInstance().then((prefs) {
       String token = prefs.getString('token')!;
-      print("Token: $token");
       socket.io.options?['extraHeaders'] = {
         'Authorization': 'Bearer $token',
       };

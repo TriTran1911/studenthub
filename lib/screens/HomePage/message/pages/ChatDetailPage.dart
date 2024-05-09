@@ -81,21 +81,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
     socket.on('RECEIIVE_MESSAGE', (data) {
       print("Chat detail: $data");
-      // print("Chat content: ${data['notification']['message']['content']}");
-      // print("Id sender: ${data['notification']['message']['sender']['id']}");
       // setState(() {
       //   _messages.add(MessageDetail(
       //     content: data['notification']['message']['content'],
-      //     type: data['notification']['message']['sender']['id'] ==
-      //             modelController.user.id
-      //         ? MessageType.send
-      //         : MessageType.receive,
+      //     type: MessageType.receive,
       //   ));
       //   _scrollToBottom();
       // });
     });
-    socket.on('NOTI_${modelController.user.id}', (data) {
-      print(data);
+    socket.on('NOTI_${widget.senderId}', (data) {
+      print('Notification 123: $data');
+      setState(() {
+        _messages.add(MessageDetail(
+          content: data['notification']['message']['content'],
+          type: MessageType.receive,
+        ));
+        _scrollToBottom();
+      });
     });
     socket.on('ERROR', (data) {
       print(data);
@@ -114,23 +116,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     });
     print('Sender: ${widget.senderId}');
     print('Receiver: ${widget.receiverId}');
+    print('Project: ${widget.projectId}');
 
     connect();
     print('Handle receive message');
-    socket.on('RECEIIVE_MESSAGE', (data) {
-      print("Chat content: ${data['notification']['message']['content']}");
-      print("Id sender: ${data['notification']['message']['sender']['id']}");
-      setState(() {
-        _messages.add(MessageDetail(
-          content: data['notification']['message']['content'],
-          type: data['notification']['message']['sender']['id'] ==
-                  modelController.user.id
-              ? MessageType.send
-              : MessageType.receive,
-        ));
-        _scrollToBottom();
-      });
-    });
   }
 
   @override
@@ -215,7 +204,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         children: [
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+              padding:
+                  EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 40),
               controller: _scrollController,
               itemCount: _messages.length,
               itemBuilder: (context, index) {
@@ -259,10 +249,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     }
 
     setState(() {
-      print('Message length: ${_messages.length}');
       _messages.add(MessageDetail(content: "$message", type: MessageType.send));
-      print('Message sent: $message');
-      print('Message length: ${_messages.length}');
     });
     _scrollToBottom();
   }
