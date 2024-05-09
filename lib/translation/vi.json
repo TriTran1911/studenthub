@@ -42,5 +42,21 @@
     "signup_noti4": "Vui lòng điền vào tất cả các trường bắt buộc.",
     "signup_noti5": "Mật khẩu phải có ít nhất 8 ký tự.",
     "signup_noti6": "Hãy đồng ý với các điều khoản để tiếp tục",
-    "signup_noti7": "Đã xảy ra lỗi: "
+    "signup_noti7": "Đã xảy ra lỗi: ",
+
+    "proifle_title1": "Chào mừng đến với Student Hub",
+    "cprofileinput_text1": "Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ kết nối với các sinh viên có kỹ năng cao",
+    "cprofileinput_text2": "Có bao nhiêu người trong công ty của bạn?",
+    "cprofileinput_text3": "Một mình tôi",
+    "cprofileinput_text4": "2-9 nhân viên",
+    "cprofileinput_text5": "10-99 nhân viên",
+    "cprofileinput_text6": "100-1000 nhân viên",
+    "cprofileinput_text7": "Hơn 1000 nhân viên",
+    "cprofileinput_input1": "Tên công ty",
+    "cprofileinput_input2": "Trang web",
+    "cprofileinput_input3": "Mô tả",
+    "cprofileinput_button1": "Tiếp tục",
+
+    "cprofile_button1": "Chỉnh sửa",
+    "cprofile_button2": "Huỷ"
 }

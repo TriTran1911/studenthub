@@ -42,5 +42,22 @@
     "signup_noti4": "Please fill in all the required fields.",
     "signup_noti5": "Password must be at least 8 characters.",
     "signup_noti6": "Please agree to the terms to continue",
-    "signup_noti7": "Error occurred: "
+    "signup_noti7": "Error occurred: ",
+
+    "proifle_title1": "Welcome to Student Hub",
+
+    "cprofileinput_text1": "Tell us about your company and you will be on your way connect with high-skilled students",
+    "cprofileinput_text2": "How many people are in your company?",
+    "cprofileinput_text3": "It's just me",
+    "cprofileinput_text4": "2-9 employees",
+    "cprofileinput_text5": "10-99 employees",
+    "cprofileinput_text6": "100-1000 employees",
+    "cprofileinput_text7": "More than 1000 employees",
+    "cprofileinput_input1": "Company name",
+    "cprofileinput_input2": "Website",
+    "cprofileinput_input3": "Description",
+    "cprofileinput_button1": "Continue",
+
+    "cprofile_button1": "Edit",
+    "cprofile_button2": "Cancel"
 }

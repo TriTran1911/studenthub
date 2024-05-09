@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
@@ -99,7 +100,7 @@ class _StudentInfoScreenState extends State<StudentInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Welcome to Student Hub',
+                "proifle_title1".tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18.0,

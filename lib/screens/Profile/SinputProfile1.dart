@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
@@ -127,7 +128,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const SizedBox(height: 32),
-            buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
+            buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
             const SizedBox(height: 16),
             buildText(
                 'Tell us about yourself and you will be on your way to connect with companies',

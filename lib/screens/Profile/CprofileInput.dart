@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 import '/screens/action/welcome.dart';
@@ -35,25 +36,25 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
+            buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
             const SizedBox(height: 15),
             buildText(
-                'Tell us about your company and you will be on your way connect with high-skilled students',
+                "cprofileinput_text1".tr(),
                 16),
             const SizedBox(height: 15),
-            buildText('How many people are in your company?', 16),
-            buildRadioListTile('It\'s just me', 'Just me'),
-            buildRadioListTile('2-9 employees', '2-9 employees'),
-            buildRadioListTile('10-99 employees', '10-99 employees'),
-            buildRadioListTile('100-1000 employees', '100-1000 employees'),
+            buildText("cprofileinput_text2".tr(), 16),
+            buildRadioListTile("cprofileinput_text3".tr(), 'Just me'),
+            buildRadioListTile("cprofileinput_text4".tr(), '2-9 employees'),
+            buildRadioListTile("cprofileinput_text5".tr(), '10-99 employees'),
+            buildRadioListTile("cprofileinput_text6".tr(), '100-1000 employees'),
             buildRadioListTile(
-                'More than 1000 employees', 'More than 1000 employees'),
+                "cprofileinput_text7".tr(), 'More than 1000 employees'),
             const SizedBox(height: 15),
-            buildTextField(_companyNameController, 'Company name'),
+            buildTextField(_companyNameController, "cprofileinput_input1".tr()),
             const SizedBox(height: 15),
-            buildTextField(_websiteController, 'Website'),
+            buildTextField(_websiteController, "cprofileinput_input2".tr()),
             const SizedBox(height: 15),
-            buildTextField(_descriptionController, 'Description'),
+            buildTextField(_descriptionController, "cprofileinput_input3".tr()),
             const SizedBox(height: 15),
             buildContinueButton(),
           ],
@@ -125,13 +126,13 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       child: ElevatedButton(
         onPressed: () {
           if (_isInputValid()) {
-            int nstaff = _selectedCompanySize == 'It\'s just me'
+            int nstaff = _selectedCompanySize == "cprofileinput_text3".tr()
                 ? 0
-                : (_selectedCompanySize == '2-9 employees')
+                : (_selectedCompanySize == "cprofileinput_text4".tr())
                     ? 1
-                    : (_selectedCompanySize == '10-99 employees'
+                    : (_selectedCompanySize == "cprofileinput_text5".tr()
                         ? 2
-                        : (_selectedCompanySize == '100-1000 employees'
+                        : (_selectedCompanySize == "cprofileinput_text6".tr()
                             ? 3
                             : 4));
             String cname = _companyNameController.text;
@@ -158,8 +159,8 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
             ),
           ),
         ),
-        child: const Text(
-          'Continue',
+        child: Text(
+          "cprofileinput_button1".tr(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,

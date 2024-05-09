@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 
@@ -32,21 +33,21 @@ class _CompanyProfileState extends State<CompanyProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildCenterText('Welcome to Student Hub', 24, FontWeight.bold),
+            buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
             const SizedBox(height: 15),
-            buildText('Company name', 16),
+            buildText("cprofileinput_input1".tr(), 16),
             const SizedBox(height: 15),
-            buildTextField('Company name', 1),
+            buildTextField("cprofileinput_input1".tr(), 1),
             const SizedBox(height: 15),
-            buildText('Website', 16),
+            buildText("cprofileinput_input2".tr(), 16),
             const SizedBox(height: 15),
-            buildTextField('Website', 1),
+            buildTextField("cprofileinput_input2".tr(), 1),
             const SizedBox(height: 15),
-            buildText('Discription', 16),
+            buildText("cprofileinput_input3".tr(), 16),
             const SizedBox(height: 15),
-            buildTextField('Discription', 3),
+            buildTextField("cprofileinput_input3".tr(), 3),
             const SizedBox(height: 15),
-            buildText('How many people are in your company?', 16),
+            buildText("cprofileinput_text2".tr(), 16),
             buildRadioListTile(),
             const SizedBox(height: 15),
             buildActionButtons(),
@@ -95,7 +96,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
 
   Widget buildRadioListTile() {
     return RadioListTile(
-      title: Text('It\'s just me', style: TextStyle(fontSize: 14)),
+      title: Text("cprofileinput_text3".tr(), style: TextStyle(fontSize: 14)),
       value: 'Just me',
       groupValue: isJustMeSelected ? 'Just me' : null,
       onChanged: isJustMeSelected
@@ -112,11 +113,11 @@ class _CompanyProfileState extends State<CompanyProfile> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          buildButton('Edit', () {
+          buildButton("cprofile_button1".tr(), () {
             setState(() {});
           }),
           SizedBox(width: 16),
-          buildButton('Cancel', () {
+          buildButton("cprofile_button2".tr(), () {
             setState(() {});
           }),
         ],
