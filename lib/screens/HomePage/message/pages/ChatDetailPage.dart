@@ -33,6 +33,7 @@ class ChatDetailPage extends StatefulWidget {
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final ScrollController _scrollController = ScrollController();
+  late MessageNotification messageNotification;
   late IO.Socket socket;
 
   List<MessageDetail> _messages = [];
@@ -79,25 +80,30 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     socket.onConnectError((data) => print('$data'));
     socket.onError((data) => print(data));
 
-    socket.on('RECEIIVE_MESSAGE', (data) {
+    socket.on('RECEIVE_MESSAGE', (data) {
       print("Chat detail: $data");
-      // setState(() {
-      //   _messages.add(MessageDetail(
-      //     content: data['notification']['message']['content'],
-      //     type: MessageType.receive,
-      //   ));
-      //   _scrollToBottom();
-      // });
+      messageNotification = MessageNotification.fromJson(data['notification']);
+      String content = messageNotification.content;
+      if (mounted) {
+        setState(() {
+          _messages.add(MessageDetail(
+            content: content,
+            type: messageNotification.senderId == widget.senderId
+                ? MessageType.send
+                : MessageType.receive,
+          ));
+        });
+        _scrollToBottom();
+      }
+      print('Message Receive: ${messageNotification.content}');
     });
+
+    socket.on('RECEIVE_INTERVIEW', (data) {
+      print("Interview: $data");
+    });
+
     socket.on('NOTI_${widget.senderId}', (data) {
       print('Notification 123: $data');
-      setState(() {
-        _messages.add(MessageDetail(
-          content: data['notification']['message']['content'],
-          type: MessageType.receive,
-        ));
-        _scrollToBottom();
-      });
     });
     socket.on('ERROR', (data) {
       print(data);
@@ -111,8 +117,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     listMessage.then((messageDetails) {
       setState(() {
         this._messages = messageDetails;
-        _scrollToBottom();
       });
+      _scrollToBottom();
     });
     print('Sender: ${widget.senderId}');
     print('Receiver: ${widget.receiverId}');
@@ -124,8 +130,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   void dispose() {
-    super.dispose();
     socket.disconnect();
+    super.dispose();
   }
 
   void _scrollToBottom() {
@@ -207,9 +213,10 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               padding:
                   EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 40),
               controller: _scrollController,
-              itemCount: _messages.length,
+              itemCount: _messages.length + 1,
               itemBuilder: (context, index) {
                 final message = _messages[index];
+                // print('Message: ${message.content}');
 
                 if (message.type == MessageType.send) {
                   return ChatSentMessage(message: message.content);
@@ -247,11 +254,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     } else {
       print('Sent message failed');
     }
-
-    setState(() {
-      _messages.add(MessageDetail(content: "$message", type: MessageType.send));
-    });
-    _scrollToBottom();
   }
 
   // Method to show video call dialog
