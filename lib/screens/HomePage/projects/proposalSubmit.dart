@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
-import 'package:studenthub/components/decoration.dart';
-import '/components/appbar.dart';
-import '/components/modelController.dart';
-=======
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
->>>>>>> Stashed changes
-
 import '../../../components/appbar.dart';
 import '../../../components/decoration.dart';
 import '../../../components/modelController.dart';
@@ -64,12 +57,8 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-<<<<<<< Updated upstream
-                    
-=======
                     submitProposal();
                     moveToPage(TabsPage(index: 0), context);
->>>>>>> Stashed changes
                   },
                   style: buildButtonStyle(Colors.blue),
                   child: buildText('Submit', 16, FontWeight.bold, Colors.white),

@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
-<<<<<<< Updated upstream
 import 'projectDetail.dart';
-=======
-import 'package:studenthub/screens/HomePage/projects/projectDetail.dart';
->>>>>>> Stashed changes
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/decoration.dart';
 import '../../../connection/server.dart';
@@ -73,41 +69,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-<<<<<<< Updated upstream
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: buildText(
-                            pro.createdAt != null
-                                ? monthDif(
-                                    DateTime.parse(pro.createdAt!.toString()))
-                                : '0', // or some default value
-                            16,
-                            FontWeight.bold,
-                            Colors.blue[800]),
-                      ),
-                      // if role is student show the icon
-                      IconButton(
-                        icon: const Icon(
-                          Icons.bookmark_remove_outlined,
-                          color: Colors.red,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            pro.isFavorite = !pro.isFavorite!;
-                            Connection().setFavorite(
-                                pro.id!, pro.isFavorite! ? 0 : 1, context);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+                  buildHeader(pro, context),
                   const SizedBox(height: 16),
                   buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
                   const SizedBox(height: 10),
@@ -185,12 +147,22 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
     );
   }
 
+  Row buildHeader(Project pro, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
             color: Colors.blue[100],
             borderRadius: BorderRadius.circular(20),
           ),
           child: buildText(
+              pro.createdAt != null
+                  ? monthDif(DateTime.parse(pro.createdAt!.toString()))
                   : '0', // or some default value
               16,
+              FontWeight.bold,
               Colors.blue[800]),
         ),
         // if role is student show the icon
