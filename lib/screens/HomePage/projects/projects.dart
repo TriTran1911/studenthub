@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/decoration.dart';
 import '/components/modelController.dart';
 import '/connection/server.dart';
-import 'TempFavoriteProjects.dart';
-import 'TempProjectDetail.dart';
+import 'favoriteProject.dart';
+import 'projectDetail.dart';
 
 class ProjectsPage extends StatefulWidget {
   final int role;
@@ -113,8 +112,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  allProjects = snapshot.data!;
-                  projectList = allProjects;
                   return buildCards();
                 }
               },

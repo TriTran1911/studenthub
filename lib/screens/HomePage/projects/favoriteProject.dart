@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
-import 'package:studenthub/screens/HomePage/projects/TempProjectDetail.dart';
+import 'projectDetail.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/decoration.dart';
 import '../../../connection/server.dart';
@@ -30,12 +30,13 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
               Row(
                 children: [
                   IconButton(
-                        icon: const Icon(Icons.arrow_back_ios),
-                        onPressed: () {
-                          moveToPage(TabsPage(index: 0), context);
-                        },
-                      ),
-                  buildCenterText('Favorite Projects', 24, FontWeight.bold, Colors.blueAccent),
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      moveToPage(TabsPage(index: 0), context);
+                    },
+                  ),
+                  buildCenterText('Favorite Projects', 24, FontWeight.bold,
+                      Colors.blueAccent),
                 ],
               ),
               const SizedBox(height: 16),
@@ -88,16 +89,15 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                       ),
                       // if role is student show the icon
                       IconButton(
-                        icon: Icon(
-                          pro.isFavorite!
-                              ? Icons.bookmark
-                              : Icons.bookmark_outline,
-                          color: pro.isFavorite! ? Colors.red : Colors.blue,
+                        icon: const Icon(
+                          Icons.bookmark_remove_outlined,
+                          color: Colors.red,
                         ),
                         onPressed: () {
                           setState(() {
                             pro.isFavorite = !pro.isFavorite!;
-                            Connection().setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);
+                            Connection().setFavorite(
+                                pro.id!, pro.isFavorite! ? 0 : 1, context);
                           });
                         },
                       ),

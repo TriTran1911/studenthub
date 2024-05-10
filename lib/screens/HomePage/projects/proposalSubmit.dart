@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/decoration.dart';
 import '/components/appbar.dart';
-import '/components/notifications.dart';
-import 'package:intl/intl.dart';
 import '/components/modelController.dart';
 
 class CoverLetterPage extends StatelessWidget {
@@ -13,7 +11,7 @@ class CoverLetterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const CustomAppBar(backWard: true),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -33,7 +31,7 @@ class CoverLetterPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-
+                    
                   },
                   style: buildButtonStyle(Colors.blue),
                   child: buildText('Submit', 16, FontWeight.bold, Colors.white),
