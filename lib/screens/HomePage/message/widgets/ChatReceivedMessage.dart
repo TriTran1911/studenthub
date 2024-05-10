@@ -9,29 +9,29 @@ class ChatReceivedMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 80),
-      child: ClipPath(
-        clipper: UpperNipMessageClipper(MessageType.receive),
-        child: Container(
-          // margin: const EdgeInsets.only(right: 100),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Color(0xFFE1E1E2),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 10,
-                offset: Offset(0, 3),
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: ClipPath(
+          // clipper: UpperNipMessageClipper(MessageType.receive),
+          child: Container(
+            padding:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
-            ],
-          ),
-          child: Text(
-            message,
-            style: const TextStyle(
-              fontSize: 16,
+            ),
+            child: Text(
+              message,
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(206, 0, 0, 0)),
             ),
           ),
         ),

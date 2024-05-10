@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -12,6 +13,7 @@ import 'package:studenthub/screens/HomePage/message/widgets/ChatBottomSheet.dart
 import 'package:studenthub/screens/HomePage/message/widgets/ChatReceivedMessage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentMessage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentScheduleBox.dart';
+import 'package:studenthub/screens/HomePage/message/widgets/createSchedule.dart';
 
 class ChatDetailPage extends StatefulWidget {
   final int senderId;
@@ -34,6 +36,10 @@ class ChatDetailPage extends StatefulWidget {
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final ScrollController _scrollController = ScrollController();
   late MessageNotification messageNotification;
+  late Interview interview;
+  late List<bool> listSender;
+  late List<int> listDisableFlag;
+  List<int> idInterview = [];
   late IO.Socket socket;
 
   List<MessageDetail> _messages = [];
@@ -50,11 +56,23 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       List<MessageDetail> messageDetails =
           responseDecoded['result'].map<MessageDetail>((message) {
         messages.add(Message.fromJson(message));
+        listSender
+            .add(message['sender']['id'] == widget.senderId ? true : false);
+        idInterview.add(message['interview'] != null
+            ? message['interview']['id'] as int
+            : 0);
+        listDisableFlag.add(message['interview'] != null
+            ? message['interview']['disableFlag'] as int
+            : 3);
         return MessageDetail(
-          content: message['content'],
-          type: message['sender']['id'] == modelController.user.id
-              ? MessageType.send
-              : MessageType.receive,
+          content: message['interview'] != null
+              ? '${message['content']}\n${message['interview']['title']}\nStart time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(message['interview']['startTime']))}\nEnd time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(message['interview']['endTime']))}\nDuration: ${DateTime.parse(message['interview']['endTime']).difference(DateTime.parse(message['interview']['startTime'])).inMinutes.toString()} minutes'
+              : message['content'],
+          type: message['interview'] != null
+              ? MessageType.scheduler
+              : message['sender']['id'] == widget.senderId
+                  ? MessageType.send
+                  : MessageType.receive,
         );
       }).toList();
       return messageDetails;
@@ -73,26 +91,25 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           print('Connected'),
         });
 
-    // socket.onDisconnect((data) => {
-    //       print('Disconnected'),
-    //     });
-
     socket.onConnectError((data) => print('$data'));
     socket.onError((data) => print(data));
 
     socket.on('RECEIVE_MESSAGE', (data) {
       print("Chat detail: $data");
       messageNotification = MessageNotification.fromJson(data['notification']);
-      String content = messageNotification.content;
       if (mounted) {
         setState(() {
           _messages.add(MessageDetail(
-            content: content,
+            content: messageNotification.content,
             type: messageNotification.senderId == widget.senderId
                 ? MessageType.send
                 : MessageType.receive,
           ));
         });
+        listSender.add(
+            messageNotification.senderId == widget.senderId ? true : false);
+        idInterview.add(messageNotification.interview?.id ?? 0);
+        listDisableFlag.add(messageNotification.interview?.disableFlag ?? 3);
         _scrollToBottom();
       }
       print('Message Receive: ${messageNotification.content}');
@@ -100,6 +117,29 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
     socket.on('RECEIVE_INTERVIEW', (data) {
       print("Interview: $data");
+      messageNotification = MessageNotification.fromJson(data['notification']);
+      if (mounted) {
+        setState(() {
+          _messages.add(MessageDetail(
+            content:
+                '${messageNotification.content}\n${messageNotification.interview?.title}\nStart time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(messageNotification.interview?.startTime ?? ''))}\nEnd time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(messageNotification.interview?.endTime ?? ''))}\nDuration: ${DateTime.parse(messageNotification.interview?.endTime ?? '').difference(DateTime.parse(messageNotification.interview?.startTime ?? '')).inMinutes.toString()} minutes',
+            type: MessageType.scheduler,
+          ));
+        });
+        listSender.add(
+            messageNotification.senderId == widget.senderId ? true : false);
+        // bool exists = idInterview.contains(messageNotification.interview?.id);
+        // if (exists) {
+        //   print('Update interview');
+        // } else {
+        //   idInterview.add(messageNotification.interview?.id ?? 0);
+        // }
+        idInterview.add(messageNotification.interview?.id ?? 0);
+        listDisableFlag.add(messageNotification.interview?.disableFlag ?? 3);
+
+        _scrollToBottom();
+      }
+      print('Hanlde receive interview');
     });
 
     socket.on('NOTI_${widget.senderId}', (data) {
@@ -113,12 +153,16 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   void initState() {
     super.initState();
+    listSender = [];
+    listDisableFlag = [];
     listMessage = getDetailMessage();
     listMessage.then((messageDetails) {
       setState(() {
         this._messages = messageDetails;
       });
-      _scrollToBottom();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
     });
     print('Sender: ${widget.senderId}');
     print('Receiver: ${widget.receiverId}');
@@ -135,15 +179,14 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   void _scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
-
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +241,16 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     size: 30,
                   ),
                   onPressed: () {
-                    _showVideoCallDialog(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CreateSchedule(
+                            messages: _messages,
+                            projectId: widget.projectId,
+                            senderId: widget.senderId,
+                            receiverId: widget.receiverId);
+                      },
+                    );
                   },
                 ),
               ),
@@ -211,19 +263,22 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           Expanded(
             child: ListView.builder(
               padding:
-                  EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 40),
+                  EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 30),
               controller: _scrollController,
-              itemCount: _messages.length + 1,
+              itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                // print('Message: ${message.content}');
 
                 if (message.type == MessageType.send) {
                   return ChatSentMessage(message: message.content);
                 } else if (message.type == MessageType.receive) {
                   return ChatReceivedMessage(message: message.content);
                 } else if (message.type == MessageType.scheduler) {
-                  return ChatSentScheduleBox(content: message.content);
+                  return ChatSentScheduleBox(
+                      content: message.content,
+                      isSender: listSender[index],
+                      idInterview: idInterview[index],
+                      disableFlag: listDisableFlag[index]);
                 }
               },
             ),
@@ -254,224 +309,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     } else {
       print('Sent message failed');
     }
-  }
-
-  // Method to show video call dialog
-  void _showVideoCallDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Text(
-                "Schedule a video call interview",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Title'),
-                    onChanged: (value) {
-                      Schedule.title = value;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  Text("Start time"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            final pickedStartDate = await showDatePicker(
-                              context: context,
-                              initialDate: startDate,
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (pickedStartDate != null &&
-                                pickedStartDate != startDate) {
-                              setState(() {
-                                startDate = pickedStartDate;
-                                Schedule.startDateText =
-                                    DateFormat('dd/MM/yyyy').format(startDate);
-                              });
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.calendar_today),
-                              SizedBox(width: 10),
-                              Text(
-                                DateFormat('dd/MM/yyyy')
-                                    .format(startDate.toLocal()),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.access_time),
-                        onPressed: () async {
-                          final pickedStartTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(startDate),
-                          );
-                          if (pickedStartTime != null) {
-                            setState(() {
-                              startDate = DateTime(
-                                startDate.year,
-                                startDate.month,
-                                startDate.day,
-                                pickedStartTime.hour,
-                                pickedStartTime.minute,
-                              );
-                              Schedule.startTimeText =
-                                  DateFormat('HH:mm').format(startDate);
-                            });
-                          }
-                        },
-                      ),
-                      Text(
-                        '${DateFormat('HH:mm').format(startDate)}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text("End time"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            final pickedEndDate = await showDatePicker(
-                              context: context,
-                              initialDate: endDate,
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (pickedEndDate != null &&
-                                pickedEndDate != endDate) {
-                              setState(() {
-                                endDate = pickedEndDate;
-                                Schedule.endDateText =
-                                    DateFormat('dd/MM/yyyy').format(endDate);
-                              });
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.calendar_today),
-                              SizedBox(width: 10),
-                              Text(
-                                DateFormat('dd/MM/yyyy')
-                                    .format(endDate.toLocal()),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.access_time),
-                        onPressed: () async {
-                          final pickedEndTime = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(endDate),
-                          );
-                          if (pickedEndTime != null) {
-                            setState(() {
-                              endDate = DateTime(
-                                endDate.year,
-                                endDate.month,
-                                endDate.day,
-                                pickedEndTime.hour,
-                                pickedEndTime.minute,
-                              );
-                              Schedule.endTimeText =
-                                  DateFormat('HH:mm').format(endDate);
-                            });
-                          }
-                        },
-                      ),
-                      Text(
-                        '${DateFormat('HH:mm').format(endDate)}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                      "Duration: ${endDate.difference(startDate).inMinutes} minutes"),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Cancel", style: TextStyle(color: Colors.blue)),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    String content = "Fan A7 wants to schedule a meeting\n";
-                    setState(() {
-                      _messages.add(
-                        MessageDetail(
-                          content: content,
-                          type: MessageType.send,
-                        ),
-                      );
-                    });
-                    // Prepare schedule information
-                    Schedule.duration =
-                        endDate.difference(startDate).inMinutes.toString();
-                    content =
-                        "${Schedule.title}        ${Schedule.duration} minutes\n";
-                    content +=
-                        "Start time:    ${Schedule.startDateText}  ${Schedule.startTimeText}\n";
-                    content +=
-                        "End time:      ${Schedule.endDateText}  ${Schedule.endTimeText}";
-                    setState(() {
-                      _messages.add(
-                        MessageDetail(
-                          content: content,
-                          type: MessageType.scheduler,
-                        ),
-                      );
-                    });
-                    print(content);
-                    Schedule.isCancel = false;
-                    Navigator.pop(context);
-                  },
-                  child: Text("Send Invite",
-                      style: TextStyle(color: Colors.white)),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
+    listSender.add(true);
   }
 }

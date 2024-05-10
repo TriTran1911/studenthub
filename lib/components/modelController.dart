@@ -334,13 +334,28 @@ class Message {
       id: json['id'],
       createdAt: json['createdAt'],
       content: json['content'],
-      sender: User.fromMessage(json['sender']),
-      receiver: User.fromMessage(json['receiver']),
+      sender: json['sender'] != null ? User.fromMessage(json['sender']) : null,
+      receiver:
+          json['receiver'] != null ? User.fromMessage(json['receiver']) : null,
       interview: json['interview'] != null
           ? Interview.fromJson(json['interview'])
           : null,
       project:
           json['project'] != null ? Project.fromJson(json['project']) : null,
+    );
+  }
+}
+
+class Notification {
+  int? id;
+  String? notifyFlag;
+
+  Notification({this.id, this.notifyFlag});
+
+  factory Notification.fromJson(Map<String, dynamic> json) {
+    return Notification(
+      id: json['id'],
+      notifyFlag: json['notifyFlag'],
     );
   }
 }

@@ -18,6 +18,7 @@ class Connection {
       },
       body: json.encode(body),
     );
+    print(response.statusCode);
     if (response.statusCode == 201 || response.statusCode == 200) {
       print("Connect server successful");
       return response.body;
@@ -57,6 +58,26 @@ class Connection {
       'Content-Type': 'application/json',
     };
     var response = await http.put(url, headers: headers, body: payload);
+    if (response.statusCode == 200) {
+      print("Connect server successful");
+      return response.body;
+    } else {
+      print("Connect server failed");
+      return response.body;
+      //throw exception and catch it in UI
+    }
+  }
+
+  static Future<dynamic> patchRequest(String api, dynamic object) async {
+    var url = Uri.parse(url_b + api);
+    var payload = json.encode(object);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    var response = await http.patch(url, headers: headers, body: payload);
     if (response.statusCode == 200) {
       print("Connect server successful");
       return response.body;

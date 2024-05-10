@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class _RecentChatsState extends State<RecentChats> {
   late Future<List<Message>> listMessage;
   late IO.Socket socket;
   late MessageNotification messageNotification;
+  Timer? timer;
 
   Future<List<Message>> getRecentChats() async {
     var response = await Connection.getRequest('/api/message', {});
@@ -67,6 +69,8 @@ class _RecentChatsState extends State<RecentChats> {
                 messageNotification.receiverId == modelController.user.id
                     ? modelController.user
                     : messages[i].receiver;
+            print(
+                'New message: ${messages[i].content} and ${messages[i].createdAt}');
           });
           break;
         }
@@ -85,6 +89,8 @@ class _RecentChatsState extends State<RecentChats> {
     });
 
     connect();
+    timer = Timer.periodic(Duration(seconds: 5), (timer) => connect());
+
     print('Hanlde new message');
   }
 
@@ -200,7 +206,7 @@ class _RecentChatsState extends State<RecentChats> {
                           ),
                         ),
                       ),
-                      Spacer(),
+                      // Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: Text(

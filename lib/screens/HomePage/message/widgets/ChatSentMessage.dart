@@ -11,20 +11,24 @@ class ChatSentMessage extends StatelessWidget {
     return Container(
       alignment: Alignment.centerRight,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 80),
+        padding: const EdgeInsets.only(top: 5, left: 80),
         child: ClipPath(
-          clipper: LowerNipMessageClipper(MessageType.send),
+          // clipper: LowerNipMessageClipper(MessageType.send),
           child: Container(
             padding:
-                const EdgeInsets.only(top: 10, bottom: 20, left: 20, right: 20),
+                const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
             decoration: BoxDecoration(
               color: Colors.blue,
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
             ),
             child: Text(
               message,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

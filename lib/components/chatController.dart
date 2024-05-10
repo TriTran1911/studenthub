@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/modelController.dart';
 
 class Schedule extends ChangeNotifier {
-  static String title = 'Catch up meeting';
+  static String title = 'Schedule a video call interview';
+  static String content = '';
   static String startDateText = '';
   static String endDateText = '';
   static String startTimeText = '';
@@ -12,11 +13,6 @@ class Schedule extends ChangeNotifier {
 
   void cancelMeeting() {
     isCancel = true;
-    notifyListeners();
-  }
-
-  void rescheduleMeeting() {
-    isCancel = false;
     notifyListeners();
   }
 }
@@ -83,10 +79,16 @@ class MessageNotification {
 
 // Define a interview class
 class Interview {
-  int id;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  String? createdAt;
+  String? updatedAt;
   String? deletedAt;
+  String? title;
+  String? startTime;
+  String? endTime;
+  int? disableFlag;
+  int? meetingRoomId;
+  MeetingRoom? meetingRoom;
   int? senderId;
   int? receiverId;
   int? projectId;
@@ -96,24 +98,38 @@ class Interview {
   String? interview;
 
   Interview(
-      {required this.id,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.deletedAt,
-      required this.senderId,
-      required this.receiverId,
-      required this.projectId,
-      required this.interviewId,
-      required this.content,
-      required this.messageFlag,
-      required this.interview});
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.title,
+      this.startTime,
+      this.endTime,
+      this.disableFlag,
+      this.meetingRoomId,
+      this.meetingRoom,
+      this.senderId,
+      this.receiverId,
+      this.projectId,
+      this.interviewId,
+      this.content,
+      this.messageFlag,
+      this.interview});
 
   factory Interview.fromJson(Map<String, dynamic> json) {
     return Interview(
-      id: json['id'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      id: json['id'] ?? null,
+      createdAt: json['createdAt'] ?? null,
+      updatedAt: json['updatedAt'] ?? null,
       deletedAt: json['deletedAt'] ?? null,
+      title: json['title'] ?? null,
+      startTime: json['startTime'] ?? null,
+      endTime: json['endTime'] ?? null,
+      disableFlag: json['disableFlag'] ?? null,
+      meetingRoomId: json['meetingRoomId'] ?? null,
+      meetingRoom: json['meetingRoom'] != null
+          ? MeetingRoom.fromJson(json['meetingRoom'])
+          : null,
       senderId: json['senderId'] ?? null,
       receiverId: json['receiverId'] ?? null,
       projectId: json['projectId'] ?? null,
@@ -121,6 +137,37 @@ class Interview {
       content: json['content'] ?? null,
       messageFlag: json['messageFlag'] ?? null,
       interview: json['interview'] ?? null,
+    );
+  }
+}
+
+class MeetingRoom {
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+  String? meeting_room_code;
+  String? meeting_room_id;
+  String? expired_at;
+
+  MeetingRoom(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.meeting_room_code,
+      this.meeting_room_id,
+      this.expired_at});
+
+  factory MeetingRoom.fromJson(Map<String, dynamic> json) {
+    return MeetingRoom(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'] ?? null,
+      meeting_room_code: json['meeting_room_code'],
+      meeting_room_id: json['meeting_room_id'],
+      expired_at: json['expired_at'],
     );
   }
 }
