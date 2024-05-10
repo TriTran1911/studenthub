@@ -30,7 +30,7 @@ class _AccountControllerState extends State<AccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: _Padding(),
     );
   }

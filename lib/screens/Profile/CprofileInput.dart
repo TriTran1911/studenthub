@@ -22,7 +22,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
 
   Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buidSingleChildScrollView(),
     );

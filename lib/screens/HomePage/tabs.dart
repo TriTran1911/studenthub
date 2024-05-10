@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dashBoard/SdashBoard.dart';
-import 'dashBoard/Cdashboard.dart';
-import 'projects/projects.dart';
+import 'dashBoard/TempCDashBoard.dart';
+import 'projects/TempProjects.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
 import '/components/controller.dart';
@@ -27,9 +27,9 @@ class _TabsPageState extends State<TabsPage> {
   }
 
   final List<TabInfo> _tabs = [
-    TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.list_alt),
+    TabInfo(page: ProjectsPage(role: User.roles[0]), label: 'Projects', icon: Icons.list_alt),
     TabInfo(
-        page: User.roles[0] == 1 ? DashboardPage() : StudentDashboardPage(),
+        page: User.roles[0] == 1 ? CDashBoardPage() : StudentDashboardPage(),
         label: 'Dashboard',
         icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
@@ -45,7 +45,7 @@ class _TabsPageState extends State<TabsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: _tabs[_selectedIndex].page,
       bottomNavigationBar: BottomNavigationBar(
         items: _tabs.map((tab) => _buildBottomNavigationBarItem(tab)).toList(),

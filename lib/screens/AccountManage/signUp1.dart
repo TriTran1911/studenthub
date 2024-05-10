@@ -17,7 +17,7 @@ class _SignUpState1 extends State<SignUp1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: _buildBody(context),

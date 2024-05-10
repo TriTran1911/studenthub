@@ -16,7 +16,7 @@ class _StudentInfoScreen2State extends State<StudentInfoScreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

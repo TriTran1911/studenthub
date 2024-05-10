@@ -19,14 +19,18 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
   }
 
   DefaultTabController _buildDefaultTabController() {
-    final activeProposals = submittedProjects.where((submitted) => submitted.messageStatus == 'Active').map((submitted) => submitted.project).toList();
+    final activeProposals = submittedProjects
+        .where((submitted) => submitted.messageStatus == 'Active')
+        .map((submitted) => submitted.project)
+        .toList();
     final submittedProposals = submittedProjects;
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
+          automaticallyImplyLeading: false,
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
@@ -49,7 +53,11 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         ),
         body: TabBarView(
           children: [
-            buildAllProjectsList(activeProposals, submittedProposals.map((submitted) => submitted.project).toList()),
+            buildAllProjectsList(
+                activeProposals,
+                submittedProposals
+                    .map((submitted) => submitted.project)
+                    .toList()),
             buildProjectsList(workingProjects),
             buildProjectsList(achievedProjects),
           ],
@@ -72,12 +80,10 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
   }
 
   void _updateProjectsList() {
-    workingProjects = Project.projects
-        .where((project) => project.typeFlag == 0)
-        .toList();
-    achievedProjects = Project.projects
-        .where((project) => project.typeFlag == 1)
-        .toList();
+    workingProjects =
+        Project.projects.where((project) => project.typeFlag == 0).toList();
+    achievedProjects =
+        Project.projects.where((project) => project.typeFlag == 1).toList();
   }
 
   Widget buildTextField(TextEditingController controller, String hintText) {
@@ -95,8 +101,11 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
       itemCount: projects.length,
       itemBuilder: (context, index) {
         final project = projects[index];
-        final submittedProject = SubmittedProjects().submittedProjects.firstWhere((submitted) => submitted.project == project);
-        final daysSinceSubmit = DateTime.now().difference(submittedProject.sentTime).inDays;
+        final submittedProject = SubmittedProjects()
+            .submittedProjects
+            .firstWhere((submitted) => submitted.project == project);
+        final daysSinceSubmit =
+            DateTime.now().difference(submittedProject.sentTime).inDays;
         return Column(
           children: [
             ListTile(
@@ -142,8 +151,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                   ),
                 ],
               ),
-              onTap: () {
-              },
+              onTap: () {},
             ),
             Divider(
               height: 17,
@@ -155,26 +163,34 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     );
   }
 
-  Widget buildAllProjectsList(List<Project> activeProposals, List<Project> submittedProposals) {
+  Widget buildAllProjectsList(
+      List<Project> activeProposals, List<Project> submittedProposals) {
     return ListView(
       children: [
         ExpansionTile(
           initiallyExpanded: true,
           title: Text('Active proposal (${activeProposals.length})'),
-          children: activeProposals.map((project) => buildProjectTile(project)).toList(),
+          children: activeProposals
+              .map((project) => buildProjectTile(project))
+              .toList(),
         ),
         ExpansionTile(
           initiallyExpanded: true,
           title: Text('Submitted proposal (${submittedProposals.length})'),
-          children: submittedProposals.map((project) => buildProjectTile(project)).toList(),
+          children: submittedProposals
+              .map((project) => buildProjectTile(project))
+              .toList(),
         ),
       ],
     );
   }
 
   Widget buildProjectTile(Project project) {
-    final submittedProject = SubmittedProjects().submittedProjects.firstWhere((submitted) => submitted.project == project);
-    final daysSinceSubmit = DateTime.now().difference(submittedProject.sentTime).inDays;
+    final submittedProject = SubmittedProjects()
+        .submittedProjects
+        .firstWhere((submitted) => submitted.project == project);
+    final daysSinceSubmit =
+        DateTime.now().difference(submittedProject.sentTime).inDays;
     return ListTile(
       title: Text(
         project.title ?? "",
@@ -199,7 +215,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        project.description ?? 'No description' ,
+                        project.description ?? 'No description',
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -218,8 +234,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
           ),
         ],
       ),
-      onTap: () {
-      },
+      onTap: () {},
     );
   }
 

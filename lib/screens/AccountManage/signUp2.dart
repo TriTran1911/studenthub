@@ -74,7 +74,7 @@ class _Signup2State extends State<SignUp2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildBody(context),
     );

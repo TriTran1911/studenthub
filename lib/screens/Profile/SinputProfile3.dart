@@ -35,7 +35,7 @@ class _StudentInputProfile3State extends State<StudentInputProfile3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

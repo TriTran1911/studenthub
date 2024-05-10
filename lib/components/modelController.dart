@@ -18,13 +18,88 @@ class Company {
   static String? description;
 }
 
+class Proposal {
+  final int? id;
+  final String? createAt;
+  final String? updateAt;
+  final String? deleteAt;
+  final int? projectId;
+  final int? studentId;
+  final String? coverLetter;
+  int? statusFlag;
+  int? disableFlag;
+  final Project? project;
+  final Student? student;
+
+  Proposal(
+      {this.id,
+      this.createAt,
+      this.updateAt,
+      this.deleteAt,
+      this.projectId,
+      this.studentId,
+      this.coverLetter,
+      this.statusFlag,
+      this.disableFlag,
+      this.project,
+      this.student});
+}
+
 class Project {
-  static int? companyId;
-  static int? proprojectScopeFlag;
-  static String? title;
-  static int? numberOfStudents;
-  static String? description;
-  static int? typeFlag;
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+  int? projectScopeFlag;
+  String? title;
+  String? description;
+  int? numberOfStudents;
+  int? typeFlag;
+  int? countProposals;
+  List<Proposal>? proposals;
+  int? countMessages;
+  int? countHired;
+  bool? isFavorite;
+
+  Project(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.projectScopeFlag,
+      this.title,
+      this.description,
+      this.numberOfStudents,
+      this.typeFlag,
+      this.countProposals,
+      this.proposals,
+      this.countMessages,
+      this.countHired,
+      this.isFavorite});
+
+  factory Project.fromAllProject(Map<String, dynamic> json) {
+    return Project(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      projectScopeFlag: json['projectScopeFlag'],
+      title: json['title'],
+      description: json['description'],
+      numberOfStudents: json['numberOfStudents'],
+      typeFlag: json['typeFlag'],
+      countProposals: json['countProposals'] ?? 0,
+      isFavorite: json['isFavorite'] ?? false,
+    );
+  }
+
+  static List<Project> buildListProject(List<dynamic> list) {
+    List<Project> projectList = [];
+    for (var project in list) {
+      projectList.add(Project.fromAllProject(project));
+    }
+    return projectList;
+  }
 }
 
 class Student {
@@ -193,8 +268,8 @@ class Education {
   final DateTime? updateAt;
   final DateTime? deleteAt;
   String? schoolName;
-  DateTime? startYear;
-  DateTime? endYear;
+  int? startYear;
+  int? endYear;
 
   Education(
       {this.id,

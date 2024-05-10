@@ -30,7 +30,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
     // Convert list to string
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: _buildPadding(context),
     );
   }

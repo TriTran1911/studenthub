@@ -16,7 +16,7 @@ class _CompanyProfileState extends State<CompanyProfile> {
 
   Scaffold _buildScaffold() {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildSingleChildScrollView(),
     );

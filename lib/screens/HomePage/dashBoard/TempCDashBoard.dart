@@ -2,38 +2,33 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/decoration.dart';
-import '/components/modelController.dart';
-import '/connection/server.dart';
-import 'TempFavoriteProjects.dart';
-import 'TempProjectDetail.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
+import '../../../components/controller.dart';
+import '../../../connection/server.dart';
 
-class ProjectsPage extends StatefulWidget {
-  final int role;
-
-  const ProjectsPage({super.key, required this.role});
+class CDashBoardPage extends StatefulWidget {
+  const CDashBoardPage({super.key});
 
   @override
-  State<ProjectsPage> createState() => _ProjectsPageState();
+  State<CDashBoardPage> createState() => _CDashBoardPageState();
 }
 
-class _ProjectsPageState extends State<ProjectsPage> {
-  final TextEditingController _searchController = TextEditingController();
-  Future<List<Project>>? _projectsFuture;
-  List<String> filteredNames = [];
-  List<Project> allProjects = [];
+class _CDashBoardPageState extends State<CDashBoardPage> {
   List<Project> projectList = [];
+  List<Project> workingProjectlist = [];
+  List<Project> achievedProjectlist = [];
+  List<Project> allProjects = [];
+  Future<List<Project>>? _projectsFuture;
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(_onSearchChanged);
     getProjects().then((value) {
       if (mounted) {
         setState(() {
-          allProjects = value;
-          projectList = allProjects;
+          projectList = value;
         });
       }
     });
@@ -41,18 +36,31 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<List<Project>> getProjects() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int companyId = prefs.getInt('companyId')!;
+
     try {
-      var response = await Connection.getRequest('/api/project', {});
+      var response =
+          await Connection.getRequest('/api/project/company/${companyId}', {});
       var responseDecode = jsonDecode(response);
 
       if (responseDecode['result'] != null) {
         print("Connected to the server successfully");
         print(responseDecode['result']);
 
-        List<Project> projectList =
+        List<Project> projectListAPI =
             Project.buildListProject(responseDecode['result']);
 
-        return projectList;
+        // check statusFlag
+        for (Project project in projectListAPI) {
+          if (project.typeFlag == 1) {
+            workingProjectlist.add(project);
+          } else if (project.typeFlag == 2) {
+            achievedProjectlist.add(project);
+          }
+        }
+
+        return projectListAPI;
       } else {
         throw Exception('Failed to load projects');
       }
@@ -62,47 +70,60 @@ class _ProjectsPageState extends State<ProjectsPage> {
     }
   }
 
-  void _onSearchChanged() {
-    String searchText = _searchController.text.toLowerCase();
-    setState(() {
-      projectList = allProjects.where((project) {
-        return project.title!.toLowerCase().contains(searchText);
-      }).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search projects...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: const EdgeInsets.only(
+                  left: 10, right: 10, top: 20, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  buildText('Your Projects', 20, FontWeight.bold),
+                  ElevatedButton(
+                    onPressed: () {
+                      moveToPage(ProjectPost1(), context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                  ),
-                ),
-                widget.role == 0
-                    ? IconButton(
-                        icon: const Icon(Icons.list_alt_outlined),
-                        onPressed: () {
-                          moveToPage(FavoriteProjectsPage(projects: projectList), context);
-                        },
-                      )
-                    : const SizedBox(width: 0),
-              ],
+                    child: buildText(
+                        'Post a job', 20, FontWeight.bold, Colors.white),
+                  )
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
+            bottom: const TabBar(
+              labelColor: Colors.blue,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.blue,
+              tabs: [
+                Tab(
+                  child: Text('All Projects',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+                Tab(
+                  child: Text('Working',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+                Tab(
+                  child: Text('Achieved',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            )),
+        body: TabBarView(
+          children: [
             FutureBuilder<List<Project>>(
               future: _projectsFuture,
               builder: (context, snapshot) {
@@ -115,9 +136,15 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 } else {
                   allProjects = snapshot.data!;
                   projectList = allProjects;
-                  return buildCards();
+                  return buildCards(projectList);
                 }
               },
+            ),
+            Center(
+              child: Text('Working'),
+            ),
+            Center(
+              child: Text('Achieved'),
             ),
           ],
         ),
@@ -125,7 +152,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
-  ListView buildCards() {
+  ListView buildCards(List<Project> projectList) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -139,7 +166,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
           ),
           elevation: 3,
           surfaceTintColor: Colors.blue,
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          margin: const EdgeInsets.all(12),
           shadowColor: Colors.blue,
           child: ListTile(
             title: Column(
@@ -163,21 +190,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           FontWeight.bold,
                           Colors.blue[800]),
                     ),
-                    // if role is student show the icon
-                    widget.role == 0
-                        ? IconButton(
-                            icon: Icon(
-                              pro.isFavorite! ? Icons.bookmark : Icons.bookmark_outline,
-                              color: pro.isFavorite! ? Colors.red : Colors.blue,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                pro.isFavorite = !pro.isFavorite!;
-                                Connection().setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);
-                              });
-                            },
-                          )
-                        : const SizedBox(width: 0),
+                    
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -246,7 +259,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
               ],
             ),
             onTap: () {
-              moveToPage(ProjectDetailPage(project: pro), context);
+              // moveToPage(ProjectDetailPage(project: pro), context);
             },
           ),
         );

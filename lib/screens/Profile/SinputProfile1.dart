@@ -9,7 +9,6 @@ import 'dart:convert';
 import '../../connection/server.dart';
 import 'SinputProfile2.dart';
 import 'package:studenthub/components/decoration.dart';
-import 'package:studenthub/components/loading.dart';
 
 class StudentInputProfile1 extends StatefulWidget {
   const StudentInputProfile1({super.key});
@@ -19,7 +18,9 @@ class StudentInputProfile1 extends StatefulWidget {
 }
 
 class _StudentInputProfile1State extends State<StudentInputProfile1> {
+  // ignore: non_constant_identifier_names
   List<TechStack> _TechStackList = [];
+  // ignore: non_constant_identifier_names
   List<SkillSet> _SkillSetList = [];
 
   final List<SkillSet> _selectedSkillSet = [];
@@ -29,11 +30,12 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   @override
   void initState() {
-    super.initState();
     _fectchData();
+    super.initState();
   }
 
   void _fectchData() async {
+    // show loading dialog until the data is fetched
     _TechStackList = await getTechStack();
     _SkillSetList = await getSkillSet();
     setState(() {});
@@ -61,11 +63,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     var response =
         await Connection.getRequest('/api/skillset/getAllSkillSet', {});
     var responseDecoded = jsonDecode(response);
-    // init a temp list to store the skillset
     List<SkillSet> list = [];
 
     if (responseDecoded['result'] != null) {
-      print(responseDecoded['result']);
       for (var skill in responseDecoded['result']) {
         list.add(SkillSet.fromJson(skill));
       }
@@ -108,44 +108,37 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
               })
           .toList(),
     };
-    for (var Education in educationList) {
-      print(Education.schoolName);
-      print(Education.startYear);
-      print(Education.endYear);
+    try {
+      var response = await Connection.postRequest('/api/profile/student', datats);
+      var responseDecoded = jsonDecode(response);
+      print(responseDecoded);
+      if (responseDecoded['result'] != null) {
+        print('Post profile successful');
+        await Connection.putRequest(
+            '/api/language/updateByStudentID/$studentId', datal);
+        await Connection.putRequest(
+            '/api/education/updateByStudentID/$studentId', datae);
+      } else {
+        print('Post profile failed');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(responseDecoded['errorDetails']),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to post profile'),
+        ),
+      );
     }
-    await Connection.putRequest(
-        '/api/education/updateByStudentID/$studentId', datae);
-    // try {
-    //   var response = await Connection.postRequest('/api/profile/student', datats);
-    //   var responseDecoded = jsonDecode(response);
-    //   print(responseDecoded);
-    //   if (responseDecoded['result'] != null) {
-    //     print('Post profile successful');
-    //     await Connection.putRequest(
-    //         '/api/language/updateByStudentID/$studentId', datal);
-    //     await Connection.putRequest(
-    //         '/api/education/updateByStudentID/$studentId', datae);
-    //   } else {
-    //     print('Post profile failed');
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(responseDecoded['errorDetails']),
-    //       ),
-    //     );
-    //   }
-    // } catch (e) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('Failed to post profile'),
-    //     ),
-    //   );
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -282,7 +275,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                       buildText(
                           education.schoolName ?? '', 16, FontWeight.bold),
                       buildText(
-                          '${education.startYear!.year} - ${education.endYear!.year}',
+                          '${education.startYear!} - ${education.endYear!}',
                           16,
                           FontWeight.normal,
                           Colors.grey[600]!),
@@ -333,15 +326,11 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     final schoolNameController = TextEditingController();
     final dateStartedController = TextEditingController();
     final dateEndedController = TextEditingController();
-    DateTime? selectedStartYear = education?.startYear;
-    DateTime? selectedEndYear = education?.endYear;
 
     if (education != null) {
       schoolNameController.text = education.schoolName!;
-      dateStartedController.text =
-          '${education.startYear!.day}-${education.startYear!.month}-${education.startYear!.year}';
-      dateEndedController.text =
-          '${education.endYear!.day}-${education.endYear!.month}-${education.endYear!.year}';
+      dateStartedController.text = education.startYear.toString();
+      dateEndedController.text = education.endYear.toString();
     }
 
     await showDialog(
@@ -379,23 +368,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                       child: SizedBox(
                         width: double.infinity,
                         child: TextFormField(
-                          readOnly: true,
                           controller: dateStartedController,
-                          decoration: buildDecoration('Date started'),
-                          onTap: () {
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime.now(),
-                            ).then((DateTime? value) {
-                              setState(() {
-                                dateStartedController.text =
-                                    '${value!.day}-${value.month}-${value.year}';
-                                selectedStartYear = value;
-                              });
-                            });
-                          },
+                          decoration: buildDecoration('Year started'),
                         ),
                       ),
                     ),
@@ -404,23 +378,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                       child: SizedBox(
                         width: double.infinity,
                         child: TextFormField(
-                          readOnly: true,
                           controller: dateEndedController,
-                          decoration: buildDecoration('Date ended'),
-                          onTap: () {
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: selectedStartYear ?? DateTime(1900),
-                              lastDate: DateTime.now(),
-                            ).then((DateTime? value) {
-                              setState(() {
-                                dateEndedController.text =
-                                    '${value!.day}-${value.month}-${value.year}';
-                                selectedEndYear = value;
-                              });
-                            });
-                          },
+                          decoration: buildDecoration('Year ended'),
                         ),
                       ),
                     ),
@@ -438,24 +397,28 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                       child: buildText(
                           'Cancel', 16, FontWeight.bold, Colors.white),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
                         if (schoolNameController.text.isNotEmpty &&
-                            selectedEndYear != null &&
-                            selectedStartYear != null &&
-                            selectedEndYear!.isAfter(selectedStartYear!)) {
+                            dateStartedController.text.isNotEmpty &&
+                            dateEndedController.text.isNotEmpty &&
+                            int.parse(dateStartedController.text) <=
+                                int.parse(dateEndedController.text)) {
                           setState(() {
                             if (education == null) {
                               educationList.add(Education(
                                 schoolName: schoolNameController.text,
-                                startYear: selectedStartYear,
-                                endYear: selectedEndYear,
+                                startYear:
+                                    int.parse(dateStartedController.text),
+                                endYear: int.parse(dateEndedController.text),
                               ));
                             } else {
                               education.schoolName = schoolNameController.text;
-                              education.startYear = selectedStartYear;
-                              education.endYear = selectedEndYear;
+                              education.startYear =
+                                  int.parse(dateStartedController.text);
+                              education.endYear =
+                                  int.parse(dateEndedController.text);
                             }
                           });
                         } else {
@@ -468,8 +431,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                         Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.blue[400]!),
-                      child:
-                          buildText('Add', 16, FontWeight.bold, Colors.white),
+                      child: buildText(education == null ? 'Add' : 'Edit', 16,
+                          FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),

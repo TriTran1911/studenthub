@@ -6,7 +6,6 @@ import '/components/notifications.dart';
 import '/screens/action/home.dart';
 import 'package:provider/provider.dart';
 import 'package:studenthub/components/chatController.dart';
-import 'package:studenthub/screens/Profile/SinputProfile1.dart';
 
 void main() {
   initialNotifications();

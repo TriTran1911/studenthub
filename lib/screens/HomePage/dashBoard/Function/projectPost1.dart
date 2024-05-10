@@ -15,7 +15,7 @@ class _ProjectPost1State extends State<ProjectPost1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: SingleChildScrollView(
         child: _buildPadding(context),
       ),

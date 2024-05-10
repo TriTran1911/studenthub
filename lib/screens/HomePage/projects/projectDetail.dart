@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
-import '/components/project.dart';
-import '/components/appbar.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
+import '../../../components/appbar.dart';
+import '../../../components/decoration.dart';
+import '../../../connection/server.dart';
 import 'proposalSubmit.dart';
 
 class ProjectDetailPage extends StatefulWidget {
@@ -10,186 +16,187 @@ class ProjectDetailPage extends StatefulWidget {
   const ProjectDetailPage({Key? key, required this.project}) : super(key: key);
 
   @override
-  _ProjectDetailPageState createState() => _ProjectDetailPageState();
+  State<ProjectDetailPage> createState() => _ProjectDetailPageState();
 }
 
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
-  bool isFavorite = false;
+  Future<void> setFavorite(int projectId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? studentId = prefs.getString('studentId');
 
-  @override
-  void initState() {
-    super.initState();
-    isFavorite = Project.isFavorite(widget.project);
+    var body = {
+      'projectId': projectId,
+      'disableFlag': widget.project.isFavorite! == false ? 1 : 0,
+    };
+
+    try {
+      var response = await Connection.patchRequest(
+          '/api/favoriteProject/$studentId', body);
+      var responseDecode = jsonDecode(response);
+      if (responseDecode['result'] != null) {
+        print("Connected to the server successfully");
+        print(responseDecode['result']);
+      } else {
+        throw Exception('Failed to load projects');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to load projects');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    Project project = widget.project;
     return Scaffold(
-      appBar: CustomAppBar(),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: const CustomAppBar(backWard: true),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                buildText('Project Detail', 24, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 16),
+                buildText('Project Title: ${project.title}', 20,
+                    FontWeight.bold, Colors.black),
+                const SizedBox(height: 16),
+                buildDescription(project),
+                const SizedBox(height: 16),
+                // show project scope
+                buildProjectScope(project),
+                const SizedBox(height: 16),
+                // show number of students
+                buildNumOfStudents(project),
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      widget.project.title ?? "No title",
-                      style: TextStyle(fontSize: 24, color: Colors.green),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          project.isFavorite = !project.isFavorite!;
+                          Connection().setFavorite(project.id!,
+                              project.isFavorite! ? 0 : 1, context);
+                          moveToPage(TabsPage(index: 0), context);
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[100],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: project.isFavorite == false
+                          ? buildText('Save project', 16, FontWeight.bold,
+                              Colors.blueAccent)
+                          : buildText('Unsave project', 16, FontWeight.bold,
+                              Colors.blueAccent),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Duration: ${widget.project.getProjectScopeAsString()}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Status: ${widget.project.getProjectTypeFlagAsString()}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Created: ${DateTime.now().difference(widget.project.createdAt ?? DateTime.now()).inDays} days ago',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    Divider(), // Horizontal line
-                    SizedBox(height: 8),
-                    Text(
-                      'Description:',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: (widget.project.description ?? '')
-                          .split('\n')
-                          .map(
-                            (descriptionItem) => Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Text('• $descriptionItem'),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    SizedBox(height: 8),
-                    Divider(), // Horizontal line
-                    SizedBox(height: 8),
-                    Text(
-                      'Proposals: ${widget.project.countProposals}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    // Text(
-                    //   'Messages: ${widget.project.messages}',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    // SizedBox(height: 8),
-                    // Text(
-                    //   'Hired: ${widget.project.hiredCount}',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    // SizedBox(height: 8),
-                    Text(
-                      'Students Needed: ${widget.project.numberOfStudents}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Time Needed: ${widget.project.getProjectScopeAsString()}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(
-                        height:
-                            16), // Add some spacing between the project details and buttons
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ElevatedButton(
+                    ElevatedButton(
                       onPressed: () {
                         moveToPage(
-                            CoverLetterPage(project: widget.project), context);
+                            CoverLetterPage(project: project), context);
                       },
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        // color blue
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Apply Now',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
+                      child: buildText(
+                          'Apply now', 16, FontWeight.bold, Colors.white),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        toggleFavorite();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            isFavorite
-                                ? Color.fromARGB(255, 107, 167, 206)
-                                : Colors.blue),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          isFavorite ? 'Saved' : 'Save',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  void toggleFavorite() {
-    setState(() {
-      if (isFavorite) {
-        Project.favoriteProjects.remove(widget.project);
-      } else {
-        Project.favoriteProjects.add(widget.project);
-      }
-      isFavorite = !isFavorite;
-    });
+  SizedBox buildNumOfStudents(Project project) {
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          const Icon(Icons.people_outlined, size: 30),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildText(
+                    'Number of Students:', 18, FontWeight.bold, Colors.black),
+                buildText(
+                    project.numberOfStudents == 1
+                        ? '${project.numberOfStudents} student'
+                        : '${project.numberOfStudents} students',
+                    16,
+                    FontWeight.normal,
+                    Colors.black),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox buildProjectScope(Project project) {
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          const Icon(Icons.access_time_outlined, size: 30),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildText('Project Scope:', 18, FontWeight.bold, Colors.black),
+                buildText(
+                    project.projectScopeFlag == 0
+                        ? 'Less than 1 month'
+                        : project.projectScopeFlag == 1
+                            ? '1 to 3 months'
+                            : project.projectScopeFlag == 2
+                                ? '3 to 6 months'
+                                : 'More than 6 months',
+                    16,
+                    FontWeight.normal,
+                    Colors.black),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox buildDescription(Project project) {
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          const Icon(Icons.search, size: 30),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildText('Student are looking for:', 18, FontWeight.bold,
+                    Colors.black),
+                for (String item in project.description!.split('\n'))
+                  buildText('• $item', 16, FontWeight.normal, Colors.black),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

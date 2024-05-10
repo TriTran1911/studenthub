@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '/components/modelController.dart';
@@ -49,7 +50,7 @@ class Connection {
 
   static Future<dynamic> putRequest(String api, dynamic object) async {
     var url = Uri.parse(url_b + api);
-    String jsonBody = jsonEncode(object, toEncodable: myJsonEncode);
+    var jsonBody = json.encode(object);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -58,7 +59,8 @@ class Connection {
       'Content-Type': 'application/json',
     };
     var response = await http.put(url, headers: headers, body: jsonBody);
-    if (response.statusCode == 200) {
+    var responseJson = json.decode(response.body);
+    if (responseJson != null) {
       print("PUT request successful");
       return response.body;
     } else {
@@ -66,11 +68,54 @@ class Connection {
       return response.body;
     }
   }
-}
 
-dynamic myJsonEncode(dynamic item) {
-  if (item is DateTime) {
-    return item.toIso8601String();
+  static Future<dynamic> patchRequest(String api, dynamic object) async {
+    var url = Uri.parse(url_b + api);
+    var jsonBody = json.encode(object);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    var response = await http.patch(url, headers: headers, body: jsonBody);
+    var responseJson = json.decode(response.body);
+    if (responseJson != null) {
+      print("PUT request successful");
+      return response.body;
+    } else {
+      print("PUT request failed with status: ${response.statusCode}");
+      return response.body;
+    }
   }
-  return item.toJson();
+
+  Future<bool> setFavorite(int projectId, int disableFlag, BuildContext context) async {
+    print('setFavorite');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? studentId = prefs.getInt('studentId').toString();
+    String url = '/api/favoriteProject/$studentId';
+    try {
+      var object = {'projectId': projectId, 'disableFlag': disableFlag};
+      var response = await Connection.patchRequest(url, object);
+      var responseDecode = jsonDecode(response);
+      if (responseDecode != null) {
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to set favorite project."),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to set favorite project."),
+        ),
+      );
+    }
+    return false;
+  }
 }
