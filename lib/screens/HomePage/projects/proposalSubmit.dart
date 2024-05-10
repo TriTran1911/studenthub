@@ -1,19 +1,51 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:studenthub/components/decoration.dart';
 import '/components/appbar.dart';
 import '/components/modelController.dart';
+=======
+import 'package:studenthub/components/controller.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
+>>>>>>> Stashed changes
 
-class CoverLetterPage extends StatelessWidget {
-  final Project project;
+import '../../../components/appbar.dart';
+import '../../../components/decoration.dart';
+import '../../../components/modelController.dart';
+import '../../../connection/server.dart';
 
-  const CoverLetterPage({super.key, required this.project});
+class CoverLetterPage extends StatefulWidget {
+  Project project;
+  
+  CoverLetterPage({super.key, required this.project});
+
+  @override
+  State<CoverLetterPage> createState() => _CoverLetterPageState();
+}
+
+class _CoverLetterPageState extends State<CoverLetterPage> {
+  TextEditingController coverLetterController = TextEditingController();
+
+  Future<void> submitProposal() async {
+    var body = {
+      'projectId': widget.project.id,
+      'studentId': User.id,
+      'coverLetter': coverLetterController.text,
+    };
+
+    var response = await Connection.postRequest('/api/proposal', body);
+    if (response != null) {
+      print('Proposal submitted');
+    } else {
+      print('Proposal failed');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(backWard: true),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,6 +55,7 @@ class CoverLetterPage extends StatelessWidget {
             const SizedBox(height: 16),
             TextFormField(
               decoration: buildDecoration('Enter your cover letter...'),
+              controller: coverLetterController,
               maxLines: 10,
             ),
             const SizedBox(height: 16),
@@ -31,7 +64,12 @@ class CoverLetterPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+<<<<<<< Updated upstream
                     
+=======
+                    submitProposal();
+                    moveToPage(TabsPage(index: 0), context);
+>>>>>>> Stashed changes
                   },
                   style: buildButtonStyle(Colors.blue),
                   child: buildText('Submit', 16, FontWeight.bold, Colors.white),

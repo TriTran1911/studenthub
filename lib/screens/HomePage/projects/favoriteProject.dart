@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
+<<<<<<< Updated upstream
 import 'projectDetail.dart';
+=======
+import 'package:studenthub/screens/HomePage/projects/projectDetail.dart';
+>>>>>>> Stashed changes
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/decoration.dart';
 import '../../../connection/server.dart';
@@ -69,6 +73,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+<<<<<<< Updated upstream
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -177,6 +182,32 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
           return const SizedBox.shrink();
         }
       },
+    );
+  }
+
+            color: Colors.blue[100],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: buildText(
+                  : '0', // or some default value
+              16,
+              Colors.blue[800]),
+        ),
+        // if role is student show the icon
+        IconButton(
+          icon: Icon(
+            pro.isFavorite! ? Icons.bookmark : Icons.bookmark_outline,
+            color: pro.isFavorite! ? Colors.red : Colors.blue,
+          ),
+          onPressed: () {
+            setState(() {
+              pro.isFavorite = !pro.isFavorite!;
+              Connection()
+                  .setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);
+            });
+          },
+        ),
+      ],
     );
   }
 

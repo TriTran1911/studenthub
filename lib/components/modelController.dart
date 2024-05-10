@@ -20,29 +20,45 @@ class Company {
 
 class Proposal {
   final int? id;
-  final String? createAt;
-  final String? updateAt;
-  final String? deleteAt;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? deletedAt;
   final int? projectId;
   final int? studentId;
   final String? coverLetter;
   int? statusFlag;
   int? disableFlag;
-  final Project? project;
-  final Student? student;
+  final Project projectCompany;
+  final Student studentUser;
 
   Proposal(
       {this.id,
-      this.createAt,
-      this.updateAt,
-      this.deleteAt,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
       this.projectId,
       this.studentId,
       this.coverLetter,
       this.statusFlag,
       this.disableFlag,
-      this.project,
-      this.student});
+      required this.projectCompany,
+      required this.studentUser});
+
+  factory Proposal.formAllProposal(Map<String, dynamic> json) {
+    return Proposal(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      projectId: json['projectId'],
+      studentId: json['studentId'],
+      coverLetter: json['coverLetter'],
+      statusFlag: json['statusFlag'],
+      disableFlag: json['disableFlag'],
+      projectCompany: Project.formAllProject(json['projectCompany']),
+      studentUser: Student(),
+    );
+  }
 }
 
 class Project {
@@ -77,7 +93,7 @@ class Project {
       this.countHired,
       this.isFavorite});
 
-  factory Project.fromAllProject(Map<String, dynamic> json) {
+  factory Project.formAllProject(Map<String, dynamic> json) {
     return Project(
       id: json['id'],
       createdAt: json['createdAt'],
@@ -96,7 +112,7 @@ class Project {
   static List<Project> buildListProject(List<dynamic> list) {
     List<Project> projectList = [];
     for (var project in list) {
-      projectList.add(Project.fromAllProject(project));
+      projectList.add(Project.formAllProject(project));
     }
     return projectList;
   }

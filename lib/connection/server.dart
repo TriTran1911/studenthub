@@ -91,10 +91,7 @@ class Connection {
   }
 
   Future<bool> setFavorite(int projectId, int disableFlag, BuildContext context) async {
-    print('setFavorite');
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? studentId = prefs.getInt('studentId').toString();
+    int? studentId = User.id;
     String url = '/api/favoriteProject/$studentId';
     try {
       var object = {'projectId': projectId, 'disableFlag': disableFlag};

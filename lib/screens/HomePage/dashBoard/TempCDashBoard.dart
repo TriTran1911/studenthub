@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
@@ -36,12 +35,11 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
   }
 
   Future<List<Project>> getProjects() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int companyId = prefs.getInt('companyId')!;
+    int companyId = User.id;
 
     try {
       var response =
-          await Connection.getRequest('/api/project/company/${companyId}', {});
+          await Connection.getRequest('/api/project/company/$companyId', {});
       var responseDecode = jsonDecode(response);
 
       if (responseDecode['result'] != null) {
@@ -124,28 +122,26 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
             )),
         body: TabBarView(
           children: [
-            FutureBuilder<List<Project>>(
-              future: _projectsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  allProjects = snapshot.data!;
-                  projectList = allProjects;
-                  return buildCards(projectList);
-                }
-              },
+            SingleChildScrollView(
+              child: FutureBuilder<List<Project>>(
+                future: _projectsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    allProjects = snapshot.data!;
+                    projectList = allProjects;
+                    return buildCards(projectList);
+                  }
+                },
+              ),
             ),
-            Center(
-              child: Text('Working'),
-            ),
-            Center(
-              child: Text('Achieved'),
-            ),
+            buildCards(workingProjectlist),
+            buildCards(achievedProjectlist),
           ],
         ),
       ),
@@ -190,7 +186,57 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                           FontWeight.bold,
                           Colors.blue[800]),
                     ),
-                    
+                    // icon selection
+                    IconButton(
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Colors.blue,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Container(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 30),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  buildBottomSheetItem(context,
+                                      "View proposals", Colors.black, () {}),
+                                  buildBottomSheetItem(context, "View messages",
+                                      Colors.black, () {}),
+                                  buildBottomSheetItem(context, "View hired",
+                                      Colors.black, () {}),
+                                  buildBottomSheetItem(context,
+                                      "View job posting", Colors.black, () {}),
+                                  buildBottomSheetItem(
+                                      context, "Edit posting", Colors.black,
+                                      () {
+                                    Navigator.pop(context);
+                                    showEditDialog(context, pro);
+                                  }),
+                                  buildBottomSheetItem(context,
+                                      "Remove posting", Colors.red, () {}),
+                                  buildBottomSheetItem(
+                                      context,
+                                      "Start working on this project",
+                                      Colors.blue,
+                                      () {}),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -258,9 +304,87 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                 ),
               ],
             ),
-            onTap: () {
-              // moveToPage(ProjectDetailPage(project: pro), context);
-            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showEditDialog(BuildContext context, Project project) async {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    TextEditingController durationController = TextEditingController();
+    TextEditingController studentController = TextEditingController();
+
+    titleController.text = project.title!;
+    descriptionController.text = project.description!;
+    durationController.text = project.projectScopeFlag.toString();
+    studentController.text = project.numberOfStudents.toString();
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Edit project', 20, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: titleController,
+                  decoration: buildDecoration('Title'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: descriptionController,
+                  decoration: buildDecoration('Description'),
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: durationController,
+                  decoration: buildDecoration('Duration'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: studentController,
+                  decoration: buildDecoration('Number of students'),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Save', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -305,5 +429,23 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
         return '$years years ago';
       }
     }
+  }
+
+  Widget buildBottomSheetItem(
+      BuildContext context, String text, Color color, VoidCallback onTap) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.grey.withOpacity(0.5),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: ListTile(
+        title: buildText(text, 18, FontWeight.bold, color),
+        onTap: onTap,
+      ),
+    );
   }
 }

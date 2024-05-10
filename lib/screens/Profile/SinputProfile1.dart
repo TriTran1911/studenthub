@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
@@ -81,9 +80,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   void postProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? studentId = prefs.getInt('studentId');
-    print(studentId);
+    int? studentId = User.id;
 
     var datats = {
       'techStackId': _selectedTechStack?.id.toString(),
@@ -171,9 +168,9 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
                 ElevatedButton(
                   onPressed: () {
                     postProfile();
-                    // moveToPage(
-                    //     StudentInputProfile2(skillSetList: _SkillSetList),
-                    //     context);
+                    moveToPage(
+                        StudentInputProfile2(skillSetList: _SkillSetList),
+                        context);
                   },
                   style: buildButtonStyle(Colors.blue[400]!),
                   child: buildText('Next', 16, FontWeight.bold, Colors.white),

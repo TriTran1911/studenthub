@@ -186,10 +186,12 @@ class _LoginState extends State<Login> {
         if (authorizationDecoded['result']['company'] != null) {
           prefs.setInt(
               'companyId', authorizationDecoded['result']['company']['id']);
+          User.id = authorizationDecoded['result']['company']['id'];
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(
               'studentId', authorizationDecoded['result']['student']['id']);
+          User.id = authorizationDecoded['result']['student']['id'];
         }
         User.roles = List<int>.from(authorizationDecoded['result']['roles']);
         User.fullname = authorizationDecoded['result']['fullname'];
