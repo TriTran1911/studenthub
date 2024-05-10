@@ -93,15 +93,15 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       var responseDecoded = jsonDecode(response);
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
-        print('Post profile successful');
+        print("sinputprofile_text1".tr());
         moveToPage(StudentInputProfile2(skillSetList: _SkillSetList), context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile posted successfully'),
+          SnackBar(
+            content: Text("sinputprofile_text2".tr()),
           ),
         );
       } else {
-        print('Post profile failed');
+        print("sinputprofile_text3".tr());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(responseDecoded['errorDetails']),
@@ -110,8 +110,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to post profile'),
+        SnackBar(
+          content: Text("sinputprofile_text4".tr()),
         ),
       );
     }
@@ -131,7 +131,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
             buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
             const SizedBox(height: 16),
             buildText(
-                'Tell us about yourself and you will be on your way to connect with companies',
+                "sinputprofile_text5".tr(),
                 16,
                 FontWeight.normal),
             const SizedBox(height: 16),

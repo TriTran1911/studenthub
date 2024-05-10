@@ -1,4 +1,9 @@
 {
+    "appbar_text1": "Notification",
+    "appbar_text2": "Are you sure you want to change the language and restart the app?",
+    "appbar_text3": "No",
+    "appbar_text4": "Yes",
+    
     "home_button1":"Company",
     "home_button2":"Student",
 
@@ -59,5 +64,16 @@
     "cprofileinput_button1": "Continue",
 
     "cprofile_button1": "Edit",
-    "cprofile_button2": "Cancel"
+    "cprofile_button2": "Cancel",
+
+    "sinputprofile_text1": "Post profile successful",
+    "sinputprofile_text2": "Profile posted successfully",
+    "sinputprofile_text3": "Post profile failed",
+    "sinputprofile_text4": "Failed to post profile",
+    "sinputprofile_text5": "Tell us about yourself and you will be on your way to connect with companies",
+
+    "account_text1": "Profiles",
+    "account_text2": "Settings",
+    "account_text3": "Logout"
+
 }

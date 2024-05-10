@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
@@ -46,14 +47,14 @@ class _AccountControllerState extends State<AccountController> {
           const Divider(height: 17, color: Colors.grey),
           _buildListView(_handleCompanySelection),
           const Divider(height: 17, color: Colors.grey),
-          _buildElevatedButton(Icons.account_circle_outlined, 'Profiles',
+          _buildElevatedButton(Icons.account_circle_outlined, "account_text1".tr(),
               _handleProfilesButtonPress),
           const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(
-              Icons.settings, 'Settings', _handleSettingsButtonPress),
+              Icons.settings, "account_text2".tr(), _handleSettingsButtonPress),
           const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(
-              Icons.logout, 'Logout', _handleLogoutButtonPress),
+              Icons.logout, "account_text3".tr(), _handleLogoutButtonPress),
           const Divider(height: 17, color: Colors.grey),
         ],
       ),
@@ -119,7 +120,7 @@ class _AccountControllerState extends State<AccountController> {
                               child: PageView(
                                 children: [
                                   ChangePasswordPage(),
-                                  const ChangeLanguagePage(),
+                                  ChangeLanguagePage(),
                                   const ChangeThemePage(),
                                 ],
                               ),

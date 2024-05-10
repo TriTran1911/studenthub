@@ -108,7 +108,7 @@ class _LoginState extends State<Login> {
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        suffixIcon: label.toLowerCase() == 'password'
+        suffixIcon: label.toLowerCase() == "login_password".tr()
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,

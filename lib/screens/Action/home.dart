@@ -1,9 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '/components/appbar.dart';
 import '/screens/AccountManage/Login.dart';
 import '/components/controller.dart';
+import '/components/theme_provider.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   @override

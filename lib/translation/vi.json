@@ -1,4 +1,9 @@
 {
+    "appbar_text1": "Thông báo",
+    "appbar_text2": "Bạn có chắc chắn muốn đổi ngôn ngữ và khởi động lại ứng dụng không?",
+    "appbar_text3": "Không",
+    "appbar_text4": "Có",
+    
     "home_button1": "Công ty",
     "home_button2":"Học sinh",
 
@@ -58,5 +63,15 @@
     "cprofileinput_button1": "Tiếp tục",
 
     "cprofile_button1": "Chỉnh sửa",
-    "cprofile_button2": "Huỷ"
+    "cprofile_button2": "Huỷ",
+
+    "sinputprofile_text1": "Đăng hồ sơ thành công",
+    "sinputprofile_text2": "Hồ sợ đã được đăng",
+    "sinputprofile_text3": "Đăng hồ sơ không thành công",
+    "sinputprofile_text4": "Không thể đăng hồ sơ",
+    "sinputprofile_text5": "Hãy cho chúng tôi biết về bản thân bạn và bạn sẽ tiếp tục kết nối với các công ty",
+
+    "account_text1": "Hồ sơ",
+    "account_text2": "Cài đặt",
+    "account_text3": "Đăng xuất"
 }
