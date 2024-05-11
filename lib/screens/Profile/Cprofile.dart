@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 
 class CompanyProfile extends StatefulWidget {
+  const CompanyProfile({super.key});
+
   @override
   _CompanyProfileState createState() => _CompanyProfileState();
 }

@@ -129,8 +129,12 @@ class _ProjectPost4State extends State<ProjectPost4> {
               child: ElevatedButton(
                 onPressed: () {
                   _handlePostProject();
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                  moveToPage(TabsPage(index: 1), context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TabsPage(index: 1),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
@@ -172,7 +176,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
         print('Project posted successfully');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Project posted successfully'),
             ),
           );

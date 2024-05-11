@@ -15,22 +15,15 @@ class CDashBoardPage extends StatefulWidget {
 }
 
 class _CDashBoardPageState extends State<CDashBoardPage> {
-  List<Project> projectList = [];
-  List<Project> workingProjectlist = [];
-  List<Project> achievedProjectlist = [];
+  List<Project> newProjectList = [];
+  List<Project> workingProjectList = [];
+  List<Project> achievedProjectList = [];
   List<Project> allProjects = [];
   Future<List<Project>>? _projectsFuture;
 
   @override
   void initState() {
     super.initState();
-    getProjects().then((value) {
-      if (mounted) {
-        setState(() {
-          projectList = value;
-        });
-      }
-    });
     _projectsFuture = getProjects();
   }
 
@@ -49,12 +42,13 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
         List<Project> projectListAPI =
             Project.buildListProject(responseDecode['result']);
 
-        // check statusFlag
         for (Project project in projectListAPI) {
-          if (project.typeFlag == 1) {
-            workingProjectlist.add(project);
+          if (project.typeFlag == 0) {
+            newProjectList.add(project);
+          } else if (project.typeFlag == 1) {
+            workingProjectList.add(project);
           } else if (project.typeFlag == 2) {
-            achievedProjectlist.add(project);
+            achievedProjectList.add(project);
           }
         }
 
@@ -65,6 +59,32 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
     } catch (e) {
       print(e);
       throw Exception('Failed to load projects');
+    }
+  }
+
+  Future<void> editProject(Project project) async {
+    try {
+      var body = {
+        'title': project.title,
+        'description': project.description,
+        'projectScopeFlag': project.projectScopeFlag,
+        'numberOfStudents': project.numberOfStudents,
+        'typeFlag': project.typeFlag,
+      };
+
+      var response =
+          await Connection.patchRequest('/api/project/${project.id}', body);
+      var responseDecode = jsonDecode(response);
+
+      if (responseDecode != null) {
+        print("Edit project successfully");
+        print(responseDecode);
+      } else {
+        throw Exception('Failed to edit project');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to edit project');
     }
   }
 
@@ -84,7 +104,7 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                   buildText('Your Projects', 20, FontWeight.bold),
                   ElevatedButton(
                     onPressed: () {
-                      moveToPage(ProjectPost1(), context);
+                      moveToPage(const ProjectPost1(), context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -134,14 +154,14 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     allProjects = snapshot.data!;
-                    projectList = allProjects;
-                    return buildCards(projectList);
+
+                    return buildCards(newProjectList);
                   }
                 },
               ),
             ),
-            buildCards(workingProjectlist),
-            buildCards(achievedProjectlist),
+            buildCards(workingProjectList),
+            buildCards(achievedProjectList),
           ],
         ),
       ),
@@ -224,7 +244,10 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                                     showEditDialog(context, pro);
                                   }),
                                   buildBottomSheetItem(context,
-                                      "Remove posting", Colors.red, () {}),
+                                      "Remove posting", Colors.red, () {
+                                    Navigator.pop(context);
+                                    showDeleteDialog(context, pro);
+                                      }),
                                   buildBottomSheetItem(
                                       context,
                                       "Start working on this project",
@@ -310,16 +333,74 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
     );
   }
 
+  // reconfirm to delete
+  Future<void> showDeleteDialog(BuildContext context, Project project) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Delete project', 20, FontWeight.bold, Colors.red),
+                const SizedBox(height: 20),
+                buildText('Are you sure you want to delete this project?', 16,
+                    FontWeight.normal, Colors.black),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          Connection.deleteRequest(
+                              '/api/project/${project.id}');
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.red[400]!),
+                      child: buildText(
+                          'Delete', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> showEditDialog(BuildContext context, Project project) async {
     TextEditingController titleController = TextEditingController();
     TextEditingController descriptionController = TextEditingController();
-    TextEditingController durationController = TextEditingController();
     TextEditingController studentController = TextEditingController();
 
     titleController.text = project.title!;
     descriptionController.text = project.description!;
-    durationController.text = project.projectScopeFlag.toString();
+    int durationController = project.projectScopeFlag!;
     studentController.text = project.numberOfStudents.toString();
+    int typeFlag = project.typeFlag!;
 
     return showDialog(
       context: context,
@@ -351,9 +432,49 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                   maxLines: 5,
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: durationController,
-                  decoration: buildDecoration('Duration'),
+                Column(
+                  children: <Widget>[
+                    RadioListTile<int>(
+                      title: const Text('Less than 1 month'),
+                      value: 0,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('1 to 3 months'),
+                      value: 1,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('3 to 6 months'),
+                      value: 2,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('More than 6 months'),
+                      value: 3,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -375,7 +496,16 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        setState(() {
+                          project.title = titleController.text;
+                          project.description = descriptionController.text;
+                          project.projectScopeFlag = durationController;
+                          project.numberOfStudents =
+                              int.parse(studentController.text);
+                          project.typeFlag = typeFlag;
+                          editProject(project);
+                        });
+                        Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.blue[400]!),
                       child:
@@ -391,44 +521,18 @@ class _CDashBoardPageState extends State<CDashBoardPage> {
     );
   }
 
-  String monthDif(DateTime? createdAt) {
-    final Duration difference = DateTime.now().difference(createdAt!);
-
-    if (difference.inSeconds < 60) {
-      return 'Just now';
-    } else if (difference.inMinutes < 60) {
-      if (difference.inMinutes == 1) {
-        return '${difference.inMinutes} minute ago';
-      } else {
-        return '${difference.inMinutes} minutes ago';
-      }
-    } else if (difference.inHours < 24) {
-      if (difference.inHours == 1) {
-        return '${difference.inHours} hour ago';
-      } else {
-        return '${difference.inHours} hours ago';
-      }
-    } else if (difference.inDays < 30) {
-      if (difference.inDays == 1) {
-        return '${difference.inDays} day ago';
-      } else {
-        return '${difference.inDays} days ago';
-      }
-    } else if (difference.inDays < 365) {
-      final int months = difference.inDays ~/ 30;
-      if (months == 1) {
-        return '$months month ago';
-      } else {
-        return '$months months ago';
-      }
-    } else {
-      final int years = difference.inDays ~/ 365;
-      if (years == 1) {
-        return '$years year ago';
-      } else {
-        return '$years years ago';
-      }
-    }
+  RadioListTile<int> buildRadioListTile(
+      String title, int value, int groupValue) {
+    return RadioListTile<int>(
+      title: Text(title),
+      value: value,
+      groupValue: groupValue,
+      onChanged: (int? newValue) {
+        setState(() {
+          groupValue = newValue!;
+        });
+      },
+    );
   }
 
   Widget buildBottomSheetItem(

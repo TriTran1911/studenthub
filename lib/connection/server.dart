@@ -82,11 +82,28 @@ class Connection {
     var response = await http.patch(url, headers: headers, body: jsonBody);
     var responseJson = json.decode(response.body);
     if (responseJson != null) {
-      print("PUT request successful");
+      print("Patch request successful");
       return response.body;
     } else {
-      print("PUT request failed with status: ${response.statusCode}");
+      print("Patch request failed with status: ${response.statusCode}");
       return response.body;
+    }
+  }
+
+  static Future<void> deleteRequest(String api) async {
+    var url = Uri.parse(url_b + api);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var headers = {
+      'accept': '*/*',
+      'Authorization': 'Bearer $token',
+    };
+    var response = await http.delete(url, headers: headers);
+    var responseJson = json.decode(response.body);
+    if (responseJson != null) {
+      print("Delete request successful");
+    } else {
+      print("Delete request failed with status: ${response.statusCode}");
     }
   }
 

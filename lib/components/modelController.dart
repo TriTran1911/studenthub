@@ -28,8 +28,7 @@ class Proposal {
   final String? coverLetter;
   int? statusFlag;
   int? disableFlag;
-  final Project projectCompany;
-  final Student studentUser;
+  final Project project;
 
   Proposal(
       {this.id,
@@ -41,8 +40,7 @@ class Proposal {
       this.coverLetter,
       this.statusFlag,
       this.disableFlag,
-      required this.projectCompany,
-      required this.studentUser});
+      required this.project});
 
   factory Proposal.formAllProposal(Map<String, dynamic> json) {
     return Proposal(
@@ -55,9 +53,16 @@ class Proposal {
       coverLetter: json['coverLetter'],
       statusFlag: json['statusFlag'],
       disableFlag: json['disableFlag'],
-      projectCompany: Project.formAllProject(json['projectCompany']),
-      studentUser: Student(),
+      project: Project.formProject(json['project']),
     );
+  }
+
+  static List<Proposal> buildListProposal(List<dynamic> list) {
+    List<Proposal> proposalList = [];
+    for (var proposal in list) {
+      proposalList.add(Proposal.formAllProposal(proposal));
+    }
+    return proposalList;
   }
 }
 
@@ -66,6 +71,7 @@ class Project {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  String? companyId;
   int? projectScopeFlag;
   String? title;
   String? description;
@@ -76,12 +82,14 @@ class Project {
   int? countMessages;
   int? countHired;
   bool? isFavorite;
+  int? status;
 
   Project(
       {this.id,
       this.createdAt,
       this.updatedAt,
       this.deletedAt,
+      this.companyId,
       this.projectScopeFlag,
       this.title,
       this.description,
@@ -91,7 +99,8 @@ class Project {
       this.proposals,
       this.countMessages,
       this.countHired,
-      this.isFavorite});
+      this.isFavorite,
+      this.status});
 
   factory Project.formAllProject(Map<String, dynamic> json) {
     return Project(
@@ -106,6 +115,23 @@ class Project {
       typeFlag: json['typeFlag'],
       countProposals: json['countProposals'] ?? 0,
       isFavorite: json['isFavorite'] ?? false,
+      status: json['status'] ?? 0,
+    );
+  }
+
+  factory Project.formProject(Map<String, dynamic> json) {
+    return Project(
+      id: json['id'] as int,
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      companyId: json['companyId'],
+      projectScopeFlag: json['projectScopeFlag'],
+      title: json['title'],
+      description: json['description'],
+      numberOfStudents: json['numberOfStudents'],
+      typeFlag: json['typeFlag'],
+      status: json['status'],
     );
   }
 
@@ -316,4 +342,44 @@ Widget loadingDialog() {
       child: CircularProgressIndicator(),
     ),
   );
+}
+
+String monthDif(DateTime? createdAt) {
+  final Duration difference = DateTime.now().difference(createdAt!);
+
+  if (difference.inSeconds < 60) {
+    return 'Just now';
+  } else if (difference.inMinutes < 60) {
+    if (difference.inMinutes == 1) {
+      return '${difference.inMinutes} minute ago';
+    } else {
+      return '${difference.inMinutes} minutes ago';
+    }
+  } else if (difference.inHours < 24) {
+    if (difference.inHours == 1) {
+      return '${difference.inHours} hour ago';
+    } else {
+      return '${difference.inHours} hours ago';
+    }
+  } else if (difference.inDays < 30) {
+    if (difference.inDays == 1) {
+      return '${difference.inDays} day ago';
+    } else {
+      return '${difference.inDays} days ago';
+    }
+  } else if (difference.inDays < 365) {
+    final int months = difference.inDays ~/ 30;
+    if (months == 1) {
+      return '$months month ago';
+    } else {
+      return '$months months ago';
+    }
+  } else {
+    final int years = difference.inDays ~/ 365;
+    if (years == 1) {
+      return '$years year ago';
+    } else {
+      return '$years years ago';
+    }
+  }
 }

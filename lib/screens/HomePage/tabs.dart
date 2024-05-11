@@ -11,7 +11,7 @@ import '/components/appbar.dart';
 class TabsPage extends StatefulWidget {
   final int index;
 
-  TabsPage({required this.index});
+  const TabsPage({super.key, required this.index});
 
   @override
   _TabsPageState createState() => _TabsPageState();
@@ -29,7 +29,7 @@ class _TabsPageState extends State<TabsPage> {
   final List<TabInfo> _tabs = [
     TabInfo(page: ProjectsPage(role: User.roles[0]), label: 'Projects', icon: Icons.list_alt),
     TabInfo(
-        page: User.roles[0] == 1 ? CDashBoardPage() : StudentDashboardPage(),
+        page: User.roles[0] == 1 ? const CDashBoardPage() : StudentDashboardPage(),
         label: 'Dashboard',
         icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),

@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
@@ -5,21 +6,24 @@ import '/screens/action/welcome.dart';
 import '/connection/server.dart';
 
 class CWithoutProfile extends StatefulWidget {
+  const CWithoutProfile({super.key});
+
   @override
   _CWithoutProfileState createState() => _CWithoutProfileState();
 }
 
 class _CWithoutProfileState extends State<CWithoutProfile> {
   String _selectedCompanySize = '';
-  TextEditingController _companyNameController = TextEditingController();
-  TextEditingController _websiteController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return _BuildScaffold(context);
   }
 
+  // ignore: non_constant_identifier_names
   Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(backWard: false),

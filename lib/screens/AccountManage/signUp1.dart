@@ -144,7 +144,7 @@ class _SignUpState1 extends State<SignUp1> {
   }
 
   void _handleOnPressed() {
-    print(_isCompany);
+    User.roles.clear();
     if (_isCompany || _isStudent) {
       if (_isCompany) {
         User.roles.add(1);

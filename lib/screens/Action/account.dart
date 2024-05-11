@@ -8,7 +8,6 @@ import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
 import '/screens/Profile/CprofileInput.dart';
-import '/screens/Profile/SprofileInput1.dart';
 import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'home.dart';
@@ -190,7 +189,7 @@ class _AccountControllerState extends State<AccountController> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      moveToPage(User.roles[0] == 1 ? StudentInfoScreen() : CWithoutProfile(), context);
+                      moveToPage(User.roles[0] == 1 ? StudentInputProfile1() : CWithoutProfile(), context);
                     },
                     style: ButtonStyle(
                       backgroundColor:
