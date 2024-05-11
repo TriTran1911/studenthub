@@ -53,11 +53,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
         return projectList;
       } else {
-        throw Exception('Failed to load projects');
+        return [];
       }
     } catch (e) {
-      print(e);
-      throw Exception('Failed to load projects');
+      print("Error: $e");
+      return [];
     }
   }
 
@@ -95,7 +95,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     ? IconButton(
                         icon: const Icon(Icons.list_alt_outlined),
                         onPressed: () {
-                          moveToPage(FavoriteProjectsPage(projects: projectList), context);
+                          moveToPage(
+                              FavoriteProjectsPage(projects: projectList),
+                              context);
                         },
                       )
                     : const SizedBox(width: 0),
@@ -164,13 +166,16 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     widget.role == 0
                         ? IconButton(
                             icon: Icon(
-                              pro.isFavorite! ? Icons.bookmark : Icons.bookmark_outline,
+                              pro.isFavorite!
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_outline,
                               color: pro.isFavorite! ? Colors.red : Colors.blue,
                             ),
                             onPressed: () {
                               setState(() {
                                 pro.isFavorite = !pro.isFavorite!;
-                                Connection().setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);
+                                Connection().setFavorite(
+                                    pro.id!, pro.isFavorite! ? 0 : 1, context);
                               });
                             },
                           )
@@ -242,9 +247,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 ),
               ],
             ),
-            onTap: () {
-              moveToPage(ProjectDetailPage(project: pro), context);
-            },
+            onTap: widget.role == 0
+                ? () {
+                    moveToPage(ProjectDetailPage(project: pro), context);
+                  }
+                : () {},
           ),
         );
       },

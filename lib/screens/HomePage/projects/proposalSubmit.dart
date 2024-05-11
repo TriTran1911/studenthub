@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/appbar.dart';
@@ -6,6 +7,7 @@ import '../../../components/decoration.dart';
 import '../../../components/modelController.dart';
 import '../../../connection/server.dart';
 
+// ignore: must_be_immutable
 class CoverLetterPage extends StatefulWidget {
   Project project;
   
@@ -19,9 +21,11 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
   TextEditingController coverLetterController = TextEditingController();
 
   Future<void> submitProposal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     var body = {
       'projectId': widget.project.id,
-      'studentId': modelController.user.id,
+      'studentId': prefs.getInt('studentId'),
       'coverLetter': coverLetterController.text,
     };
 

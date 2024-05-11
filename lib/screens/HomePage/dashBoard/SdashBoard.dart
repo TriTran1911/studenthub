@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/decoration.dart';
 import '../../../components/modelController.dart';
 import '../../../connection/server.dart';
@@ -28,21 +29,25 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
   void _initProposals() async {
     proposalList = await fetchProposal();
-    for (Proposal proposal in proposalList) {
-      if (proposal.statusFlag == 0) {
-        submittedProposalList.add(proposal);
-      } else if (proposal.statusFlag == 1) {
-        activeProposalList.add(proposal);
-      } else if (proposal.statusFlag == 2) {
-        workingProposalList.add(proposal);
-      } else {
-        achievedProposalList.add(proposal);
+    setState(() {
+      for (Proposal proposal in proposalList) {
+        if (proposal.statusFlag == 0) {
+          submittedProposalList.add(proposal);
+        } else if (proposal.statusFlag == 1) {
+          activeProposalList.add(proposal);
+        } else if (proposal.statusFlag == 2) {
+          workingProposalList.add(proposal);
+        } else {
+          achievedProposalList.add(proposal);
+        }
       }
-    }
+    });
   }
 
   Future<List<Proposal>> fetchProposal() async {
-    int studentId = modelController.user.id;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? studentId = prefs.getInt('studentId');
+    print('Student ID: $studentId');
 
     try {
       var response =
@@ -58,12 +63,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
         return proposalListAPI;
       } else {
-        throw Exception('Failed to load projects');
+        print("Failed to connect to the server");
       }
     } catch (e) {
-      print(e);
-      throw Exception('Failed to load projects');
+      print("Failed to connect to the server");
     }
+    return [];
   }
 
   @override
@@ -112,7 +117,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               child: ListView(
                 children: <Widget>[
                   ExpansionTile(
-                    // delay expand
                     visualDensity: VisualDensity.standard,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -161,36 +165,10 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                 ],
               ),
             ),
-            buildTabPage(workingProposalList),
-            buildTabPage(achievedProposalList),
+            buildCards(workingProposalList),
+            buildCards(achievedProposalList),
           ],
         ),
-      ),
-    );
-  }
-
-  Padding buildTabPage(List<Proposal> proposalList) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: ListView(
-        children: <Widget>[
-          ExpansionTile(
-            visualDensity: VisualDensity.standard,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            collapsedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            backgroundColor: Colors.blueAccent[200],
-            collapsedBackgroundColor: Colors.blueAccent[400],
-            title: buildText(
-                'Working proposal', 20, FontWeight.bold, Colors.white),
-            children: <Widget>[
-              buildCards(proposalList),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -201,10 +179,10 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           Center(
             child: buildText(
-                'No project found\n', 16, FontWeight.bold, Colors.white),
+                'No project found\n', 16, FontWeight.bold),
           ),
         ],
       );

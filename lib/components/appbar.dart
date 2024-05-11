@@ -71,10 +71,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
                 },
               ),
-
-
-
-          
               // Nút đăng nhập hoặc tìm kiếm
               !appBarIcon.isSelected
                   ? IconButton(

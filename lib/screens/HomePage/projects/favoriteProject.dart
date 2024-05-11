@@ -7,6 +7,7 @@ import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/decoration.dart';
 import '../../../connection/server.dart';
 
+// ignore: must_be_immutable
 class FavoriteProjectsPage extends StatefulWidget {
   List<Project> projects = [];
 

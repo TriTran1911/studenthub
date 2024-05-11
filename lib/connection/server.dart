@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '/components/modelController.dart';
 
 const String url_b = "https://api.studenthub.dev";
 
@@ -108,7 +107,9 @@ class Connection {
   }
 
   Future<bool> setFavorite(int projectId, int disableFlag, BuildContext context) async {
-    int? studentId = modelController.user.id;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? studentId = prefs.getInt('studentId');
+    print(studentId);
     String url = '/api/favoriteProject/$studentId';
     try {
       var object = {'projectId': projectId, 'disableFlag': disableFlag};

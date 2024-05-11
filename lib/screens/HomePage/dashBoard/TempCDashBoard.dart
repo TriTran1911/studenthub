@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
 import '../../../components/controller.dart';
 import '../../../connection/server.dart';
+import 'Function/companyProjectDetail.dart';
 
 class CompanyDashboardPage extends StatefulWidget {
   const CompanyDashboardPage({super.key});
@@ -28,7 +30,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
   }
 
   Future<List<Project>> getProjects() async {
-    int companyId = modelController.user.id;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? companyId = prefs.getInt('companyId');
 
     try {
       var response =
@@ -160,8 +163,12 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                 },
               ),
             ),
-            buildCards(workingProjectList),
-            buildCards(achievedProjectList),
+            SingleChildScrollView(
+              child: buildCards(workingProjectList),
+            ),
+            SingleChildScrollView(
+              child: buildCards(achievedProjectList),
+            ),
           ],
         ),
       ),
@@ -169,168 +176,178 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
   }
 
   ListView buildCards(List<Project> projectList) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: projectList.length,
-      itemBuilder: (context, index) {
-        Project pro = projectList[index];
-        return Card(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+    if (projectList.isEmpty) {
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const SizedBox(height: 20),
+          Center(
+            child: buildText('No project found', 16, FontWeight.bold),
           ),
-          elevation: 3,
-          surfaceTintColor: Colors.blue,
-          margin: const EdgeInsets.all(12),
-          shadowColor: Colors.blue,
-          child: ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[100],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: buildText(
-                          pro.createdAt != null
-                              ? monthDif(
-                                  DateTime.parse(pro.createdAt!.toString()))
-                              : '0', // or some default value
-                          16,
-                          FontWeight.bold,
-                          Colors.blue[800]),
-                    ),
-                    // icon selection
-                    IconButton(
-                      icon: const Icon(
-                        Icons.more_vert,
-                        color: Colors.blue,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 30),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  buildBottomSheetItem(context,
-                                      "View proposals", Colors.black, () {}),
-                                  buildBottomSheetItem(context, "View messages",
-                                      Colors.black, () {}),
-                                  buildBottomSheetItem(context, "View hired",
-                                      Colors.black, () {}),
-                                  buildBottomSheetItem(context,
-                                      "View job posting", Colors.black, () {}),
-                                  buildBottomSheetItem(
-                                      context, "Edit posting", Colors.black,
-                                      () {
-                                    Navigator.pop(context);
-                                    showEditDialog(context, pro);
-                                  }),
-                                  buildBottomSheetItem(context,
-                                      "Remove posting", Colors.red, () {
-                                    Navigator.pop(context);
-                                    showDeleteDialog(context, pro);
-                                      }),
-                                  buildBottomSheetItem(
-                                      context,
-                                      "Start working on this project",
-                                      Colors.blue,
-                                      () {}),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
-                const SizedBox(height: 10),
-                buildText(
-                    pro.description!, 16, FontWeight.normal, Colors.black),
-                const SizedBox(height: 10),
-                Row(
-                  //space between
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        const Icon(
-                          Icons.access_time_outlined,
-                          color: Colors.blue,
-                        ),
-                        buildText(
-                            pro.projectScopeFlag == 0
-                                ? 'Less than 1 month'
-                                : pro.projectScopeFlag == 1
-                                    ? '1 to 3 months'
-                                    : pro.projectScopeFlag == 2
-                                        ? '3 to 6 months'
-                                        : 'More than 6 months',
-                            14,
-                            FontWeight.normal,
-                            Colors.black),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(
-                          pro.numberOfStudents == 1
-                              ? Icons.person_outlined
-                              : Icons.people_outlined,
-                          color: Colors.blue,
-                        ),
-                        buildText(
-                            pro.numberOfStudents == 1
-                                ? '${pro.numberOfStudents} student'
-                                : '${pro.numberOfStudents} students',
-                            14,
-                            FontWeight.normal,
-                            Colors.black),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Icon(
-                          Icons.assignment,
-                          color: Colors.blue,
-                        ),
-                        buildText(
-                            pro.countProposals == 1
-                                ? '${pro.countProposals.toString()} proposal'
-                                : '${pro.countProposals.toString()} proposals',
-                            14,
-                            FontWeight.normal,
-                            Colors.black),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+        ],
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: projectList.length,
+        itemBuilder: (context, index) {
+          Project pro = projectList[index];
+          return Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-          ),
-        );
-      },
-    );
+            elevation: 3,
+            surfaceTintColor: Colors.blue,
+            margin: const EdgeInsets.all(12),
+            shadowColor: Colors.blue,
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[100],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: buildText(
+                            pro.createdAt != null
+                                ? monthDif(
+                                    DateTime.parse(pro.createdAt!.toString()))
+                                : '0', // or some default value
+                            16,
+                            FontWeight.bold,
+                            Colors.blue[800]),
+                      ),
+                      // icon selection
+                      IconButton(
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.blue,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 30),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildBottomSheetItem(context,
+                                        "View project detail", Colors.black, () {
+                                          moveToPage(const ProjectDetailPage(), context);
+                                        }),
+                                    buildBottomSheetItem(
+                                        context, "Edit posting", Colors.black,
+                                        () {
+                                      Navigator.pop(context);
+                                      showEditDialog(context, pro);
+                                    }),
+                                    buildBottomSheetItem(
+                                        context, "Remove posting", Colors.red,
+                                        () {
+                                      Navigator.pop(context);
+                                      showDeleteDialog(context, pro);
+                                    }),
+                                    buildBottomSheetItem(
+                                        context,
+                                        "Start working on this project",
+                                        Colors.blue,
+                                        () {}),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
+                  const SizedBox(height: 10),
+                  buildText(
+                      pro.description!, 16, FontWeight.normal, Colors.black),
+                  const SizedBox(height: 10),
+                  Row(
+                    //space between
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          const Icon(
+                            Icons.access_time_outlined,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.projectScopeFlag == 0
+                                  ? 'Less than 1 month'
+                                  : pro.projectScopeFlag == 1
+                                      ? '1 to 3 months'
+                                      : pro.projectScopeFlag == 2
+                                          ? '3 to 6 months'
+                                          : 'More than 6 months',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Icon(
+                            pro.numberOfStudents == 1
+                                ? Icons.person_outlined
+                                : Icons.people_outlined,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.numberOfStudents == 1
+                                  ? '${pro.numberOfStudents} student'
+                                  : '${pro.numberOfStudents} students',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Icon(
+                            Icons.assignment,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.countProposals == 1
+                                  ? '${pro.countProposals.toString()} proposal'
+                                  : '${pro.countProposals.toString()} proposals',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 
   // reconfirm to delete

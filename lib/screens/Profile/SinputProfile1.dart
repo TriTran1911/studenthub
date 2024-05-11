@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
@@ -81,7 +82,8 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   void postProfile() async {
-    int? studentId = modelController.user.id;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? studentId = prefs.getInt('studentId');
 
     var datats = {
       'techStackId': _selectedTechStack?.id.toString(),

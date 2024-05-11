@@ -473,7 +473,7 @@ class Message {
           ? Interview.fromJson(json['interview'])
           : null,
       project:
-          json['project'] != null ? Project.formAllProject(json['project']) : null,
+          json['project'] != null ? Project.formProject(json['project']) : null,
     );
   }
 }
