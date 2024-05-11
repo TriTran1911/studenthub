@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/connection/server.dart';
+import 'package:studenthub/screens/HomePage/message/pages/VideoCallPage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatReceivedMessage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/ChatSentMessage.dart';
 
@@ -31,19 +32,19 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
-  Future<Interview> getInterview() async {
-    var response = await Connection.getRequest(
-        '/api/interview/${widget.idInterview.toString()}', {});
-    var responseDecoded = jsonDecode(response);
+  // Future<Interview> getInterview() async {
+  //   var response = await Connection.getRequest(
+  //       '/api/interview/${widget.idInterview.toString()}', {});
+  //   var responseDecoded = jsonDecode(response);
 
-    if (responseDecoded['result'] != null) {
-      interview = Interview.fromJson(responseDecoded['result']);
-      print('Success to get interview');
-    } else {
-      throw Exception('Failed to get interview');
-    }
-    return interview;
-  }
+  //   if (responseDecoded['result'] != null) {
+  //     interview = Interview.fromJson(responseDecoded['result']);
+  //     print('Success to get interview');
+  //   } else {
+  //     throw Exception('Failed to get interview');
+  //   }
+  //   return interview;
+  // }
 
   Future<void> editInterview() async {
     var data = {
@@ -67,16 +68,16 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
   @override
   void initState() {
     super.initState();
-    interview = Interview(
-        id: 0,
-        title: '',
-        startTime: '',
-        endTime: '',
-        disableFlag: 0,
-        meetingRoomId: 0,
-        createdAt: '',
-        updatedAt: '',
-        deletedAt: '');
+    // interview = Interview(
+    //     id: 0,
+    //     title: '',
+    //     startTime: '',
+    //     endTime: '',
+    //     disableFlag: 0,
+    //     meetingRoomId: 0,
+    //     createdAt: '',
+    //     updatedAt: '',
+    //     deletedAt: '');
   }
 
   @override
@@ -119,7 +120,14 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
                 children: [
                   if (widget.disableFlag == 0) ...[
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => VideoCallPage(),
+                        //   ),
+                        // );
+                      },
                       child:
                           Text('Join', style: TextStyle(color: Colors.white)),
                       style: ButtonStyle(
@@ -144,21 +152,21 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // ListTile(
-                                  //   title: Text("Reschedule the meeting"),
-                                  //   onTap: () {
-                                  //     getInterview().then((value) {
-                                  //       setState(() {
-                                  //         interview = value;
-                                  //       });
-                                  //     });
-
-                                  //     Navigator.pop(context);
-                                  //   },
-                                  // ),
                                   ListTile(
-                                    title: Text("Cancel"),
+                                    title: Text("Reschedule the meeting"),
                                     onTap: () {
+                                      // getInterview().then((value) {
+                                      //   setState(() {
+                                      //     interview = value;
+                                      //   });
+                                      // });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: Text("Cancel interview"),
+                                    onTap: () {
+                                      editInterview();
                                       Navigator.pop(context);
                                     },
                                   ),

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/modelController.dart';
 
+// define constants keys
+const AppID = 2034044448;
+const AppSign =
+    '821a3d56ad322789fa6e6df5c7bf6e5acbc3ef39defde5c9e20912e838a816f0';
+
 class Schedule extends ChangeNotifier {
   static String title = 'Schedule a video call interview';
   static String content = '';
