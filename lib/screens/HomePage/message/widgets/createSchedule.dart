@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studenthub/components/chatController.dart';
-import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
 
 class CreateSchedule extends StatefulWidget {

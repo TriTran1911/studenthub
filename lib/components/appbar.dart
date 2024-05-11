@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 import '/screens/action/account.dart';
 import '/components/controller.dart';
@@ -7,12 +6,14 @@ import 'package:easy_localization/easy_localization.dart';
 import '/components/theme_provider.dart';
 import 'package:provider/provider.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar();
+  final bool backWard;
+  
+  const CustomAppBar({super.key, required this.backWard});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: backWard,
       backgroundColor: const Color.fromARGB(255, 92, 92, 92),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

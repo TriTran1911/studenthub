@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -6,24 +7,27 @@ import '/screens/action/welcome.dart';
 import '/connection/server.dart';
 
 class CWithoutProfile extends StatefulWidget {
+  const CWithoutProfile({super.key});
+
   @override
   _CWithoutProfileState createState() => _CWithoutProfileState();
 }
 
 class _CWithoutProfileState extends State<CWithoutProfile> {
   String _selectedCompanySize = '';
-  TextEditingController _companyNameController = TextEditingController();
-  TextEditingController _websiteController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return _BuildScaffold(context);
   }
 
+  // ignore: non_constant_identifier_names
   Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buidSingleChildScrollView(),
     );
@@ -38,15 +42,14 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
           children: <Widget>[
             buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
             const SizedBox(height: 15),
-            buildText(
-                "cprofileinput_text1".tr(),
-                16),
+            buildText("cprofileinput_text1".tr(), 16),
             const SizedBox(height: 15),
             buildText("cprofileinput_text2".tr(), 16),
             buildRadioListTile("cprofileinput_text3".tr(), 'Just me'),
             buildRadioListTile("cprofileinput_text4".tr(), '2-9 employees'),
             buildRadioListTile("cprofileinput_text5".tr(), '10-99 employees'),
-            buildRadioListTile("cprofileinput_text6".tr(), '100-1000 employees'),
+            buildRadioListTile(
+                "cprofileinput_text6".tr(), '100-1000 employees'),
             buildRadioListTile(
                 "cprofileinput_text7".tr(), 'More than 1000 employees'),
             const SizedBox(height: 15),
@@ -102,7 +105,8 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
     );
   }
 
-  Future<void> postProfile(String companyName, int size, String website, String description) async {
+  Future<void> postProfile(
+      String companyName, int size, String website, String description) async {
     var data = {
       'companyName': companyName,
       'size': size,

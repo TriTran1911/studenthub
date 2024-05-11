@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
-import '/components/appBar.dart';
+import '/components/appbar.dart';
 import 'projectPost4.dart';
 
 class ProjectPost3 extends StatefulWidget {
@@ -24,7 +24,7 @@ class _ProjectPost3State extends State<ProjectPost3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: true),
       body: SingleChildScrollView(
         child: _buildPadding(context),
       ),

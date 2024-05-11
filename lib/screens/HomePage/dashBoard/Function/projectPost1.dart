@@ -4,7 +4,10 @@ import 'package:studenthub/components/controller.dart';
 import 'projectPost2.dart';
 
 class ProjectPost1 extends StatefulWidget {
+  const ProjectPost1({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ProjectPost1State createState() => _ProjectPost1State();
 }
 
@@ -15,7 +18,7 @@ class _ProjectPost1State extends State<ProjectPost1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: true),
       body: SingleChildScrollView(
         child: _buildPadding(context),
       ),
@@ -28,39 +31,39 @@ class _ProjectPost1State extends State<ProjectPost1> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '1/4    Let\'s start with a strong title',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          SizedBox(height: 10),
-          IconButton(
+          const SizedBox(height: 10),
+          const IconButton(
             icon: Icon(Icons.info),
             tooltip:
                 'This helps your post stand out to the right students. It\'s the first thing they\'ll see, so make it impressive!',
-            onPressed: () {},
+            onPressed: null,
           ),
-          SizedBox(height: 10),
-          TextField(
+          const SizedBox(height: 10),
+           TextField(
             controller: _titleController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Write a title for your post',
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Example titles',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+          const SizedBox(height: 10),
+          const Padding(
+            padding: EdgeInsets.only(left: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -72,11 +75,11 @@ class _ProjectPost1State extends State<ProjectPost1> {
               ],
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Container(
             alignment: Alignment.centerRight,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               decoration: BoxDecoration(
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(20.0),
@@ -89,17 +92,17 @@ class _ProjectPost1State extends State<ProjectPost1> {
                       ),
                       context);
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
+                child: const Text(
                   'Next: Description',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
                 ),
               ),
             ),

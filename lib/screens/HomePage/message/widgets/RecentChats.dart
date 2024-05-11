@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/components/modelController.dart';
@@ -132,19 +131,19 @@ class _RecentChatsState extends State<RecentChats> {
                     MaterialPageRoute(
                       builder: (context) => ChatDetailPage(
                         senderId:
-                            messages[i].sender!.id! == modelController.user.id
-                                ? messages[i].sender!.id!
-                                : messages[i].receiver!.id!,
+                            messages[i].sender!.id == modelController.user.id
+                                ? messages[i].sender!.id
+                                : messages[i].receiver!.id,
                         receiverId:
-                            messages[i].receiver!.id! == modelController.user.id
-                                ? messages[i].sender!.id!
-                                : messages[i].receiver!.id!,
+                            messages[i].receiver!.id == modelController.user.id
+                                ? messages[i].sender!.id
+                                : messages[i].receiver!.id,
                         projectId: messages[i].project!.id!,
-                        senderName: modelController.user.fullname!,
+                        senderName: modelController.user.fullname,
                         receiverName:
-                            messages[i].receiver!.id! == modelController.user.id
-                                ? messages[i].sender!.fullname!
-                                : messages[i].receiver!.fullname!,
+                            messages[i].receiver!.id == modelController.user.id
+                                ? messages[i].sender!.fullname
+                                : messages[i].receiver!.fullname,
                       ),
                     ),
                   );

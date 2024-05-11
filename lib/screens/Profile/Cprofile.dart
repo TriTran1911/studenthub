@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
 
 class CompanyProfile extends StatefulWidget {
+  const CompanyProfile({super.key});
+
   @override
   _CompanyProfileState createState() => _CompanyProfileState();
 }
@@ -17,14 +19,11 @@ class _CompanyProfileState extends State<CompanyProfile> {
 
   Scaffold _buildScaffold() {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildSingleChildScrollView(),
     );
   }
-
-  // get the data from the server
-  
 
   SingleChildScrollView _buildSingleChildScrollView() {
     return SingleChildScrollView(

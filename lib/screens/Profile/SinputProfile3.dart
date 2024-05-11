@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:studenthub/components/controller.dart';
-import 'package:studenthub/components/keyword.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
 
 class StudentInputProfile3 extends StatefulWidget {
@@ -35,7 +35,7 @@ class _StudentInputProfile3State extends State<StudentInputProfile3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -1,309 +1,293 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import '/components/project.dart';
+import 'package:studenthub/components/controller.dart';
+import 'package:studenthub/components/decoration.dart';
+import '/components/modelController.dart';
+import '/connection/server.dart';
+import 'favoriteProject.dart';
 import 'projectDetail.dart';
-import 'favoriteList.dart';
 
 class ProjectsPage extends StatefulWidget {
+  final int role;
+
+  const ProjectsPage({super.key, required this.role});
+
   @override
-  _ProjectsPageState createState() => _ProjectsPageState();
+  State<ProjectsPage> createState() => _ProjectsPageState();
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  late List<Project> projects = [];
-  late TextEditingController _searchController;
+  final TextEditingController _searchController = TextEditingController();
+  Future<List<Project>>? _projectsFuture;
+  List<String> filteredNames = [];
+  List<Project> allProjects = [];
+  List<Project> projectList = [];
 
   @override
   void initState() {
     super.initState();
-    intitialData();
-    _searchController = TextEditingController();
+    _searchController.addListener(_onSearchChanged);
+    getProjects().then((value) {
+      if (mounted) {
+        setState(() {
+          allProjects = value;
+          projectList = allProjects;
+        });
+      }
+    });
+    _projectsFuture = getProjects();
   }
 
-  Future<void> intitialData() async {
-    List<Project> tmp = await fetchDataProjects();
+  Future<List<Project>> getProjects() async {
+    try {
+      var response = await Connection.getRequest('/api/project', {});
+      var responseDecode = jsonDecode(response);
+
+      if (responseDecode['result'] != null) {
+        print("Connected to the server successfully");
+        print(responseDecode['result']);
+
+        List<Project> projectList =
+            Project.buildListProject(responseDecode['result']);
+
+        return projectList;
+      } else {
+        throw Exception('Failed to load projects');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to load projects');
+    }
+  }
+
+  void _onSearchChanged() {
+    String searchText = _searchController.text.toLowerCase();
     setState(() {
-      projects = tmp;
+      projectList = allProjects.where((project) {
+        return project.title!.toLowerCase().contains(searchText);
+      }).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
               children: [
                 Expanded(
-                  child: _buildSearchBar(),
-                ),
-                IconButton(
-                  icon: Icon(Icons.filter_list),
-                  onPressed: () {
-                    // _showFilterOptions(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: _buildProjectsListWithoutMessagesHired(),
-          ),
-        ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-        child: FloatingActionButton(
-          onPressed: () {
-            _showFavoriteProjects(context);
-          },
-          child: Icon(Icons.favorite, color: Color.fromARGB(255, 250, 24, 24)),
-          elevation: 0,
-          mini: true,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return TextField(
-      controller: _searchController,
-      decoration: InputDecoration(
-        hintText: 'Search projects...',
-        prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      onChanged: (query) {
-        _filterProjects(query);
-      },
-    );
-  }
-
-  Widget _buildProjectsListWithoutMessagesHired() {
-    return ListView.builder(
-      itemCount: projects.length,
-      itemBuilder: (context, index) {
-        final createdAt = projects[index].createdAt;
-        final daysSinceCreation = createdAt != null
-            ? DateTime.now().difference(createdAt).inDays
-            : 0; // Default value if createdAt is null
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: Offset(0, 1),
-              ),
-            ],
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  projects[index].title ?? "No title",
-                  style: TextStyle(color: Colors.green),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Created $daysSinceCreation days ago'),
-                    Text(
-                      'Students are looking for:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Time: ${projects[index].getProjectScopeAsString()}, ${projects[index].numberOfStudents} students needed',
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: (projects[index].description ?? '')
-                            .split('\n')
-                            .map(
-                              (descriptionItem) => Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: Text('• $descriptionItem'),
-                              ),
-                            )
-                            .toList(),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search projects...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                ),
+                widget.role == 0
+                    ? IconButton(
+                        icon: const Icon(Icons.list_alt_outlined),
+                        onPressed: () {
+                          moveToPage(FavoriteProjectsPage(projects: projectList), context);
+                        },
+                      )
+                    : const SizedBox(width: 0),
+              ],
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<List<Project>>(
+              future: _projectsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return buildCards();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView buildCards() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: projectList.length,
+      itemBuilder: (context, index) {
+        Project pro = projectList[index];
+        return Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 3,
+          surfaceTintColor: Colors.blue,
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          shadowColor: Colors.blue,
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: buildText(
+                          pro.createdAt != null
+                              ? monthDif(
+                                  DateTime.parse(pro.createdAt!.toString()))
+                              : '0', // or some default value
+                          16,
+                          FontWeight.bold,
+                          Colors.blue[800]),
+                    ),
+                    // if role is student show the icon
+                    widget.role == 0
+                        ? IconButton(
+                            icon: Icon(
+                              pro.isFavorite! ? Icons.bookmark : Icons.bookmark_outline,
+                              color: pro.isFavorite! ? Colors.red : Colors.blue,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                pro.isFavorite = !pro.isFavorite!;
+                                Connection().setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);
+                              });
+                            },
+                          )
+                        : const SizedBox(width: 0),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 10),
+                buildText(
+                    pro.description!, 16, FontWeight.normal, Colors.black),
+                const SizedBox(height: 10),
+                Row(
+                  //space between
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                                'Proposals: less than ${projects[index].countProposals}'),
-                          ],
+                        const Icon(
+                          Icons.access_time_outlined,
+                          color: Colors.blue,
                         ),
+                        buildText(
+                            pro.projectScopeFlag == 0
+                                ? 'Less than 1 month'
+                                : pro.projectScopeFlag == 1
+                                    ? '1 to 3 months'
+                                    : pro.projectScopeFlag == 2
+                                        ? '3 to 6 months'
+                                        : 'More than 6 months',
+                            14,
+                            FontWeight.normal,
+                            Colors.black),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          pro.numberOfStudents == 1
+                              ? Icons.person_outlined
+                              : Icons.people_outlined,
+                          color: Colors.blue,
+                        ),
+                        buildText(
+                            pro.numberOfStudents == 1
+                                ? '${pro.numberOfStudents} student'
+                                : '${pro.numberOfStudents} students',
+                            14,
+                            FontWeight.normal,
+                            Colors.black),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Icon(
+                          Icons.assignment,
+                          color: Colors.blue,
+                        ),
+                        buildText(
+                            pro.countProposals == 1
+                                ? '${pro.countProposals.toString()} proposal'
+                                : '${pro.countProposals.toString()} proposals',
+                            14,
+                            FontWeight.normal,
+                            Colors.black),
                       ],
                     ),
                   ],
                 ),
-                trailing: IconButton(
-                  icon: Icon(
-                    Project.isFavorite(projects[index])
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color:
-                        Project.isFavorite(projects[index]) ? Colors.red : null,
-                  ),
-                  onPressed: () {
-                    _toggleFavorite(projects[index]);
-                  },
-                ),
-                onTap: () {
-                  _selectProject(projects[index]);
-                },
-              ),
-            ],
+              ],
+            ),
+            onTap: () {
+              moveToPage(ProjectDetailPage(project: pro), context);
+            },
           ),
         );
       },
     );
   }
 
-  void _filterProjects(String query) {
-    setState(() {
-      projects = Project.projects
-          .where((project) =>
-              project.title?.toLowerCase().contains(query.toLowerCase()) ??
-              false)
-          .toList();
-    });
-  }
+  String monthDif(DateTime? createdAt) {
+    final Duration difference = DateTime.now().difference(createdAt!);
 
-  void _selectProject(Project project) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectDetailPage(project: project),
-      ),
-    ).then((value) {
-      setState(() {
-        // Check if the project is now favorite or not
-        if (Project.isFavorite(project)) {
-          // If the project is now favorite, refresh the list of projects
-          projects = Project.projects.map((p) {
-            if (p == project) return project;
-            return p;
-          }).toList();
-        }
-      });
-    });
-  }
-
-  void _toggleFavorite(Project project) {
-    setState(() {
-      Project.toggleFavorite(project);
-    });
-  }
-
-  void _showFavoriteProjects(BuildContext context) {
-    List<Project> favoriteProjects = Project.projects
-        .where((project) => Project.isFavorite(project))
-        .toList();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FavoriteProjectsPage(
-          projects: favoriteProjects,
-          handleProjectTool: _handleProjectTool,
-          selectProject: _selectProject,
-        ),
-      ),
-    ).then((value) {
-      // Update the list of favorite projects when returning from FavoriteProjectsPage
-      setState(() {
-        favoriteProjects = Project.projects
-            .where((project) => Project.isFavorite(project))
-            .toList();
-      });
-    });
-  }
-
-  // void _applyFilters(
-  //   int? projectScopeFlag,
-  //   int? studentsNeeded,
-  //   int? proposalsLessThan,
-  // ) {
-  //   setState(() {
-  //     projects = Project.projects.where((project) {
-  //       bool passFilter = true;
-  //       if (projectScopeFlag != null) {
-  //         switch (projectScopeFlag) {
-  //           case 0:
-  //             passFilter = passFilter && project.projectScopeFlag == 0;
-  //             break;
-  //           case 1:
-  //             passFilter = passFilter && project.projectScopeFlag == 1;
-  //             break;
-  //           case 2:
-  //             passFilter = passFilter && project.projectScopeFlag == 2;
-  //             break;
-  //           case 3:
-  //             passFilter = passFilter && project.projectScopeFlag == 3;
-  //             break;
-  //           default:
-  //             passFilter = false; // Assuming other cases should be filtered out
-  //             break;
-  //         }
-  //       }
-  //       if (studentsNeeded != null) {
-  //         passFilter = passFilter && project.numberOfStudents! >= studentsNeeded;
-  //       }
-  //       if (proposalsLessThan != null) {
-  //         passFilter = passFilter && project.countProposals! < proposalsLessThan;
-  //       }
-  //       return passFilter;
-  //     }).toList();
-  //   });
-  // }
-
-  // void _showFilterOptions(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return FilterProjectsPage(
-  //         applyFilters: _applyFilters,
-  //       );
-  //     },
-  //   );
-  // }
-
-  void _handleProjectTool(ProjectTool result, Project project) {
-    switch (result) {
-      case ProjectTool.Edit:
-        _editProject(project);
-        break;
-      case ProjectTool.Remove:
-        _removeProject(project);
-        break;
+    if (difference.inSeconds < 60) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      if (difference.inMinutes == 1) {
+        return '${difference.inMinutes} minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else if (difference.inHours < 24) {
+      if (difference.inHours == 1) {
+        return '${difference.inHours} hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inDays < 30) {
+      if (difference.inDays == 1) {
+        return '${difference.inDays} day ago';
+      } else {
+        return '${difference.inDays} days ago';
+      }
+    } else if (difference.inDays < 365) {
+      final int months = difference.inDays ~/ 30;
+      if (months == 1) {
+        return '$months month ago';
+      } else {
+        return '$months months ago';
+      }
+    } else {
+      final int years = difference.inDays ~/ 365;
+      if (years == 1) {
+        return '$years year ago';
+      } else {
+        return '$years years ago';
+      }
     }
-  }
-
-  void _editProject(Project project) {
-    // Your implementation to edit a project goes here
-  }
-
-  void _removeProject(Project project) {
-    // Your implementation to remove a project goes here
-  }
-
-  Future<List<Project>> fetchDataProjects() async {
-    return await Project.getAllProjectsData();
   }
 }

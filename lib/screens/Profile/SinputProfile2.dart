@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/modelController.dart';
-import 'package:studenthub/components/keyword.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'SinputProfile3.dart';
 import 'package:studenthub/components/controller.dart';
 
@@ -82,7 +82,7 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -101,6 +101,20 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
               const SizedBox(height: 16.0),
               projectCards(),
               const SizedBox(height: 16.0),
+              Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // postProfile();
+                    moveToPage(
+                        const StudentInputProfile3(), context);
+                  },
+                  style: buildButtonStyle(Colors.blue[400]!),
+                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
+                ),
+              ],
+            ),
             ],
           ),
         ),

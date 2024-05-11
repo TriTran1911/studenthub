@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dashBoard/SdashBoard.dart';
-import 'dashBoard/Cdashboard.dart';
+import 'dashBoard/TempCDashBoard.dart';
 import 'projects/projects.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
@@ -11,7 +11,7 @@ import '/components/appbar.dart';
 class TabsPage extends StatefulWidget {
   final int index;
 
-  TabsPage({required this.index});
+  const TabsPage({super.key, required this.index});
 
   @override
   _TabsPageState createState() => _TabsPageState();
@@ -27,10 +27,10 @@ class _TabsPageState extends State<TabsPage> {
   }
 
   final List<TabInfo> _tabs = [
-    TabInfo(page: ProjectsPage(), label: 'Projects', icon: Icons.list_alt),
+    TabInfo(page: ProjectsPage(role: modelController.user.roles[0]), label: 'Projects', icon: Icons.list_alt),
     TabInfo(
         page: modelController.user.roles[0] == 1
-            ? DashboardPage()
+            ? CompanyDashboardPage()
             : StudentDashboardPage(),
         label: 'Dashboard',
         icon: Icons.dashboard),
@@ -47,7 +47,7 @@ class _TabsPageState extends State<TabsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       body: _tabs[_selectedIndex].page,
       bottomNavigationBar: BottomNavigationBar(
         items: _tabs.map((tab) => _buildBottomNavigationBarItem(tab)).toList(),

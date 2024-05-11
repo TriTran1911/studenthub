@@ -30,7 +30,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
     // Convert list to string
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: true),
       body: _buildPadding(context),
     );
   }
@@ -113,7 +113,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                     16,
                   ),
                   Text(widget.numberOfStudents.toString(),
-                      style: TextStyle(fontSize: 16)),
+                      style: const TextStyle(fontSize: 16)),
                 ],
               ),
             ],
@@ -121,7 +121,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
           Container(
             alignment: Alignment.centerRight,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               decoration: BoxDecoration(
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(20.0),
@@ -129,20 +129,23 @@ class _ProjectPost4State extends State<ProjectPost4> {
               child: ElevatedButton(
                 onPressed: () {
                   _handlePostProject();
-                  // pop until the first route
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                  moveToPage(TabsPage(index: 1), context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TabsPage(index: 1),
+                    ),
+                  );
                 },
-                child: Text(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                ),
+                child: const Text(
                   'Post job',
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
                 ),
               ),
             ),
@@ -152,7 +155,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
     );
   }
 
-  void _handlePostProject() async {
+  Future<void> _handlePostProject() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var data = {
       'companyId': prefs.getInt('companyId'),
@@ -173,7 +176,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
         print('Project posted successfully');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Project posted successfully'),
             ),
           );

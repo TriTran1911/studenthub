@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildBody(context),
     );
@@ -59,7 +59,7 @@ class _LoginState extends State<Login> {
               child: Text(
                 "login_password1".tr(),
                 textAlign: TextAlign.end,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
@@ -93,7 +93,7 @@ class _LoginState extends State<Login> {
     return Text(
       "login_title1".tr(),
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20.0,
       ),
@@ -180,15 +180,15 @@ class _LoginState extends State<Login> {
         var authorization = await Connection.getRequest('/api/auth/me/', {});
         var authorizationDecoded = jsonDecode(authorization);
 
+        Navigator.of(context).pop();
+        print('Sign in successful');
+
         if (authorizationDecoded['result']['company'] != null) {
-          prefs.setInt(
-              'companyId', authorizationDecoded['result']['company']['id']);
+          prefs.setInt('companyId', authorizationDecoded['result']['company']['id']);
         }
         if (authorizationDecoded['result']['student'] != null) {
-          prefs.setInt(
-              'studentId', authorizationDecoded['result']['student']['id']);
+          prefs.setInt('studentId', authorizationDecoded['result']['student']['id']);
         }
-        modelController.user.id = authorizationDecoded['result']['id'];
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
         modelController.user.fullname =
@@ -196,7 +196,6 @@ class _LoginState extends State<Login> {
         print("login_text3".tr());
         moveToPage(TabsPage(index: 0), context);
       } else {
-        await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop();
         print(responseDecoded['errorDetails']);
         ScaffoldMessenger.of(context).showSnackBar(
