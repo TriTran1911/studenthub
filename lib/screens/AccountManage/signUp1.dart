@@ -65,7 +65,7 @@ class _SignUpState1 extends State<SignUp1> {
     return Text(
       "signup_title1".tr(),
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 20.0,
       ),
@@ -78,7 +78,7 @@ class _SignUpState1 extends State<SignUp1> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             border: Border.all(
               color: isSelected ? Colors.blue : Colors.grey,
@@ -91,7 +91,7 @@ class _SignUpState1 extends State<SignUp1> {
               Icon(icon),
               const SizedBox(width: 8.0),
               Expanded(child: Text(text)),
-              if (isSelected) Icon(Icons.check),
+              if (isSelected) const Icon(Icons.check),
             ],
           ),
         ),
@@ -135,7 +135,7 @@ class _SignUpState1 extends State<SignUp1> {
           child: Text(
             "signup_text2".tr(),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.blue,
             ),
           ),

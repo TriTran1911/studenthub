@@ -4,8 +4,8 @@ import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'projectDetail.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
-import '../../../components/decoration.dart';
-import '../../../connection/server.dart';
+import '../../../../components/decoration.dart';
+import '../../../../connection/server.dart';
 
 // ignore: must_be_immutable
 class FavoriteProjectsPage extends StatefulWidget {
