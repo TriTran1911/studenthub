@@ -96,83 +96,78 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Padding(
-              padding: const EdgeInsets.only(
-                  left: 10, right: 10, top: 20, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildText('Your Projects', 20, FontWeight.bold),
-                  ElevatedButton(
-                    onPressed: () {
-                      moveToPage(const ProjectPost1(), context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: buildText(
-                        'Post a job', 20, FontWeight.bold, Colors.white),
-                  )
-                ],
-              ),
-            ),
-            bottom: const TabBar(
-              labelColor: Colors.blue,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.blue,
-              tabs: [
-                Tab(
-                  child: Text('All Projects',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                Tab(
-                  child: Text('Working',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                Tab(
-                  child: Text('Achieved',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            )),
+        appBar: buildAppBar(context),
         body: TabBarView(
           children: [
-            SingleChildScrollView(
-              child: FutureBuilder<List<Project>>(
-                future: _projectsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    allProjects = snapshot.data!;
+            FutureBuilder<List<Project>>(
+              future: _projectsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  allProjects = snapshot.data!;
 
-                    return buildCards(newProjectList);
-                  }
-                },
-              ),
+                  return buildCards(newProjectList);
+                }
+              },
             ),
-            SingleChildScrollView(
-              child: buildCards(workingProjectList),
-            ),
-            SingleChildScrollView(
-              child: buildCards(achievedProjectList),
-            ),
+            buildCards(workingProjectList),
+            buildCards(achievedProjectList),
           ],
         ),
       ),
     );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildText('Your Projects', 20, FontWeight.bold),
+              ElevatedButton(
+                onPressed: () {
+                  moveToPage(const ProjectPost1(), context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child:
+                    buildText('Post a job', 20, FontWeight.bold, Colors.white),
+              )
+            ],
+          ),
+        ),
+        bottom: const TabBar(
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Colors.blue,
+          tabs: [
+            Tab(
+              child: Text('All Projects',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            Tab(
+              child: Text('Working',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            Tab(
+              child: Text('Achieved',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ));
   }
 
   ListView buildCards(List<Project> projectList) {
@@ -189,8 +184,6 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
       );
     } else {
       return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: projectList.length,
         itemBuilder: (context, index) {
           Project pro = projectList[index];
@@ -248,10 +241,14 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    buildBottomSheetItem(context,
-                                        "View project detail", Colors.black, () {
-                                          moveToPage(const ProjectDetailPage(), context);
-                                        }),
+                                    buildBottomSheetItem(
+                                        context,
+                                        "View project detail",
+                                        Colors.black, () {
+                                      moveToPage(
+                                          ProjectDetailPage(project: pro),
+                                          context);
+                                    }),
                                     buildBottomSheetItem(
                                         context, "Edit posting", Colors.black,
                                         () {

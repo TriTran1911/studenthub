@@ -192,7 +192,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: proposalList.length,
         itemBuilder: (context, index) {
-          Project pro = proposalList[index].project;
+          Project pro = proposalList[index].project!;
           return Card(
             color: Colors.white,
             shape: RoundedRectangleBorder(

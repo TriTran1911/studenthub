@@ -85,7 +85,8 @@ class Proposal {
   final String? coverLetter;
   int? statusFlag;
   int? disableFlag;
-  final Project project;
+  Project? project;
+  Student? student;
 
   Proposal(
       {this.id,
@@ -97,7 +98,8 @@ class Proposal {
       this.coverLetter,
       this.statusFlag,
       this.disableFlag,
-      required this.project});
+      this.project,
+      this.student});
 
   factory Proposal.formAllProposal(Map<String, dynamic> json) {
     return Proposal(
@@ -112,6 +114,29 @@ class Proposal {
       disableFlag: json['disableFlag'],
       project: Project.formProject(json['project']),
     );
+  }
+
+  factory Proposal.formGetByProjectId(Map<String, dynamic> json) {
+    return Proposal(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      projectId: json['projectId'],
+      studentId: json['studentId'],
+      coverLetter: json['coverLetter'],
+      statusFlag: json['statusFlag'],
+      disableFlag: json['disableFlag'],
+      student: Student.fromJson(json['student']),
+    );
+  }
+
+  static List<Proposal> buildListGetByProjectId(List<dynamic> list) {
+    List<Proposal> proposalList = [];
+    for (var proposal in list) {
+      proposalList.add(Proposal.formGetByProjectId(proposal));
+    }
+    return proposalList;
   }
 
   static List<Proposal> buildListProposal(List<dynamic> list) {
@@ -202,23 +227,68 @@ class Project {
 }
 
 class Student {
-  static int? id;
-  static DateTime? createdAt;
-  static DateTime? updatedAt;
-  static DateTime? deletedAt;
-  static List<TechStack>? techStack;
-  static List<SkillSet>? skillSet;
-  static List<dynamic>? proposals;
-  static List<Education>? educations;
-  static List<Language>? languages;
-  static List<Experience>? experiences;
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+  String? fullname;
+  TechStack? techStack;
+  List<SkillSet>? skillSet;
+  List<dynamic>? proposals;
+  List<Education>? educations;
+  List<Language>? languages;
+  List<Experience>? experiences;
+
+  Student(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.techStack,
+      this.skillSet,
+      this.fullname,
+      this.proposals,
+      this.educations,
+      this.languages,
+      this.experiences});
+  
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      fullname: json['user']['fullname'],
+      techStack: json['techStack'] != null
+          ? TechStack.fromJson(json['techStack'])
+          : null,
+      skillSet: json['skillSet'] != null
+          ? (json['skillSet'] as List)
+              .map((e) => SkillSet.fromJson(e))
+              .toList()
+          : null,
+      educations: json['educations'] != null
+          ? (json['educations'] as List)
+              .map((e) => Education.fromJson(e))
+              .toList()
+          : null,
+    );
+  }
+
+  static List<Student> buildListStudent(List<dynamic> list) {
+    List<Student> studentList = [];
+    for (var student in list) {
+      studentList.add(Student.fromJson(student));
+    }
+    return studentList;
+  }
 }
 
 class TechStack {
   int? id;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  DateTime? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
   String? name;
 
   TechStack(
@@ -237,9 +307,9 @@ class TechStack {
 
 class SkillSet {
   int? id;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  DateTime? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
   String? name;
 
   SkillSet(
@@ -258,9 +328,9 @@ class SkillSet {
 
 class Language {
   final int? id;
-  final DateTime? createAt;
-  final DateTime? updateAt;
-  final DateTime? deleteAt;
+  final String? createAt;
+  final String? updateAt;
+  final String? deleteAt;
   String? languageName;
   String? level;
 
@@ -365,9 +435,9 @@ List<String> get levels => LanguageList.level;
 
 class Education {
   final int? id;
-  final DateTime? createAt;
-  final DateTime? updateAt;
-  final DateTime? deleteAt;
+  final String? createAt;
+  final String? updateAt;
+  final String? deleteAt;
   String? schoolName;
   int? startYear;
   int? endYear;
@@ -380,13 +450,25 @@ class Education {
       this.schoolName,
       this.startYear,
       this.endYear});
+  
+  factory Education.fromJson(Map<String, dynamic> json) {
+    return Education(
+      id: json['id'],
+      createAt: json['createAt'],
+      updateAt: json['updateAt'],
+      deleteAt: json['deleteAt'],
+      schoolName: json['schoolName'],
+      startYear: json['startYear'],
+      endYear: json['endYear'],
+    );
+  }
 }
 
 class Experience {
   static int? id;
-  static DateTime? createdAt;
-  static DateTime? updatedAt;
-  static DateTime? deletedAt;
+  static String? createdAt;
+  static String? updatedAt;
+  static String? deletedAt;
   static int? studentId;
   static String? title;
   static String? startMonth;
