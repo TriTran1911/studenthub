@@ -56,7 +56,7 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
     };
 
     var response = await Connection.patchRequest(
-        '/api/interview/${widget.idInterview}', data);
+        '/api/interview/${widget.idInterview}/disable', data);
     var responseDecoded = response;
     if (responseDecoded != null) {
       print('Success to edit interview');
