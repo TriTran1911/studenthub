@@ -78,12 +78,12 @@ class _AccountControllerState extends State<AccountController> {
       if (result['roles'].length == 1) {
         if (result['roles'][0] == 1) {
           result['company'] == null
-              ? moveToPage(CWithoutProfile(), context)
-              : moveToPage(CompanyProfile(), context);
+              ? moveToPage(const CWithoutProfile(), context)
+              : moveToPage(const CompanyProfile(), context);
         } else {
           result['student'] == null
-              ? moveToPage(StudentInputProfile1(), context)
-              : moveToPage(StudentInputProfile1(), context);
+              ? moveToPage(const StudentInputProfile1(), context)
+              : moveToPage(const StudentInputProfile1(), context);
         }
       } else {}
       print(result);

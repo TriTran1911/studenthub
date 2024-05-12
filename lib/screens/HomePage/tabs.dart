@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dashBoard/SdashBoard.dart';
-import 'dashBoard/TempCDashBoard.dart';
+import 'dashBoard/CDashBoard.dart';
 import 'projects/projects.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
