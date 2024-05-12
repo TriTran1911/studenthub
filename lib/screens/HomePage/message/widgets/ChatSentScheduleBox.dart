@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/connection/server.dart';
 import 'package:studenthub/screens/HomePage/message/pages/VideoCallPage.dart';
@@ -56,7 +52,7 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
     };
 
     var response = await Connection.patchRequest(
-        '/api/interview/${widget.idInterview}', data);
+        '/api/interview/${widget.idInterview}/disable', data);
     var responseDecoded = response;
     if (responseDecoded != null) {
       print('Success to edit interview');
@@ -121,12 +117,12 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
                   if (widget.disableFlag == 0) ...[
                     ElevatedButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => VideoCallPage(),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoCallPage(),
+                          ),
+                        );
                       },
                       child:
                           Text('Join', style: TextStyle(color: Colors.white)),

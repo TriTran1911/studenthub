@@ -251,7 +251,7 @@ class Student {
       this.educations,
       this.languages,
       this.experiences});
-  
+
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       id: json['id'],
@@ -263,9 +263,7 @@ class Student {
           ? TechStack.fromJson(json['techStack'])
           : null,
       skillSet: json['skillSet'] != null
-          ? (json['skillSet'] as List)
-              .map((e) => SkillSet.fromJson(e))
-              .toList()
+          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)
@@ -450,7 +448,7 @@ class Education {
       this.schoolName,
       this.startYear,
       this.endYear});
-  
+
   factory Education.fromJson(Map<String, dynamic> json) {
     return Education(
       id: json['id'],
@@ -533,6 +531,7 @@ class Message {
   User? receiver;
   Interview? interview;
   Project? project;
+  Notification? notifications;
 
   Message(
       {this.id,
@@ -541,7 +540,8 @@ class Message {
       this.sender,
       this.receiver,
       this.interview,
-      this.project});
+      this.project,
+      this.notifications});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
@@ -556,6 +556,9 @@ class Message {
           : null,
       project:
           json['project'] != null ? Project.formProject(json['project']) : null,
+      notifications: json['notifications'] != null
+          ? Notification.fromJson(json['notifications'])
+          : null,
     );
   }
 }

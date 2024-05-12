@@ -184,10 +184,16 @@ class _LoginState extends State<Login> {
         print('Sign in successful');
 
         if (authorizationDecoded['result']['company'] != null) {
-          prefs.setInt('companyId', authorizationDecoded['result']['company']['id']);
+          prefs.setInt(
+              'companyId', authorizationDecoded['result']['company']['id']);
+          modelController.user.id =
+              authorizationDecoded['result']['company']['userId'];
         }
         if (authorizationDecoded['result']['student'] != null) {
-          prefs.setInt('studentId', authorizationDecoded['result']['student']['id']);
+          prefs.setInt(
+              'studentId', authorizationDecoded['result']['student']['userId']);
+          modelController.user.id =
+              authorizationDecoded['result']['student']['id'];
         }
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
