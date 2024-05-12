@@ -128,12 +128,20 @@ class _ProjectPost4State extends State<ProjectPost4> {
               child: ElevatedButton(
                 onPressed: () {
                   _handlePostProject();
+                  // pop all the screens and navigate to the second tab
+                  Navigator.popUntil(context, (route) => route.isFirst);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TabsPage(index: 1),
                     ),
                   );
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => TabsPage(index: 1),
+                  //   ),
+                  // );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,

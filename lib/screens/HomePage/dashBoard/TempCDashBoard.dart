@@ -99,27 +99,29 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         appBar: buildAppBar(context),
         body: TabBarView(
           children: [
-            FutureBuilder<List<Project>>(
-              future: _projectsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  allProjects = snapshot.data!;
-
-                  return buildCards(newProjectList);
-                }
-              },
-            ),
-            buildCards(workingProjectList),
-            buildCards(achievedProjectList),
+            buildTabBarView(newProjectList),
+            buildTabBarView(workingProjectList),
+            buildTabBarView(achievedProjectList),
           ],
         ),
       ),
+    );
+  }
+
+  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList) {
+    return FutureBuilder<List<Project>>(
+      future: _projectsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return buildCards(ProjectList);
+        }
+      },
     );
   }
 
@@ -245,6 +247,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                         context,
                                         "View project detail",
                                         Colors.black, () {
+                                      Navigator.pop(context);
                                       moveToPage(
                                           ProjectDetailPage(project: pro),
                                           context);
@@ -264,8 +267,10 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                     buildBottomSheetItem(
                                         context,
                                         "Start working on this project",
-                                        Colors.blue,
-                                        () {}),
+                                        Colors.blue, () {
+                                      Navigator.pop(context);
+                                      showConfirmationDialog(context, pro);
+                                    }),
                                   ],
                                 ),
                               );
@@ -388,6 +393,10 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         setState(() {
                           Connection.deleteRequest(
                               '/api/project/${project.id}');
+                          // remove the project from the list of selected projects
+                          newProjectList.remove(project);
+                          workingProjectList.remove(project);
+                          achievedProjectList.remove(project);
                         });
                         Navigator.of(context).pop();
                       },
@@ -524,6 +533,70 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       style: buildButtonStyle(Colors.blue[400]!),
                       child:
                           buildText('Save', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showConfirmationDialog(
+      BuildContext context, Project project) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Start working on this project', 20, FontWeight.bold,
+                    Colors.blue),
+                const SizedBox(height: 20),
+                buildText(
+                    'Are you sure you want to start working on this project?',
+                    16,
+                    FontWeight.normal,
+                    Colors.black),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          project.typeFlag = 1;
+                          newProjectList.remove(project);
+                          workingProjectList.add(project);
+                          editProject(project);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Start', 16, FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),

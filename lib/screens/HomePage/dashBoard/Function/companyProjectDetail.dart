@@ -81,7 +81,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: 'Search projects...',
+                              hintText: 'Search for chat...',
                               prefixIcon: const Icon(Icons.search),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -90,6 +90,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
+                        
                       ],
                     ),
                   ),
