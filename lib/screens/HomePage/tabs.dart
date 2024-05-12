@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dashBoard/SdashBoard.dart';
-import 'dashBoard/TempCDashBoard.dart';
+import 'dashBoard/CDashBoard.dart';
 import 'projects/projects.dart';
 import 'message/message.dart';
 import 'alerts/alerts.dart';
@@ -30,8 +30,8 @@ class _TabsPageState extends State<TabsPage> {
     TabInfo(page: ProjectsPage(role: modelController.user.roles[0]), label: 'Projects', icon: Icons.list_alt),
     TabInfo(
         page: modelController.user.roles[0] == 1
-            ? CompanyDashboardPage()
-            : StudentDashboardPage(),
+            ? const CompanyDashboardPage()
+            : const StudentDashboardPage(),
         label: 'Dashboard',
         icon: Icons.dashboard),
     TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),

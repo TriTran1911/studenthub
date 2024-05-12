@@ -42,10 +42,10 @@ dependencies:
   easy_localization: ^3.0.6
   socket_io_client: ^2.0.3+1
 #   wakelock_plus: ^1.1.6
-#   zego_uikit_prebuilt_video_conference: ^2.7.4
-#   zego_uikit: ^2.22.2
-#   package_info_plus: ^4.2.0
-#   zego_express_engine: ^3.13.3
+  zego_uikit_prebuilt_video_conference: ^2.7.4
+  zego_uikit: ^2.22.2
+  package_info_plus: ^4.2.0
+  zego_express_engine: ^3.13.3
 
 # dependency_overrides:
 #   wakelock_plus: 1.1.6

@@ -5,8 +5,8 @@ import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/decoration.dart';
 import '/components/modelController.dart';
 import '/connection/server.dart';
-import 'favoriteProject.dart';
-import 'projectDetail.dart';
+import 'Function/favoriteProject.dart';
+import 'Function/projectDetail.dart';
 
 class ProjectsPage extends StatefulWidget {
   final int role;
@@ -92,9 +92,152 @@ class _ProjectsPageState extends State<ProjectsPage> {
                       ),
                     ),
                   ),
+                  IconButton(
+                    icon: const Icon(Icons.filter_list_outlined),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            surfaceTintColor: Colors.brown,
+                            title: const Text('Filter Projects',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Card(
+                                  child: ListTile(
+                                    title: const Text('All Projects'),
+                                    onTap: () {
+                                      setState(() {
+                                        projectList = allProjects;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                                Card(
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        title: const Text('Less than 1 month'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.projectScopeFlag ==
+                                                    0)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: const Text('1 to 3 months'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.projectScopeFlag ==
+                                                    1)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: const Text('3 to 6 months'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.projectScopeFlag ==
+                                                    2)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: const Text('More than 6 months'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.projectScopeFlag ==
+                                                    3)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Card(
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        title:
+                                            const Text('Less than 10 students'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.numberOfStudents! <
+                                                    10)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: const Text('10 to 20 students'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.numberOfStudents! >=
+                                                        10 &&
+                                                    project.numberOfStudents! <=
+                                                        20)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        title:
+                                            const Text('More than 20 students'),
+                                        onTap: () {
+                                          setState(() {
+                                            projectList = allProjects
+                                                .where((project) =>
+                                                    project.numberOfStudents! >
+                                                    20)
+                                                .toList();
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                   widget.role == 0
                       ? IconButton(
-                          icon: const Icon(Icons.list_alt_outlined),
+                          icon: const Icon(Icons.bookmarks, color: Colors.red),
                           onPressed: () {
                             moveToPage(
                                 FavoriteProjectsPage(projects: projectList),
@@ -164,7 +307,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           FontWeight.bold,
                           Colors.blue[800]),
                     ),
-                    // if role is student show the icon
                     widget.role == 0
                         ? IconButton(
                             icon: Icon(

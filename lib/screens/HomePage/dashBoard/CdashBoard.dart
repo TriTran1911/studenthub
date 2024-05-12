@@ -1,711 +1,642 @@
-// import 'dart:convert';
+import 'dart:convert';
 
-// import 'package:flutter/material.dart';
-// import 'package:studenthub/components/controller.dart';
-// import 'package:studenthub/components/modelController.dart';
-// import '../../../connection/server.dart';
-// import '/components/project.dart';
-// import '/screens/Action/projectTab.dart';
-// import '/screens/HomePage/dashBoard/Function/projectPost1.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/decoration.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
+import '../../../components/controller.dart';
+import '../../../connection/server.dart';
+import 'Function/companyProjectDetail.dart';
 
-// class DashboardPage extends StatefulWidget {
-//   @override
-//   _DashboardPageState createState() => _DashboardPageState();
-// }
+class CompanyDashboardPage extends StatefulWidget {
+  const CompanyDashboardPage({super.key});
 
-// class _DashboardPageState extends State<DashboardPage> {
-  
-//   @override
-//   void initState() {
-//     super.initState();
-//     intitialData();
-//   }
+  @override
+  State<CompanyDashboardPage> createState() => _CompanyDashboardPageState();
+}
 
-//   Future<List<Project>> getProjects() async {
-//     try {
-//       var response = await Connection.getRequest('/api/project', {});
-//       var responseDecode = jsonDecode(response);
+class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
+  List<Project> newProjectList = [];
+  List<Project> workingProjectList = [];
+  List<Project> achievedProjectList = [];
+  List<Project> allProjects = [];
+  Future<List<Project>>? _projectsFuture;
 
-//       if (responseDecode['result'] != null) {
-//         print("Connected to the server successfully");
-//         print(responseDecode['result']);
+  @override
+  void initState() {
+    super.initState();
+    _projectsFuture = getProjects();
+  }
 
-//         List<Project> projectList =
-//             Project.buildListProject(responseDecode['result']);
+  Future<List<Project>> getProjects() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? companyId = prefs.getInt('companyId');
 
-//         return projectList;
-//       } else {
-//         throw Exception('Failed to load projects');
-//       }
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to load projects');
-//     }
-//   }
-//   }
+    try {
+      var response =
+          await Connection.getRequest('/api/project/company/$companyId', {});
+      var responseDecode = jsonDecode(response);
 
-//   Widget build(BuildContext context) {
-//     _updateProjectsList();
+      if (responseDecode['result'] != null) {
+        print("Connected to the server successfully");
+        print(responseDecode['result']);
 
-//     return _buildDefaultTabController();
-//   }
+        List<Project> projectListAPI =
+            Project.buildListProject(responseDecode['result']);
 
-//   DefaultTabController _buildDefaultTabController() {
-//     return DefaultTabController(
-//       length: 3,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           automaticallyImplyLeading: false,
-//           title: const Row(
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             children: [
-//               Text(
-//                 'Your projects',
-//                 style: TextStyle(
-//                   fontSize: 18.0,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//             ],
-//           ),
-//           actions: <Widget>[
-//             _buildPostJobButton(),
-//           ],
-//           bottom: TabBar(
-//             indicatorColor: Colors.blue,
-//             tabs: [
-//               _buildTab('All Projects'),
-//               _buildTab('Working'),
-//               _buildTab('Achieved'),
-//             ],
-//           ),
-//         ),
-//         body: TabBarView(
-//           children: [
-//             buildProjectsList(onBoardingProjects),
-//             buildProjectsList(workingProjects),
-//             buildProjectsList(achievedProjects),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+        for (Project project in projectListAPI) {
+          if (project.typeFlag == 0) {
+            newProjectList.add(project);
+          } else if (project.typeFlag == 1) {
+            workingProjectList.add(project);
+          } else if (project.typeFlag == 2) {
+            achievedProjectList.add(project);
+          }
+        }
 
-//   Widget _buildPostJobButton() {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-//       child: TextButton(
-//         onPressed: () => _addProject(),
-//         style: ButtonStyle(
-//           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-//           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//             RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(10.0),
-//             ),
-//           ),
-//         ),
-//         child: const Padding(
-//           padding: EdgeInsets.symmetric(horizontal: 10.0),
-//           child: Text(
-//             'Post a job',
-//             style: TextStyle(
-//               color: Colors.white,
-//               fontWeight: FontWeight.bold,
-//               fontSize: 16.0,
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
+        return projectListAPI;
+      } else {
+        throw Exception('Failed to load projects');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to load projects');
+    }
+  }
 
-//   void _addProject() {
-//     moveToPage(ProjectPost1(), context);
-//   }
+  Future<void> editProject(Project project) async {
+    try {
+      var body = {
+        'title': project.title,
+        'description': project.description,
+        'projectScopeFlag': project.projectScopeFlag,
+        'numberOfStudents': project.numberOfStudents,
+        'typeFlag': project.typeFlag,
+      };
 
-//   Widget _buildTab(String title) {
-//     return Tab(
-//       child: Text(
-//         title,
-//         style: const TextStyle(
-//           fontWeight: FontWeight.bold,
-//           fontSize: 16.0,
-//           color: Colors.blue,
-//         ),
-//       ),
-//     );
-//   }
+      var response =
+          await Connection.patchRequest('/api/project/${project.id}', body);
+      var responseDecode = jsonDecode(response);
 
-//   void _updateProjectsList() {
-//     onBoardingProjects = Project.projects
-//         .where((project) => project.typeFlag == 0 || project.typeFlag == 1)
-//         .toList();
-//     workingProjects =
-//         Project.projects.where((project) => project.typeFlag == 0).toList();
-//     achievedProjects =
-//         Project.projects.where((project) => project.typeFlag == 1).toList();
-//   }
+      if (responseDecode != null) {
+        print("Edit project successfully");
+        print(responseDecode);
+      } else {
+        throw Exception('Failed to edit project');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to edit project');
+    }
+  }
 
-//   Widget buildTextField(TextEditingController controller, String hintText) {
-//     return TextField(
-//       controller: controller,
-//       decoration: InputDecoration(
-//         hintText: hintText,
-//         border: const OutlineInputBorder(),
-//       ),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: buildAppBar(context),
+        body: TabBarView(
+          children: [
+            buildTabBarView(newProjectList),
+            buildTabBarView(workingProjectList),
+            buildTabBarView(achievedProjectList),
+          ],
+        ),
+      ),
+    );
+  }
 
-//   Widget buildProjectsList(List<Project> projects) {
-//     return ListView.builder(
-//       itemCount: projects.length,
-//       itemBuilder: (context, index) {
-//         // Calculate days since creation
-//         final daysSinceCreation =
-//             DateTime.now().difference(projects[index].createdAt!).inDays;
+  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList) {
+    return FutureBuilder<List<Project>>(
+      future: _projectsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return buildCards(ProjectList);
+        }
+      },
+    );
+  }
 
-//         return Container(
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(10.0),
-//             color: Colors.white,
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.grey.withOpacity(0.5),
-//                 spreadRadius: 1,
-//                 blurRadius: 1,
-//                 offset: const Offset(0, 1),
-//               ),
-//             ],
-//           ),
-//           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-//           child: Column(
-//             children: [
-//               ListTile(
-//                 title: Text(
-//                   projects[index].title!,
-//                   style: const TextStyle(color: Colors.green),
-//                 ),
-//                 subtitle: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text('Created $daysSinceCreation days ago'),
-//                     const Text(
-//                       'Students are looking for:',
-//                       style: TextStyle(fontWeight: FontWeight.bold),
-//                     ),
-//                     Padding(
-//                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-//                       child: Text(projects[index]
-//                           .description!), // Assuming description is a non-null field
-//                     ),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Column(
-//                           children: [
-//                             Text('${projects[index].countProposals ?? 0}'),
-//                             const Text('Proposals'),
-//                           ],
-//                         ),
-//                         const Column(
-//                           children: [
-//                             Text('0'), // Placeholder for Messages
-//                             Text('Messages'),
-//                           ],
-//                         ),
-//                         const Column(
-//                           children: [
-//                             Text('0'), // Placeholder for Hired
-//                             Text('Hired'),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//                 trailing: IconButton(
-//                   icon: const Icon(Icons.more_horiz),
-//                   onPressed: () {
-//                     _showBottomSheet(context, projects[index]);
-//                   },
-//                 ),
-//                 onTap: () {
-//                   moveToPage(ProposalsPage(project: projects[index]), context);
-//                 },
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildText('Your Projects', 20, FontWeight.bold),
+              ElevatedButton(
+                onPressed: () {
+                  moveToPage(const ProjectPost1(), context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child:
+                    buildText('Post a job', 20, FontWeight.bold, Colors.white),
+              )
+            ],
+          ),
+        ),
+        bottom: const TabBar(
+          labelColor: Colors.blue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Colors.blue,
+          tabs: [
+            Tab(
+              child: Text('All Projects',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            Tab(
+              child: Text('Working',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            Tab(
+              child: Text('Achieved',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ));
+  }
 
-//   void _removeProject(Project project) {
-//     setState(() {
-//       Project.removeProject(project);
-//     });
-//   }
+  ListView buildCards(List<Project> projectList) {
+    if (projectList.isEmpty) {
+      return ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const SizedBox(height: 20),
+          Center(
+            child: buildText('No project found', 16, FontWeight.bold),
+          ),
+        ],
+      );
+    } else {
+      return ListView.builder(
+        itemCount: projectList.length,
+        itemBuilder: (context, index) {
+          Project pro = projectList[index];
+          return Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 3,
+            surfaceTintColor: Colors.blue,
+            margin: const EdgeInsets.all(12),
+            shadowColor: Colors.blue,
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[100],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: buildText(
+                            pro.createdAt != null
+                                ? monthDif(
+                                    DateTime.parse(pro.createdAt!.toString()))
+                                : '0', // or some default value
+                            16,
+                            FontWeight.bold,
+                            Colors.blue[800]),
+                      ),
+                      // icon selection
+                      IconButton(
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.blue,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 30),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildBottomSheetItem(
+                                        context,
+                                        "View project detail",
+                                        Colors.black, () {
+                                      Navigator.pop(context);
+                                      moveToPage(
+                                          ProjectDetailPage(project: pro),
+                                          context);
+                                    }),
+                                    buildBottomSheetItem(
+                                        context, "Edit posting", Colors.black,
+                                        () {
+                                      Navigator.pop(context);
+                                      showEditDialog(context, pro);
+                                    }),
+                                    buildBottomSheetItem(
+                                        context, "Remove posting", Colors.red,
+                                        () {
+                                      Navigator.pop(context);
+                                      showDeleteDialog(context, pro);
+                                    }),
+                                    buildBottomSheetItem(
+                                        context,
+                                        "Start working on this project",
+                                        Colors.blue, () {
+                                      Navigator.pop(context);
+                                      showConfirmationDialog(context, pro);
+                                    }),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
+                  const SizedBox(height: 10),
+                  buildText(
+                      pro.description!, 16, FontWeight.normal, Colors.black),
+                  const SizedBox(height: 10),
+                  Row(
+                    //space between
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          const Icon(
+                            Icons.access_time_outlined,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.projectScopeFlag == 0
+                                  ? 'Less than 1 month'
+                                  : pro.projectScopeFlag == 1
+                                      ? '1 to 3 months'
+                                      : pro.projectScopeFlag == 2
+                                          ? '3 to 6 months'
+                                          : 'More than 6 months',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Icon(
+                            pro.numberOfStudents == 1
+                                ? Icons.person_outlined
+                                : Icons.people_outlined,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.numberOfStudents == 1
+                                  ? '${pro.numberOfStudents} student'
+                                  : '${pro.numberOfStudents} students',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Icon(
+                            Icons.assignment,
+                            color: Colors.blue,
+                          ),
+                          buildText(
+                              pro.countProposals == 1
+                                  ? '${pro.countProposals.toString()} proposal'
+                                  : '${pro.countProposals.toString()} proposals',
+                              14,
+                              FontWeight.normal,
+                              Colors.black),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
 
-//   void _showDeleteConfirmationDialog(BuildContext context, Project project) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text(
-//             "Delete Posting",
-//             textAlign: TextAlign.center,
-//             style: TextStyle(
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           content: const Text("Are you sure you want to delete this posting?"),
-//           actions: <Widget>[
-//             TextButton(
-//               child: const Text(
-//                 "Cancel",
-//                 style: TextStyle(
-//                   color: Colors.blue,
-//                   fontSize: 16.0,
-//                 ),
-//               ),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//             ElevatedButton(
-//               onPressed: () {
-//                 _removeProject(project);
-//                 Navigator.of(context).pop();
-//                 Navigator.of(context).pop();
-//               },
-//               style: ButtonStyle(
-//                 backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-//                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                   RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(5.0),
-//                   ),
-//                 ),
-//               ),
-//               child: const Text(
-//                 "Delete",
-//                 style: TextStyle(
-//                   color: Colors.white,
-//                   fontSize: 16.0,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
+  // reconfirm to delete
+  Future<void> showDeleteDialog(BuildContext context, Project project) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Delete project', 20, FontWeight.bold, Colors.red),
+                const SizedBox(height: 20),
+                buildText('Are you sure you want to delete this project?', 16,
+                    FontWeight.normal, Colors.black),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          Connection.deleteRequest(
+                              '/api/project/${project.id}');
+                          // remove the project from the list of selected projects
+                          newProjectList.remove(project);
+                          workingProjectList.remove(project);
+                          achievedProjectList.remove(project);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.red[400]!),
+                      child: buildText(
+                          'Delete', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-//   void _editPosting(BuildContext context, Project project) {
-//     TextEditingController titleController =
-//         TextEditingController(text: project.title!);
-//     int selectedDurationIndex = project.projectScopeFlag!;
-//     int studentsNeeded = project.numberOfStudents!;
-//     TextEditingController descriptionController =
-//         TextEditingController(text: project.description!);
+  Future<void> showEditDialog(BuildContext context, Project project) async {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    TextEditingController studentController = TextEditingController();
 
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return StatefulBuilder(
-//           builder: (context, setState) {
-//             return AlertDialog(
-//               title: const Text(
-//                 "Edit Posting",
-//                 textAlign: TextAlign.center,
-//                 style: TextStyle(
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               content: SingleChildScrollView(
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     TextField(
-//                       controller: titleController,
-//                       decoration: const InputDecoration(labelText: "Title"),
-//                     ),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         const Text("Duration: "),
-//                         RadioListTile(
-//                           title: const Text("Less than 1 month"),
-//                           value: 0,
-//                           groupValue: selectedDurationIndex,
-//                           onChanged: (value) {
-//                             setState(() {
-//                               selectedDurationIndex = value!;
-//                             });
-//                           },
-//                           activeColor: Colors.blue,
-//                         ),
-//                         RadioListTile(
-//                           title: const Text("1 to 3 months"),
-//                           value: 1,
-//                           groupValue: selectedDurationIndex,
-//                           onChanged: (value) {
-//                             setState(() {
-//                               selectedDurationIndex = value!;
-//                             });
-//                           },
-//                           activeColor: Colors.blue,
-//                         ),
-//                         RadioListTile(
-//                           title: const Text("3 to 6 months"),
-//                           value: 2,
-//                           groupValue: selectedDurationIndex,
-//                           onChanged: (value) {
-//                             setState(() {
-//                               selectedDurationIndex = value!;
-//                             });
-//                           },
-//                           activeColor: Colors.blue,
-//                         ),
-//                         RadioListTile(
-//                           title: const Text("More than 6 months"),
-//                           value: 3,
-//                           groupValue: selectedDurationIndex,
-//                           onChanged: (value) {
-//                             setState(() {
-//                               selectedDurationIndex = value!;
-//                             });
-//                           },
-//                           activeColor: Colors.blue,
-//                         ),
-//                       ],
-//                     ),
-//                     Row(
-//                       children: [
-//                         const Text("Students Needed: "),
-//                         Container(
-//                           padding: const EdgeInsets.symmetric(
-//                               horizontal: 1.0, vertical: 1.0),
-//                           decoration: BoxDecoration(
-//                             border: Border.all(color: Colors.black),
-//                           ),
-//                           child: IconButton(
-//                             icon: const Icon(Icons.remove),
-//                             onPressed: () {
-//                               if (studentsNeeded > 0) {
-//                                 setState(() {
-//                                   studentsNeeded--;
-//                                 });
-//                               }
-//                             },
-//                           ),
-//                         ),
-//                         GestureDetector(
-//                           onTap: () {
-//                             showDialog(
-//                               context: context,
-//                               builder: (context) {
-//                                 int updatedStudentsNeeded = studentsNeeded;
-//                                 return AlertDialog(
-//                                   title: const Text(
-//                                     "Edit Students Needed",
-//                                     textAlign: TextAlign.center,
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                   content: TextFormField(
-//                                     initialValue: studentsNeeded.toString(),
-//                                     keyboardType: TextInputType.number,
-//                                     onChanged: (value) {
-//                                       updatedStudentsNeeded =
-//                                           int.tryParse(value) ?? 0;
-//                                     },
-//                                   ),
-//                                   actions: [
-//                                     TextButton(
-//                                       onPressed: () {
-//                                         Navigator.pop(context);
-//                                       },
-//                                       child: const Text(
-//                                         'Cancel',
-//                                         style: TextStyle(
-//                                           color: Colors.blue,
-//                                           fontSize: 16.0,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                     ElevatedButton(
-//                                       onPressed: () {
-//                                         setState(() {
-//                                           studentsNeeded =
-//                                               updatedStudentsNeeded;
-//                                         });
-//                                         Navigator.pop(context);
-//                                       },
-//                                       style: ButtonStyle(
-//                                         backgroundColor:
-//                                             MaterialStateProperty.all<Color>(
-//                                                 Colors.blue),
-//                                         shape: MaterialStateProperty.all<
-//                                             RoundedRectangleBorder>(
-//                                           RoundedRectangleBorder(
-//                                             borderRadius:
-//                                                 BorderRadius.circular(5.0),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       child: const Text(
-//                                         'Save',
-//                                         style: TextStyle(
-//                                           color: Colors.white,
-//                                           fontSize: 16.0,
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 );
-//                               },
-//                             );
-//                           },
-//                           child: Container(
-//                             padding: const EdgeInsets.symmetric(
-//                                 horizontal: 15.0, vertical: 15.0),
-//                             decoration: const BoxDecoration(
-//                               border: Border(
-//                                 top: BorderSide(color: Colors.black),
-//                                 bottom: BorderSide(color: Colors.black),
-//                               ),
-//                             ),
-//                             child: Text(studentsNeeded.toString()),
-//                           ),
-//                         ),
-//                         Container(
-//                           padding: const EdgeInsets.symmetric(
-//                               horizontal: 1.0, vertical: 1.0),
-//                           decoration: BoxDecoration(
-//                             border: Border.all(color: Colors.black),
-//                           ),
-//                           child: IconButton(
-//                             icon: Icon(Icons.add),
-//                             onPressed: () {
-//                               setState(() {
-//                                 studentsNeeded++;
-//                               });
-//                             },
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     TextField(
-//                       controller: descriptionController,
-//                       decoration:
-//                           const InputDecoration(labelText: "Description"),
-//                       maxLines: null,
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               actions: <Widget>[
-//                 TextButton(
-//                   child: const Text(
-//                     "Cancel",
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontSize: 16.0,
-//                     ),
-//                   ),
-//                   onPressed: () {
-//                     Navigator.of(context).pop();
-//                   },
-//                 ),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     setState(() {
-//                       project.title = titleController.text;
-//                       project.projectScopeFlag = selectedDurationIndex;
-//                       project.numberOfStudents = studentsNeeded;
-//                       project.description = descriptionController.text;
-//                     });
-//                     Navigator.of(context).pop();
-//                     Navigator.of(context).pop();
-//                   },
-//                   style: ButtonStyle(
-//                     backgroundColor:
-//                         MaterialStateProperty.all<Color>(Colors.blue),
-//                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                       RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(5.0),
-//                       ),
-//                     ),
-//                   ),
-//                   child: const Text(
-//                     'Save',
-//                     style: TextStyle(
-//                       color: Colors.white,
-//                       fontSize: 16.0,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
+    titleController.text = project.title!;
+    descriptionController.text = project.description!;
+    int durationController = project.projectScopeFlag!;
+    studentController.text = project.numberOfStudents.toString();
+    int typeFlag = project.typeFlag!;
 
-//   void _showBottomSheet(BuildContext context, Project project) {
-//     showModalBottomSheet(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return Container(
-//           height: 430,
-//           child: Column(
-//             children: [
-//               ListTile(
-//                 title: const Text('View Proposals',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   Navigator.of(context).pop();
-//                   moveToPage(
-//                       ProposalsPage(project: project, initialTabIndex: 0),
-//                       context);
-//                 },
-//               ),
-//               ListTile(
-//                 title: const Text('View Messages',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   Navigator.of(context).pop();
-//                   moveToPage(
-//                       ProposalsPage(project: project, initialTabIndex: 2),
-//                       context);
-//                 },
-//               ),
-//               ListTile(
-//                 title: const Text('View Hired',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   Navigator.of(context).pop();
-//                   moveToPage(
-//                       ProposalsPage(project: project, initialTabIndex: 3),
-//                       context);
-//                 },
-//               ),
-//               const Divider(height: 17, color: Colors.grey),
-//               ListTile(
-//                 title: const Text('View job posting',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {},
-//               ),
-//               ListTile(
-//                 title: const Text('Edit posting',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   _editPosting(context, project);
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     const SnackBar(
-//                       content: Text("You have edited the posting."),
-//                     ),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 title: const Text('Remove posting',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   _showDeleteConfirmationDialog(context, project);
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     const SnackBar(
-//                       content: Text("You have removed the posting."),
-//                     ),
-//                   );
-//                 },
-//               ),
-//               const Divider(height: 17, color: Colors.grey),
-//               ListTile(
-//                 title: const Text('Start working this project',
-//                     style: TextStyle(
-//                       color: Colors.blue,
-//                       fontWeight: FontWeight.bold,
-//                       fontSize: 16,
-//                     )),
-//                 onTap: () {
-//                   setState(() {
-//                     project.projectScopeFlag =
-//                         1; // Set project scope flag to working
-//                   });
-//                   Navigator.of(context).pop();
-//                   ScaffoldMessenger.of(context).showSnackBar(
-//                     const SnackBar(
-//                       content:
-//                           Text("You have started working on this project."),
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Edit project', 20, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: titleController,
+                  decoration: buildDecoration('Title'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: descriptionController,
+                  decoration: buildDecoration('Description'),
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 10),
+                Column(
+                  children: <Widget>[
+                    RadioListTile<int>(
+                      title: const Text('Less than 1 month'),
+                      value: 0,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('1 to 3 months'),
+                      value: 1,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('3 to 6 months'),
+                      value: 2,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('More than 6 months'),
+                      value: 3,
+                      groupValue: durationController,
+                      onChanged: (int? value) {
+                        setState(() {
+                          durationController = value!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: studentController,
+                  decoration: buildDecoration('Number of students'),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          project.title = titleController.text;
+                          project.description = descriptionController.text;
+                          project.projectScopeFlag = durationController;
+                          project.numberOfStudents =
+                              int.parse(studentController.text);
+                          project.typeFlag = typeFlag;
+                          editProject(project);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Save', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-//   void fetchProjectsByCompanyId(String companyId) async {
-//     try {
-//       List<Project> projects = await Project.getProjectsByCompanyId(companyId);
-//       setState(() {
-//         onBoardingProjects = projects;
-//         workingProjects =
-//             projects.where((project) => project.typeFlag == 0).toList();
-//         achievedProjects =
-//             projects.where((project) => project.typeFlag == 1).toList();
-//       });
-//     } catch (e) {
-//       print('Error fetching projects by company id: $e');
-//     }
-//   }
+  Future<void> showConfirmationDialog(
+      BuildContext context, Project project) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText('Start working on this project', 20, FontWeight.bold,
+                    Colors.blue),
+                const SizedBox(height: 20),
+                buildText(
+                    'Are you sure you want to start working on this project?',
+                    16,
+                    FontWeight.normal,
+                    Colors.black),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          project.typeFlag = 1;
+                          newProjectList.remove(project);
+                          workingProjectList.add(project);
+                          editProject(project);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Start', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-//   Future<List<Project>> fetchDataProjectsByID(String companyId) async {
-//     return await Project.getProjectsByCompanyId(companyId);
-//   }
-// }
+  RadioListTile<int> buildRadioListTile(
+      String title, int value, int groupValue) {
+    return RadioListTile<int>(
+      title: Text(title),
+      value: value,
+      groupValue: groupValue,
+      onChanged: (int? newValue) {
+        setState(() {
+          groupValue = newValue!;
+        });
+      },
+    );
+  }
 
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: DashboardPage(),
-//     );
-//   }
-// }
+  Widget buildBottomSheetItem(
+      BuildContext context, String text, Color color, VoidCallback onTap) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.grey.withOpacity(0.5),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: ListTile(
+        title: buildText(text, 18, FontWeight.bold, color),
+        onTap: onTap,
+      ),
+    );
+  }
+}

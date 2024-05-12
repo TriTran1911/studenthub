@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
-import '../../../components/appbar.dart';
-import '../../../components/decoration.dart';
-import '../../../components/modelController.dart';
-import '../../../connection/server.dart';
+import '../../../../components/appbar.dart';
+import '../../../../components/decoration.dart';
+import '../../../../components/modelController.dart';
+import '../../../../connection/server.dart';
 
 // ignore: must_be_immutable
 class CoverLetterPage extends StatefulWidget {
