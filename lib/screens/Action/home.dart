@@ -25,8 +25,15 @@ class Home extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 50),
           _buildTextColumn(),
-          Lottie.asset('assets/animation/home.json',
-              height: 300, repeat: true, reverse: true),
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Lottie.asset(
+              'assets/animation/home.json',
+              height: 300,
+              repeat: true,
+              reverse: true,
+            ),
+          ),
           SizedBox(height: 20),
           _buildElevatedButton(
             "home_button1".tr(),

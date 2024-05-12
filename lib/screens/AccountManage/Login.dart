@@ -59,8 +59,7 @@ class _LoginState extends State<Login> {
               child: Text(
                 "login_password1".tr(),
                 textAlign: TextAlign.end,
-                style: const TextStyle(
-                  color: Colors.black,
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),

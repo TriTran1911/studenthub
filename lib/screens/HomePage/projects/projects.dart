@@ -74,54 +74,54 @@ class _ProjectsPageState extends State<ProjectsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-        children: [
-          Row(
-          children: [
-            Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-              hintText: 'Search projects...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search projects...',
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  widget.role == 0
+                      ? IconButton(
+                          icon: const Icon(Icons.list_alt_outlined),
+                          onPressed: () {
+                            moveToPage(
+                                FavoriteProjectsPage(projects: projectList),
+                                context);
+                          },
+                        )
+                      : const SizedBox(width: 0),
+                ],
               ),
-              ),
-            ),
-            ),
-            widget.role == 0
-              ? IconButton(
-                icon: const Icon(Icons.list_alt_outlined),
-                onPressed: () {
-                moveToPage(
-                  FavoriteProjectsPage(projects: projectList),
-                  context);
+              const SizedBox(height: 16),
+              FutureBuilder<List<Project>>(
+                future: _projectsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return buildCards();
+                  }
                 },
-              )
-              : const SizedBox(width: 0),
-          ],
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          FutureBuilder<List<Project>>(
-          future: _projectsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-            } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-            } else {
-            return buildCards();
-            }
-          },
-          ),
-        ],
         ),
-      ),
       ),
     );
   }
