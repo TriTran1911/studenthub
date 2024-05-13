@@ -20,7 +20,8 @@ class LanguageProvider extends ChangeNotifier {
 class ChangeLanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    var languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(

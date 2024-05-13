@@ -5,9 +5,10 @@ import '/components/controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '/components/theme_provider.dart';
 import 'package:provider/provider.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool backWard;
-  
+
   const CustomAppBar({super.key, required this.backWard});
 
   @override
@@ -27,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               // Nút chuyển đổi ngôn ngữ
               IconButton(
-                  icon: context.locale == Locale('en')
+                icon: context.locale == Locale('en')
                     ? Image.asset('images/usa.png', width: 26, height: 26)
                     : Image.asset('images/vietnam.png', width: 26, height: 26),
                 onPressed: () {
@@ -53,7 +54,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 context.setLocale(Locale('en'));
                               }
                               // Restart ứng dụng
-                              Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                              Navigator.popUntil(
+                                  context,
+                                  ModalRoute.withName(
+                                      Navigator.defaultRouteName));
                             },
                             child: Text("appbar_text4".tr()),
                           ),
@@ -65,10 +69,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               IconButton(
                 icon: Consumer<ThemeProvider>(
-                  builder: (context, themeProvider, _) => Icon(themeProvider.getThemeType() == ThemeType.Dark ? Icons.light_mode : Icons.dark_mode),
+                  builder: (context, themeProvider, _) => Icon(
+                      themeProvider.getThemeType() == ThemeType.Dark
+                          ? Icons.light_mode
+                          : Icons.dark_mode),
                 ),
                 onPressed: () {
-                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme();
                 },
               ),
               // Nút đăng nhập hoặc tìm kiếm
@@ -93,9 +101,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       onPressed: () {
                         appBarIcon.isSelected = false;
-                        !appBarIcon.isBlocked
-                            ? Navigator.pop(context)
-                            : null;
+                        !appBarIcon.isBlocked ? Navigator.pop(context) : null;
                       },
                     ),
             ],
