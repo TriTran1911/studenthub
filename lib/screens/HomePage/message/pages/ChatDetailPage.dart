@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/chatController.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';

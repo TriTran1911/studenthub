@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:custom_clippers/custom_clippers.dart';
 
 class ChatReceivedMessage extends StatelessWidget {
   final String message;

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -9,7 +8,6 @@ import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
 import 'package:studenthub/connection/socket.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
-import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
 class RecentChatsByProject extends StatefulWidget {
   final Project project;
