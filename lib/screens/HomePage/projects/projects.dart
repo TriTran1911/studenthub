@@ -394,7 +394,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 ),
               ],
             ),
-            onTap: widget.role == 1
+            onTap: widget.role == 0
                 ? () {
                     moveToPage(ProjectDetailPage(project: pro), context);
                   }

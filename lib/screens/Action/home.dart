@@ -16,7 +16,16 @@ class Home extends StatelessWidget {
     );
   }
 
-  Padding _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context) {
+    return PageView(
+      children: [
+        _buildFirstPage(context),
+        _buildSecondPage(context),
+      ],
+    );
+  }
+
+  Widget _buildFirstPage(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final lottieAsset = isDarkMode
         ? 'assets/animation/Lottie_black.json'
@@ -25,7 +34,7 @@ class Home extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(height: 50),
@@ -46,6 +55,34 @@ class Home extends StatelessWidget {
               moveToPage(Login(), context);
             },
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSecondPage(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final lottieAsset = isDarkMode
+        ? 'assets/animation/Lottie_black.json'
+        : 'assets/animation/Lottie_white.json';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: 50),
+          _buildTextColumn(),
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Lottie.asset(
+              lottieAsset,
+              height: 300,
+              repeat: true,
+              reverse: true,
+            ),
+          ),
           SizedBox(height: 20),
           _buildElevatedButton(
             "home_button2".tr(),
@@ -53,8 +90,6 @@ class Home extends StatelessWidget {
               moveToPage(Login(), context);
             },
           ),
-          SizedBox(height: 20),
-          _buildTextColumn(),
         ],
       ),
     );
