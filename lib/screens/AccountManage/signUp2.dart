@@ -34,6 +34,12 @@ class _ChatBubbleWithVisibilityToggleState
   bool _obscureText = true;
 
   @override
+  void initState() {
+    super.initState();
+    print('Role: ' + modelController.user.roles[0].toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
@@ -200,7 +206,7 @@ class _Signup2State extends State<SignUp2> {
       'fullname': _userNameController.text,
       'email': _emailController.text,
       'password': _passwordController.text,
-      'role': modelController.user.roles[0],
+      'role': modelController.user.roles[0].toString(),
     };
 
     String url = '/api/auth/sign-up';
@@ -211,6 +217,7 @@ class _Signup2State extends State<SignUp2> {
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
         print("signup_noti1".tr());
+        print(modelController.user.roles[0]);
         moveToPage(Login(), context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
