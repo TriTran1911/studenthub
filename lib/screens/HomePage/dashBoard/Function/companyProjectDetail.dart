@@ -80,9 +80,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-<<<<<<< Updated upstream
-                        RecentChatsByProject(project: pro),
-=======
                         Expanded(
                           child: TextField(
                             controller: _searchController,
@@ -96,7 +93,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
->>>>>>> Stashed changes
                       ],
                     ),
                   ),
