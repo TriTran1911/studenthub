@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import '/components/appbar.dart';
 import '/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
@@ -54,14 +56,20 @@ class _ChatBubbleWithVisibilityToggleState
               labelStyle: Theme.of(context).textTheme.bodyText1,
               border: OutlineInputBorder(),
               suffixIcon: widget.isPassword
-                  ? IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                      icon: Icon(
-                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                  ? Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: themeProvider.getIconColor(
+                              context), // Lấy màu biểu tượng từ chủ đề
+                        ),
                       ),
                     )
                   : null,

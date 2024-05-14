@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
+import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/components/modelController.dart';
 import '/components/controller.dart';
@@ -18,6 +19,8 @@ import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
 
 class AccountController extends StatefulWidget {
+  const AccountController({super.key});
+
   @override
   _AccountControllerState createState() => _AccountControllerState();
 }
@@ -83,7 +86,7 @@ class _AccountControllerState extends State<AccountController> {
         } else {
           result['student'] == null
               ? moveToPage(const StudentInputProfile1(), context)
-              : moveToPage(const StudentInputProfile1(), context);
+              : moveToPage(const StudentProfilePage(), context);
         }
       } else {}
       print(result);

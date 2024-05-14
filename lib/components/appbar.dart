@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/screens/HomePage/tabs.dart';
+import '/components/theme_provider.dart'; // Import ThemeProvider
 import '/screens/action/account.dart';
 import '/components/controller.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '/components/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool backWard;
 
-  const CustomAppBar({super.key, required this.backWard});
+  const CustomAppBar({Key? key, required this.backWard}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,58 +26,92 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               // Nút chuyển đổi ngôn ngữ
-              IconButton(
-                icon: context.locale == Locale('en')
-                    ? Image.asset('images/usa.png', width: 26, height: 26)
-                    : Image.asset('images/vietnam.png', width: 26, height: 26),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("appbar_text1".tr()),
-                        content: Text("appbar_text2".tr()),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("appbar_text3".tr()),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              // Chuyển đổi ngôn ngữ
-                              if (context.locale == Locale('en')) {
-                                context.setLocale(Locale('vi'));
-                              } else {
-                                context.setLocale(Locale('en'));
-                              }
-                              // Restart ứng dụng
-                              Navigator.popUntil(
+              PopupMenuButton<String>(
+                icon: Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, _) => Icon(
+                    Icons.language,
+                    color: themeProvider.getIconColor(context),
+                  ),
+                ),
+                onSelected: (String value) {
+                  if ((value == 'vi' && context.locale != Locale('vi')) ||
+                      (value == 'en' && context.locale != Locale('en'))) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("appbar_text1".tr()),
+                          content: Text("appbar_text2".tr()),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("appbar_text3".tr()),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (value == 'vi') {
+                                  context.setLocale(Locale('vi'));
+                                } else {
+                                  context.setLocale(Locale('en'));
+                                }
+                                Navigator.popUntil(
                                   context,
                                   ModalRoute.withName(
-                                      Navigator.defaultRouteName));
-                            },
-                            child: Text("appbar_text4".tr()),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                                      Navigator.defaultRouteName),
+                                );
+                              },
+                              child: Text("appbar_text4".tr()),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'vi',
+                    child: Row(
+                      children: <Widget>[
+                        Image.asset('images/vietnam.png',
+                            width: 26, height: 26),
+                        SizedBox(width: 8),
+                        Text('Vietnamese'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'en',
+                    child: Row(
+                      children: <Widget>[
+                        Image.asset('images/usa.png', width: 26, height: 26),
+                        SizedBox(width: 8),
+                        Text('English'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+
+              // Thay đổi chủ đề sử dụng ThemeProvider
               IconButton(
                 icon: Consumer<ThemeProvider>(
                   builder: (context, themeProvider, _) => Icon(
-                      themeProvider.getThemeType() == ThemeType.Dark
-                          ? Icons.light_mode
-                          : Icons.dark_mode),
+                    themeProvider.getThemeType() == ThemeType.Dark
+                        ? Icons.light_mode
+                        : Icons.dark_mode,
+                    color: themeProvider
+                        .getIconColor(context), // Lấy màu biểu tượng từ chủ đề
+                  ),
                 ),
                 onPressed: () {
                   Provider.of<ThemeProvider>(context, listen: false)
                       .toggleTheme();
                 },
               ),
+
               // Nút đăng nhập hoặc tìm kiếm
               !appBarIcon.isSelected
                   ? IconButton(
@@ -114,3 +147,45 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
+  final String title;
+  final bool showBackButton;
+  final Gradient gradient;
+
+  const CustomAppBar1({
+    Key? key,
+    required this.title,
+    this.showBackButton = false,
+    required this.gradient,
+  }) : preferredSize = const Size.fromHeight(60.0), super(key: key);
+
+  @override
+  final Size preferredSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: showBackButton
+          ? IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          : null,
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24.0,
+          color: Colors.white,
+        ),
+      ),
+      centerTitle: true,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: gradient,
+        ),
+      ),
+    );
+  }
+}
+

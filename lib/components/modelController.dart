@@ -231,10 +231,11 @@ class Student {
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
+  String? email;
   String? fullname;
   int? userId;
   TechStack? techStack;
-  List<SkillSet>? skillSet;
+  List<SkillSet>? skillSets;
   List<dynamic>? proposals;
   List<Education>? educations;
   List<Language>? languages;
@@ -246,7 +247,8 @@ class Student {
       this.updatedAt,
       this.deletedAt,
       this.techStack,
-      this.skillSet,
+      this.email,
+      this.skillSets,
       this.fullname,
       this.userId,
       this.proposals,
@@ -265,12 +267,41 @@ class Student {
       techStack: json['techStack'] != null
           ? TechStack.fromJson(json['techStack'])
           : null,
-      skillSet: json['skillSet'] != null
-          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
+      skillSets: json['skillSets'] != null
+          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)
               .map((e) => Education.fromJson(e))
+              .toList()
+          : null,
+    );
+  }
+
+  factory Student.formStudentInfo(Map<String, dynamic> json) {
+    return Student(
+      id: json['id'],
+      email: json['email'],
+      fullname: json['fullname'],
+      techStack: json['techStack'] != null
+          ? TechStack.fromJson(json['techStack'])
+          : null,
+      skillSets: json['skillSets'] != null
+          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
+          : null,
+      educations: json['educations'] != null
+          ? (json['educations'] as List)
+              .map((e) => Education.fromJson(e))
+              .toList()
+          : null,
+      languages: json['languages'] != null
+          ? (json['languages'] as List)
+              .map((e) => Language.fromJson(e))
+              .toList()
+          : null,
+      experiences: json['experiences'] != null
+          ? (json['experiences'] as List)
+              .map((e) => Experience.fromJson(e))
               .toList()
           : null,
     );
@@ -342,6 +373,17 @@ class Language {
       this.deleteAt,
       this.languageName,
       this.level});
+
+  factory Language.fromJson(Map<String, dynamic> json) {
+    return Language(
+      id: json['id'],
+      createAt: json['createAt'],
+      updateAt: json['updateAt'],
+      deleteAt: json['deleteAt'],
+      languageName: json['languageName'],
+      level: json['level'],
+    );
+  }
 }
 
 // generate languageName and level
@@ -466,22 +508,54 @@ class Education {
 }
 
 class Experience {
-  static int? id;
-  static String? createdAt;
-  static String? updatedAt;
-  static String? deletedAt;
-  static int? studentId;
-  static String? title;
-  static String? startMonth;
-  static String? endMonth;
-  static String? description;
-  static List<SkillSet>? skillSet;
+  final int? id;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? deletedAt;
+  final int? studentId;
+  String? title;
+  String? startMonth;
+  String? endMonth;
+  String? description;
+  List<SkillSet>? skillSet;
+
+  Experience(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.studentId,
+      this.title,
+      this.startMonth,
+      this.endMonth,
+      this.description,
+      this.skillSet});
+
+  factory Experience.fromJson(Map<String, dynamic> json) {
+    return Experience(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      studentId: json['studentId'],
+      title: json['title'],
+      startMonth: json['startMonth'],
+      endMonth: json['endMonth'],
+      description: json['description'],
+      skillSet: json['skillSet'] != null
+          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
+          : null,
+    );
+  }
 }
 
 Widget loadingDialog() {
   return const AlertDialog(
     content: Center(
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.blue,
+        color: Colors.white,
+      ),
     ),
   );
 }
