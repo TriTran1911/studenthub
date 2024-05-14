@@ -9,6 +9,11 @@ class User {
   List<int> roles;
   Company company;
   Student student;
+  bool? verified;
+  bool? isConfirmed;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
 
   User({
     required this.id,
@@ -18,19 +23,21 @@ class User {
     required this.roles,
     required this.company,
     required this.student,
+    required this.verified,
+    required this.isConfirmed,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.deletedAt,
   });
 
   User.fromMessage(Map<String, dynamic> json)
       : id = json['id'],
         fullname = json['fullname'],
-        email =
-            '', // You'll need to update these with actual values from the json map
+        email = '',
         password = '',
         roles = [],
-        company =
-            Company(), // You'll need to update these with actual values from the json map
-        student =
-            Student(); // You'll need to update these with actual values from the json map
+        company = Company(),
+        student = Student();
 
   User.fromNotification(Map<String, dynamic> json)
       : id = json['id'],
@@ -38,10 +45,13 @@ class User {
         email = '',
         password = '',
         roles = [],
-        company =
-            Company(), // You'll need to update these with actual values from the json map
-        student =
-            Student(); // You'll need to update these with actual values from the json map
+        company = Company(),
+        student = Student(),
+        verified = json['verified'] ?? true,
+        isConfirmed = json['isConfirmed'] ?? true,
+        createdAt = json['createdAt'] ?? '',
+        updatedAt = json['updatedAt'] ?? '',
+        deletedAt = json['deletedAt'] ?? '';
 }
 
 class ModelController {
@@ -61,6 +71,11 @@ class ModelController {
       roles: [],
       company: Company(),
       student: Student(),
+      verified: false,
+      isConfirmed: false,
+      createdAt: '',
+      updatedAt: '',
+      deletedAt: '',
     );
   }
 }
@@ -68,11 +83,14 @@ class ModelController {
 ModelController modelController = ModelController();
 
 class Company {
-  static int? id;
-  static String? companyName;
-  static int? size;
-  static String? website;
-  static String? description;
+  int? id;
+  String? companyName;
+  int? size;
+  String? website;
+  String? description;
+
+  Company(
+      {this.id, this.companyName, this.size, this.website, this.description});
 }
 
 class Proposal {
@@ -616,10 +634,17 @@ String timeDif(DateTime? createdAt) {
 class Message {
   int? id;
   String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
   String? content;
   User? sender;
   User? receiver;
+  int? senderId;
+  int? receiverId;
+  int? projectId;
   Interview? interview;
+  int? interviewId;
+  int? messageFlag;
   Project? project;
   Notification? notifications;
 
@@ -631,7 +656,14 @@ class Message {
       this.receiver,
       this.interview,
       this.project,
-      this.notifications});
+      this.notifications,
+      this.updatedAt,
+      this.deletedAt,
+      this.senderId,
+      this.receiverId,
+      this.projectId,
+      this.messageFlag,
+      this.interviewId});
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
@@ -651,18 +683,86 @@ class Message {
           : null,
     );
   }
+
+  factory Message.fromNotification(Map<String, dynamic> json) {
+    return Message(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      senderId: json['senderId'],
+      receiverId: json['receiverId'],
+      projectId: json['projectId'],
+      interview: json['interview'] != null
+          ? Interview.fromJson(json['interview'])
+          : null,
+      content: json['content'],
+      messageFlag: json['messageFlag'],
+      interviewId: json['interviewId'],
+    );
+  }
 }
 
 class Notification {
   int? id;
   String? notifyFlag;
+  String? createdAt;
+  String? updatedAt;
+  String? deletedAt;
+  int? receiverId;
+  int? senderId;
+  int? messageId;
+  String? title;
+  String? typeNotifyFlag;
+  String? content;
+  Message? message;
+  User? sender;
+  User? receiver;
 
-  Notification({this.id, this.notifyFlag});
+  Notification(
+      {this.id,
+      this.notifyFlag,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.receiverId,
+      this.senderId,
+      this.messageId,
+      this.title,
+      this.typeNotifyFlag,
+      this.content,
+      this.message,
+      this.sender,
+      this.receiver});
 
   factory Notification.fromJson(Map<String, dynamic> json) {
     return Notification(
       id: json['id'],
       notifyFlag: json['notifyFlag'],
+    );
+  }
+
+  factory Notification.fromNotification(Map<String, dynamic> json) {
+    return Notification(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      receiverId: json['receiverId'],
+      senderId: json['senderId'],
+      messageId: json['messageId'],
+      title: json['title'],
+      notifyFlag: json['notifyFlag'],
+      typeNotifyFlag: json['typeNotifyFlag'],
+      content: json['content'],
+      message: json['message'] != null
+          ? Message.fromNotification(json['message'])
+          : null,
+      sender:
+          json['sender'] != null ? User.fromNotification(json['sender']) : null,
+      receiver: json['receiver'] != null
+          ? User.fromNotification(json['receiver'])
+          : null,
     );
   }
 }

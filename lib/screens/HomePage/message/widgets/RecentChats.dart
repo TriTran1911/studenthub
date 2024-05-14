@@ -20,6 +20,7 @@ class _RecentChatsState extends State<RecentChats> {
   late IO.Socket socket;
   late MessageNotification messageNotification;
   Timer? timer;
+  // final controllerUserId = modelController.user.id;
 
   Future<List<Message>> getRecentChats() async {
     var response = await Connection.getRequest('/api/message', {});

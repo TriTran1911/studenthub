@@ -194,20 +194,26 @@ class _LoginState extends State<Login> {
         if (authorizationDecoded['result']['company'] != null) {
           prefs.setInt(
               'companyId', authorizationDecoded['result']['company']['id']);
-          modelController.user.id =
+          modelController.user.company.id =
               authorizationDecoded['result']['company']['userId'];
+          modelController.user.company.companyName =
+              authorizationDecoded['result']['company']['fullname'];
+          print('Company id: ${modelController.user.company.companyName}');
         } else {
           moveToPage(const CWithoutProfile(), context);
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(
               'studentId', authorizationDecoded['result']['student']['id']);
-          modelController.user.id =
+          modelController.user.student.id =
               authorizationDecoded['result']['student']['userId'];
+          modelController.user.student.fullname =
+              authorizationDecoded['result']['student']['fullname'];
+          print('Student id: ${modelController.user.student.fullname}');
         }
+        modelController.user.id = authorizationDecoded['result']['id'];
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
-        print('12344');
         modelController.user.fullname =
             authorizationDecoded['result']['fullname'];
         print("login_text3".tr());

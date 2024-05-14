@@ -36,6 +36,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   late Interview interview;
   late List<bool> listSender;
   late List<int> listDisableFlag;
+  late List<int> listMeetingId;
   List<int> idInterview = [];
   late IO.Socket socket;
 
@@ -61,6 +62,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         listDisableFlag.add(message['interview'] != null
             ? message['interview']['disableFlag'] as int
             : 3);
+        listMeetingId.add(message['interview'] != null
+            ? message['interview']['meetingRoomId'] as int
+            : 0);
         return MessageDetail(
           content: message['interview'] != null
               ? '${message['content']}\n${message['interview']['title']}\nStart time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(message['interview']['startTime']))}\nEnd time:    ${DateFormat('yyyy-MM-dd    HH:mm').format(DateTime.parse(message['interview']['endTime']))}\nDuration: ${DateTime.parse(message['interview']['endTime']).difference(DateTime.parse(message['interview']['startTime'])).inMinutes.toString()} minutes'
@@ -107,6 +111,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
             messageNotification.senderId == widget.senderId ? true : false);
         idInterview.add(messageNotification.interview?.id ?? 0);
         listDisableFlag.add(messageNotification.interview?.disableFlag ?? 3);
+        listMeetingId.add(messageNotification.interview?.meetingRoomId ?? 0);
         _scrollToBottom();
       }
       print('Message Receive: ${messageNotification.content}');
@@ -133,6 +138,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         // }
         idInterview.add(messageNotification.interview?.id ?? 0);
         listDisableFlag.add(messageNotification.interview?.disableFlag ?? 3);
+        listMeetingId.add(messageNotification.interview?.meetingRoomId ?? 0);
 
         _scrollToBottom();
       }
@@ -277,7 +283,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       content: message.content,
                       isSender: listSender[index],
                       idInterview: idInterview[index],
-                      disableFlag: listDisableFlag[index]);
+                      disableFlag: listDisableFlag[index],
+                      meetingRoomId: listMeetingId[index]);
                 }
               },
             ),
