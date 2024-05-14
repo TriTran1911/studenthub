@@ -33,7 +33,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
-                      moveToPage(TabsPage(index: 0), context);
+                      moveToPage(const TabsPage(index: 0), context);
                     },
                   ),
                   buildCenterText('Favorite Projects', 24, FontWeight.bold,
@@ -41,7 +41,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              buildCards(),
+              buildCards()
             ],
           ),
         ),
