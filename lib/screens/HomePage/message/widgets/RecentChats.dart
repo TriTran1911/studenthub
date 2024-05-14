@@ -31,6 +31,10 @@ class _RecentChatsState extends State<RecentChats> {
       for (var message in responseDecoded['result']) {
         messages.add(Message.fromJson(message));
       }
+      messages.sort((a, b) {
+        return DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!));
+      });
       return messages;
     } else {
       throw Exception('Failed to load message');

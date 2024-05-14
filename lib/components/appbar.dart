@@ -95,13 +95,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       })
                   : IconButton(
                       icon: const Icon(
-                        Icons.search,
+                        Icons.home,
                         color: Colors.white,
                         size: 30,
                       ),
                       onPressed: () {
                         appBarIcon.isSelected = false;
-                        !appBarIcon.isBlocked ? Navigator.pop(context) : null;
+                        Navigator.pop(context);
                       },
                     ),
             ],

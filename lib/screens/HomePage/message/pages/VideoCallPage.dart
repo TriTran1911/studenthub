@@ -17,7 +17,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     if (!status.isGranted) {
       status = await Permission.camera.request();
       if (!status.isGranted) {
-        // The user did not grant the permission
         print('Permission Denied');
         showDialog(
           context: context,
@@ -65,7 +64,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
             ),
           );
         } else {
-          // The Future is still running, show a loading spinner
           return CircularProgressIndicator();
         }
       },
