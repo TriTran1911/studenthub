@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/components/decoration.dart';
+import '../../connection/server.dart';
 import 'SinputProfile3.dart';
 import 'package:studenthub/components/controller.dart';
 
@@ -20,74 +21,48 @@ class StudentInputProfile2 extends StatefulWidget {
 
 class _StudentInputProfile2State extends State<StudentInputProfile2> {
   List<SkillSet> _selectedSkillSet = [];
+  List<Experience> experiences = [];
 
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
+  Future<void> postExperience() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? studentId = prefs.getInt('studentId');
 
-  Future<void> _selectStartDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _startDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _startDate) {
-      setState(() {
-        _startDate = picked;
-        _startDateController.text = DateFormat('dd-MM-yyyy').format(_startDate);
-      });
+    var data = {
+      "experience": experiences
+          .map((e) => {
+                "id": null,
+                "title": e.title,
+                "description": e.description,
+                "startMonth": e.startMonth,
+                "endMonth": e.endMonth,
+                "skillSets": e.skillSets!.map((e) => e.id.toString()).toList(),
+              })
+          .toList(),
+    };
+
+    try
+    {
+      await Connection.putRequest('/api/experience/updateByStudentId/$studentId', data);
+      print('Experience posted');
+    } catch (e) {
+      print(e);
     }
   }
-
-  Future<void> _selectEndDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _endDate.isBefore(_startDate) ? _startDate : _endDate,
-      firstDate: _startDate,
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _endDate) {
-      setState(() {
-        _endDate = picked;
-        _endDateController.text = DateFormat('dd-MM-yyyy').format(_endDate);
-      });
-    }
-  }
-
-  final List<Project> projects = [
-    Project(
-      title: 'Project 1',
-      subtitle: 'Subtitle 1',
-      description:
-          'It is the developer of a super-app for ride-hailing, food delivery, and digital payments services on mobile devices that operates in Singapore, Malaysia, ..',
-      selectedSkillSet: [
-        SkillSet(name: 'Java'),
-        SkillSet(name: 'Python'),
-        SkillSet(name: 'Dart')
-      ],
-    ),
-    Project(
-      title: 'Project 2',
-      subtitle: 'Subtitle 2',
-      description: 'Description of Project 2',
-      selectedSkillSet: [SkillSet(name: 'Dart')],
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const CustomAppBar(backWard: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 20.0),
               buildCenterText('Experiences', 20, FontWeight.bold),
@@ -99,153 +74,256 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
               const SizedBox(height: 16.0),
               addingProject(),
               const SizedBox(height: 16.0),
-              projectCards(),
-              const SizedBox(height: 16.0),
-              Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // postProfile();
-                    moveToPage(
-                        const StudentInputProfile3(), context);
-                  },
-                  style: buildButtonStyle(Colors.blue[400]!),
-                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
-                ),
+              for (var experience in experiences) ...[
+                buildProjectContainer(experience, context),
+                const SizedBox(height: 16.0),
               ],
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        // postExperience();
+                        moveToPage(const StudentInputProfile3(), context);
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Next', 16, FontWeight.bold, Colors.white)),
+                ],
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          moveToPage(
-            const StudentInputProfile3(),
-            context,
-          );
-        },
-        backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: buildText('Next', 16, FontWeight.bold),
-      ),
     );
   }
 
-  Widget projectCards() {
-    return Column(
-      children: List.generate(projects.length, (index) {
-        return Card(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-          color: Colors.blue[300],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  Container buildProjectContainer(Experience experience, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+          width: 1.0,
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildText(experience.title!, 20, FontWeight.bold),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  editRemoveButtons(context, experience),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outlined, color: Colors.red),
+                    onPressed: () {
+                      setState(() {
+                        experiences.remove(experience);
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-          child: ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildText(projects[index].title, 20, FontWeight.bold),
-                    buildText(projects[index].subtitle, 16, FontWeight.normal,
-                        Colors.grey[600]),
-                  ],
+          const SizedBox(height: 16.0),
+          buildText('${experience.startMonth!} - ${experience.endMonth!}', 16,
+              FontWeight.normal, Colors.grey[600]),
+          const SizedBox(height: 16.0),
+          buildText(
+              experience.description!, 16, FontWeight.bold, Colors.grey[600]),
+          const SizedBox(height: 16.0),
+          Wrap(
+            spacing: 8.0, // gap between adjacent chips
+            runSpacing: 4.0, // gap between lines
+            direction: Axis.horizontal, // main axis (rows or columns)
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                child: buildText('Skillset:', 20, FontWeight.bold),
+              ),
+              for (var skill in experience.skillSets!) ...[
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[100],
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: buildText(
+                      skill.name!, 20, FontWeight.normal, Colors.blueAccent),
                 ),
-                iconFunction(index),
               ],
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildText(projects[index].description, 16, FontWeight.bold),
-                const SizedBox(height: 16.0),
-                buildText('Skillset', 20, FontWeight.bold),
-                const SizedBox(height: 16.0),
-                showSkillSet(projects[index]),
-              ],
-            ),
+            ],
           ),
-        );
-      }),
-    );
-  }
-
-  Widget showSkillSet(Project project) {
-    return Container(
-      height: 90,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
-            children: project.selectedSkillSet
-                .map(
-                    (SkillSet skillSet) => buildSkillsetButton(skillSet, false))
-                .toList(),
-          ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget buildSkillset() {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(2.0),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-          child: Wrap(
-            spacing: 10.0,
-            runSpacing: 10.0,
-            children: widget.skillSetList
-                .map((SkillSet skillSet) => buildSkillsetButton(skillSet, true))
-                .toList(),
-          ),
-        ),
-      ),
-    );
+  IconButton editRemoveButtons(BuildContext context, Experience experience) {
+    return IconButton(
+        icon: const Icon(Icons.edit_outlined),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              TextEditingController titleController =
+                  TextEditingController(text: experience.title);
+              TextEditingController descriptionController =
+                  TextEditingController(text: experience.description);
+              TextEditingController startMonthController =
+                  TextEditingController(text: experience.startMonth);
+              TextEditingController endMonthController =
+                  TextEditingController(text: experience.endMonth);
+              _selectedSkillSet = List.from(experience.skillSets!);
+              return Dialog(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildCenterText(
+                          'Edit Project', 24, FontWeight.bold, Colors.blue),
+                      const SizedBox(height: 16.0),
+                      TextField(
+                        style: const TextStyle(fontSize: 18.0),
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                          labelStyle: TextStyle(fontSize: 18.0),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      buildText('Skillset', 20, FontWeight.bold),
+                      const SizedBox(height: 16.0),
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Wrap(
+                              spacing: 10.0,
+                              runSpacing: 10.0,
+                              children: widget.skillSetList
+                                  .map((SkillSet skillSet) =>
+                                      buildSkillsetButton(skillSet))
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              style: const TextStyle(fontSize: 18.0),
+                              controller: startMonthController,
+                              decoration: const InputDecoration(
+                                labelText: 'Start Date',
+                                labelStyle: TextStyle(fontSize: 18.0),
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Expanded(
+                            child: TextField(
+                              style: const TextStyle(fontSize: 18.0),
+                              controller: endMonthController,
+                              decoration: const InputDecoration(
+                                labelText: 'End Date',
+                                labelStyle: TextStyle(fontSize: 18.0),
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      TextField(
+                        style: const TextStyle(fontSize: 18.0),
+                        controller: descriptionController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          labelText: 'Description',
+                          labelStyle: TextStyle(fontSize: 18.0),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (titleController.text.isEmpty ||
+                              startMonthController.text.isEmpty ||
+                              endMonthController.text.isEmpty ||
+                              descriptionController.text.isEmpty ||
+                              _selectedSkillSet.isEmpty) {
+                            _showValidationError(
+                                context, 'You must fill all fields');
+                          } else {
+                            setState(() {
+                              experience.title = titleController.text;
+                              experience.startMonth = startMonthController.text;
+                              experience.endMonth = endMonthController.text;
+                              experience.description =
+                                  descriptionController.text;
+                              experience.skillSets =
+                                  List.from(_selectedSkillSet);
+                            });
+                            titleController.clear();
+                            startMonthController.clear();
+                            endMonthController.clear();
+                            descriptionController.clear();
+                            _selectedSkillSet.clear();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        style: buildButtonStyle(Colors.blue[400]!),
+                        child: buildText(
+                            'Edit', 16, FontWeight.bold, Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
-  Widget buildSkillsetButton(SkillSet skillSet, bool edit) {
+  Widget buildSkillsetButton(SkillSet skillSet) {
     bool isSelected = _selectedSkillSet.contains(skillSet);
     return TextButton(
-      onPressed: edit
-          ? () {
-              isSelected = !isSelected;
-              if (isSelected) {
-                _selectedSkillSet.add(skillSet);
-              } else {
-                _selectedSkillSet.remove(skillSet);
-              }
-            }
-          : null,
+      onPressed: () {
+        isSelected = !isSelected;
+        if (isSelected) {
+          _selectedSkillSet.add(skillSet);
+        } else {
+          _selectedSkillSet.remove(skillSet);
+        }
+      },
       style: ButtonStyle(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -254,7 +332,7 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
         ),
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
-            if (isSelected && edit) {
+            if (isSelected) {
               return Colors.grey[400]!;
             }
             return Colors.blue[400]!;
@@ -262,86 +340,7 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
         ),
         shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
       ),
-      child: Text(
-        skillSet.name!,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-
-  Row iconFunction(int index) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  // Create controllers for the text fields
-                  final titleController =
-                      TextEditingController(text: projects[index].title);
-                  final descriptionController =
-                      TextEditingController(text: projects[index].description);
-
-                  return Dialog(
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          buildText('Edit Project', 20, FontWeight.bold),
-                          const SizedBox(height: 16.0),
-                          buildTextField('Title', 1, 1),
-                          const SizedBox(height: 16.0),
-                          buildText('Skillset', 20, FontWeight.bold),
-                          const SizedBox(height: 16.0),
-                          buildSkillset(),
-                          const SizedBox(height: 16.0),
-                          datePicker(context),
-                          const SizedBox(height: 16.0),
-                          buildTextField('Description', 5, 2),
-                          const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Update the project
-                              setState(() {
-                                projects[index].title = titleController.text;
-                                projects[index].description =
-                                    descriptionController.text;
-                                projects[index].selectedSkillSet =
-                                    List.from(_selectedSkillSet);
-                              });
-
-                              // Close the dialog
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Edit'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            }),
-        IconButton(
-          icon: const Icon(Icons.delete_outlined),
-          onPressed: () {
-            setState(() {
-              projects.removeAt(index);
-            });
-          },
-        ),
-      ],
+      child: buildText(skillSet.name!, 16, FontWeight.normal, Colors.white),
     );
   }
 
@@ -359,46 +358,101 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
                 return Dialog(
                   child: Container(
                       padding: const EdgeInsets.all(16.0),
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          buildText('Add Project', 20, FontWeight.bold),
+                          buildCenterText(
+                              'Add Project', 24, FontWeight.bold, Colors.blue),
                           const SizedBox(height: 16.0),
                           buildTextField('Title', 1, 1),
                           const SizedBox(height: 16.0),
                           buildText('Skillset', 20, FontWeight.bold),
                           const SizedBox(height: 16.0),
-                          buildSkillset(),
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Wrap(
+                                  spacing: 10.0,
+                                  runSpacing: 10.0,
+                                  children: widget.skillSetList
+                                      .map((SkillSet skillSet) =>
+                                          buildSkillsetButton(skillSet))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 16.0),
-                          // start Date and end Date, start date cannot be after end date
-                          datePicker(context),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: buildTextField('Start date', 1, 3),
+                              ),
+                              const SizedBox(width: 16.0),
+                              Expanded(
+                                child: buildTextField('End date', 1, 4),
+                              ),
+                            ],
+                          ),
                           const SizedBox(height: 16.0),
                           buildTextField('Description', 5, 2),
                           const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              String subtitle =
-                                  '${DateFormat('dd-MM').format(_startDate)} - ${DateFormat('dd-MM').format(_endDate)}';
-                              int monthsDifference =
-                                  _endDate.month - _startDate.month;
-                              Project newProject = Project(
-                                title: _titleController.text,
-                                subtitle:
-                                    '$subtitle ($monthsDifference months)',
-                                description: _descriptionController.text,
-                                selectedSkillSet: List.from(_selectedSkillSet),
-                              );
-                              setState(() {
-                                projects.add(newProject);
-                              });
-
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Add'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  // check all fields are filled and check if the start date is before the end date
+                                  // and they are mm-YYYY format
+                                  if (_titleController.text.isEmpty ||
+                                      _startDateController.text.isEmpty ||
+                                      _endDateController.text.isEmpty ||
+                                      _descriptionController.text.isEmpty ||
+                                      _selectedSkillSet.isEmpty) {
+                                    _showValidationError(
+                                        context, 'You must fill all fields');
+                                  } else {
+                                    setState(() {
+                                      experiences.add(Experience(
+                                        title: _titleController.text,
+                                        startMonth: _startDateController.text,
+                                        endMonth: _endDateController.text,
+                                        description:
+                                            _descriptionController.text,
+                                        skillSets: List.from(_selectedSkillSet),
+                                      ));
+                                    });
+                                    _titleController.clear();
+                                    _startDateController.clear();
+                                    _endDateController.clear();
+                                    _descriptionController.clear();
+                                    _selectedSkillSet.clear();
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                style: buildButtonStyle(Colors.blue[400]!),
+                                child: buildText(
+                                    'Add', 16, FontWeight.bold, Colors.white),
+                              ),
+                            ],
                           ),
                         ],
                       )),
@@ -411,64 +465,49 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
     );
   }
 
-  Row datePicker(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: () => _selectStartDate(context),
-            child: IgnorePointer(
-              child: TextField(
-                controller: _startDateController,
-                decoration: const InputDecoration(
-                  labelText: 'Start Date',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
+  void _showValidationError(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.red[900],
+          title: const Icon(
+            Icons.error,
+            size: 50.0,
+            color: Colors.red,
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: InkWell(
-            onTap: () => _selectEndDate(context),
-            child: IgnorePointer(
-              child: TextField(
-                controller: _endDateController,
-                decoration: const InputDecoration(
-                  labelText: 'End Date',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+          content: Text(message, style: const TextStyle(fontSize: 24.0)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: buildText('OK', 16, FontWeight.bold, Colors.red),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
   TextField buildTextField(String label, int maxLines, int type) {
     return TextField(
-      controller: type == 1 ? _titleController : _descriptionController,
+      style: const TextStyle(fontSize: 18.0),
+      controller: type == 1
+          ? _titleController
+          : type == 2
+              ? _descriptionController
+              : type == 3
+                  ? _startDateController
+                  : _endDateController,
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
+        // set size of label text
+        labelStyle: const TextStyle(fontSize: 18.0),
         border: const OutlineInputBorder(),
       ),
     );
   }
-}
-
-class Project {
-  String title;
-  final String subtitle;
-  String description;
-  List<SkillSet> selectedSkillSet;
-
-  Project({
-    required this.title,
-    required this.subtitle,
-    required this.description,
-    this.selectedSkillSet = const [],
-  });
 }

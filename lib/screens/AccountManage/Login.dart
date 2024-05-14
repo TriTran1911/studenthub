@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,12 +55,12 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () {
-                moveToPage(ForgotPasswordPage(), context);
+                moveToPage(const ForgotPasswordPage(), context);
               },
               child: Text(
                 "login_password1".tr(),
                 textAlign: TextAlign.end,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -198,7 +197,7 @@ class _LoginState extends State<Login> {
           modelController.user.id =
               authorizationDecoded['result']['company']['userId'];
         } else {
-          moveToPage(CWithoutProfile(), context);
+          moveToPage(const CWithoutProfile(), context);
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(

@@ -64,7 +64,12 @@ class _VideoCallPageState extends State<VideoCallPage> {
             ),
           );
         } else {
-          return CircularProgressIndicator();
+          // The Future is still running, show a loading spinner
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          );
         }
       },
     );

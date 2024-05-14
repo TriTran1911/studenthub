@@ -157,8 +157,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(
-              backgroundColor: Colors.blue,
-              color: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           );
         } else {

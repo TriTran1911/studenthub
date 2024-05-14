@@ -7,6 +7,7 @@ import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'dart:convert';
+import '../../components/loading.dart';
 import '../../connection/server.dart';
 import 'SinputProfile2.dart';
 import 'package:studenthub/components/decoration.dart';
@@ -31,14 +32,14 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
 
   @override
   void initState() {
-    _fectchData();
     super.initState();
+    _fectchData();
   }
 
-  void _fectchData() async {
+  Future<void> _fectchData() async {
     // show loading dialog until the data is fetched
-    _TechStackList = await getTechStack();
     _SkillSetList = await getSkillSet();
+    _TechStackList = await getTechStack();
     setState(() {});
   }
 
@@ -74,11 +75,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     } else {
       throw Exception('Failed to load skillset');
     }
-  }
-
-  Future<void> fetchData() async {
-    await getTechStack();
-    await getSkillSet();
   }
 
   void postProfile() async {
@@ -139,48 +135,49 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const CustomAppBar(backWard: true),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const SizedBox(height: 32),
-            buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
-            const SizedBox(height: 16),
-            buildText("sinputprofile_text5".tr(), 16, FontWeight.normal),
-            const SizedBox(height: 16),
-            buildText('Techstack', 20, FontWeight.bold),
-            const SizedBox(height: 16),
-            buildTechstackDropdownMenu(),
-            const SizedBox(height: 16),
-            buildText('Skillset', 20, FontWeight.bold),
-            const SizedBox(height: 16),
-            buildSkillset(),
-            const SizedBox(height: 16),
-            buildLanguage(),
-            const SizedBox(height: 16),
-            buildEducation(),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    postProfile();
-                    moveToPage(
-                        StudentInputProfile2(skillSetList: _SkillSetList),
-                        context);
-                  },
-                  style: buildButtonStyle(Colors.blue[400]!),
-                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SizedBox(height: 32),
+                buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
+                const SizedBox(height: 16),
+                buildText("sinputprofile_text5".tr(), 16, FontWeight.normal),
+                const SizedBox(height: 16),
+                buildText('Techstack', 20, FontWeight.bold),
+                const SizedBox(height: 16),
+                buildTechstackDropdownMenu(),
+                const SizedBox(height: 16),
+                buildText('Skillset', 20, FontWeight.bold),
+                const SizedBox(height: 16),
+                buildSkillset(),
+                const SizedBox(height: 16),
+                buildLanguage(),
+                const SizedBox(height: 16),
+                buildEducation(),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        postProfile();
+                        moveToPage(
+                            StudentInputProfile2(skillSetList: _SkillSetList),
+                            context);
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Next', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        )),
-      ),
+          )),
     );
   }
 

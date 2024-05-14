@@ -268,7 +268,9 @@ class Student {
           ? TechStack.fromJson(json['techStack'])
           : null,
       skillSets: json['skillSets'] != null
-          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
+          ? (json['skillSets'] as List)
+              .map((e) => SkillSet.fromJson(e))
+              .toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)
@@ -287,7 +289,9 @@ class Student {
           ? TechStack.fromJson(json['techStack'])
           : null,
       skillSets: json['skillSets'] != null
-          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
+          ? (json['skillSets'] as List)
+              .map((e) => SkillSet.fromJson(e))
+              .toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)
@@ -355,6 +359,14 @@ class SkillSet {
       deletedAt: json['deletedAt'],
       name: json['name'],
     );
+  }
+
+  static List<SkillSet> buildListSkillSet(List<dynamic> list) {
+    List<SkillSet> skillSetList = [];
+    for (var skillSet in list) {
+      skillSetList.add(SkillSet.fromJson(skillSet));
+    }
+    return skillSetList;
   }
 }
 
@@ -517,7 +529,7 @@ class Experience {
   String? startMonth;
   String? endMonth;
   String? description;
-  List<SkillSet>? skillSet;
+  List<SkillSet>? skillSets;
 
   Experience(
       {this.id,
@@ -529,7 +541,7 @@ class Experience {
       this.startMonth,
       this.endMonth,
       this.description,
-      this.skillSet});
+      this.skillSets});
 
   factory Experience.fromJson(Map<String, dynamic> json) {
     return Experience(
@@ -542,8 +554,10 @@ class Experience {
       startMonth: json['startMonth'],
       endMonth: json['endMonth'],
       description: json['description'],
-      skillSet: json['skillSet'] != null
-          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
+      skillSets: json['skillSets'] != null
+          ? (json['skillSest'] as List)
+              .map((e) => SkillSet.fromJson(e))
+              .toList()
           : null,
     );
   }
@@ -553,8 +567,7 @@ Widget loadingDialog() {
   return const AlertDialog(
     content: Center(
       child: CircularProgressIndicator(
-        backgroundColor: Colors.blue,
-        color: Colors.white,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
       ),
     ),
   );
