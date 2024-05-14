@@ -97,7 +97,10 @@
     "project_text12": "proposals",
     "project_text13": "student",
     "project_text14": "students",
-    "project_text15": "Apply Filter",
+    "project_text15": "Apply",
+    "project_text16": "Cancel",
+    "project_text17": "Please select at least one filter",
+    "project_text18": "No projects found",
 
     "modelControl_text1": "Just now",
     "modelControl_text2": "minute ago",

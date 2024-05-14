@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/HomePage/tabs.dart';
 import '/components/theme_provider.dart'; // Import ThemeProvider
 import '/screens/action/account.dart';
 import '/components/controller.dart';
@@ -134,7 +135,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       onPressed: () {
                         appBarIcon.isSelected = false;
-                        Navigator.pop(context);
+                        Navigator.popUntil(
+                          context,
+                          ModalRoute.withName(Navigator.defaultRouteName),
+                        );
+                        moveToPage(const TabsPage(index: 0), context);
                       },
                     ),
             ],

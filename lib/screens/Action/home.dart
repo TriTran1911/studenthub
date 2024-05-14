@@ -4,9 +4,10 @@ import 'package:liquid_swipe/liquid_swipe.dart';
 import '/screens/AccountManage/Login.dart';
 import '/components/controller.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -14,13 +15,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentPage = 0;
 
-  final Gradient gradient1 = LinearGradient(
+  final Gradient gradient1 = const LinearGradient(
     colors: [Colors.blueAccent, Colors.lightBlueAccent],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  final Gradient gradient2 = LinearGradient(
+  final Gradient gradient2 = const LinearGradient(
     colors: [Colors.purpleAccent, Colors.deepPurpleAccent],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -48,8 +49,8 @@ class _HomeState extends State<Home> {
               });
             },
           ),
-          Positioned(
-            top: 70,
+          const Positioned(
+            top: 70, 
             left: 16,
             child: Row(
               children: [
@@ -92,13 +93,13 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             _buildTextColumn(
               title: tr('home_title1'),
               subtitle: tr('home_title2'),
               textColor: Colors.white,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               child: Lottie.asset(
                 lottieAsset,
@@ -107,18 +108,18 @@ class _HomeState extends State<Home> {
                 reverse: true,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildElevatedButton(
               buttonText,
               () {
                 moveToPage(Login(), context);
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               swipeText,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 16.0,
               ),
@@ -145,7 +146,7 @@ class _HomeState extends State<Home> {
             color: textColor,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           subtitle,
           textAlign: TextAlign.center,
@@ -171,7 +172,7 @@ class _HomeState extends State<Home> {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16.0,
         ),

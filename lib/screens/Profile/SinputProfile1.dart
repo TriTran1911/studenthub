@@ -7,7 +7,6 @@ import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import '../../components/appbar.dart';
 import 'dart:convert';
-import '../../components/loading.dart';
 import '../../connection/server.dart';
 import 'SinputProfile2.dart';
 import 'package:studenthub/components/decoration.dart';

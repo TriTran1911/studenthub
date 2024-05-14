@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/controller.dart';
 import '../../../connection/server.dart';
 import 'Function/companyProjectDetail.dart';
@@ -443,105 +444,108 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildText('Edit project', 20, FontWeight.bold, Colors.blue),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: titleController,
-                  decoration: buildDecoration('Title'),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: descriptionController,
-                  decoration: buildDecoration('Description'),
-                  maxLines: 5,
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  children: <Widget>[
-                    RadioListTile<int>(
-                      title: Text(tr("project_text2")),
-                      value: 0,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: Text(tr("project_text3")),
-                      value: 1,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: Text(tr("project_text4")),
-                      value: 2,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: Text(tr("project_text5")),
-                      value: 3,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: studentController,
-                  decoration: buildDecoration('Number of students'),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: buildButtonStyle(Colors.grey[400]!),
-                      child: buildText(
-                          'Cancel', 16, FontWeight.bold, Colors.white),
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          project.title = titleController.text;
-                          project.description = descriptionController.text;
-                          project.projectScopeFlag = durationController;
-                          project.numberOfStudents =
-                              int.parse(studentController.text);
-                          project.typeFlag = typeFlag;
-                          editProject(project);
-                        });
-                        Navigator.of(context).pop();
-                      },
-                      style: buildButtonStyle(Colors.blue[400]!),
-                      child:
-                          buildText('Save', 16, FontWeight.bold, Colors.white),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setStateDialog) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildText('Edit project', 20, FontWeight.bold, Colors.blue),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: titleController,
+                    decoration: buildDecoration('Title'),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: buildDecoration('Description'),
+                    maxLines: 5,
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: <Widget>[
+                      RadioListTile<int>(
+                        title: Text(tr("project_text2")),
+                        value: 0,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text3")),
+                        value: 1,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text4")),
+                        value: 2,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text5")),
+                        value: 3,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: studentController,
+                    decoration: buildDecoration('Number of students'),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: buildButtonStyle(Colors.grey[400]!),
+                        child: buildText(
+                            'Cancel', 16, FontWeight.bold, Colors.white),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            project.title = titleController.text;
+                            project.description = descriptionController.text;
+                            project.projectScopeFlag = durationController;
+                            project.numberOfStudents =
+                                int.parse(studentController.text);
+                            project.typeFlag = typeFlag;
+                            editProject(project);
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        style: buildButtonStyle(Colors.blue[400]!),
+                        child: buildText(
+                            'Save', 16, FontWeight.bold, Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
           ),
         );
       },
