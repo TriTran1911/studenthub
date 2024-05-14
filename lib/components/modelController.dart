@@ -235,7 +235,7 @@ class Student {
   String? fullname;
   int? userId;
   TechStack? techStack;
-  List<SkillSet>? skillSet;
+  List<SkillSet>? skillSets;
   List<dynamic>? proposals;
   List<Education>? educations;
   List<Language>? languages;
@@ -248,7 +248,7 @@ class Student {
       this.deletedAt,
       this.techStack,
       this.email,
-      this.skillSet,
+      this.skillSets,
       this.fullname,
       this.userId,
       this.proposals,
@@ -267,8 +267,8 @@ class Student {
       techStack: json['techStack'] != null
           ? TechStack.fromJson(json['techStack'])
           : null,
-      skillSet: json['skillSet'] != null
-          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
+      skillSets: json['skillSets'] != null
+          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)
@@ -286,8 +286,8 @@ class Student {
       techStack: json['techStack'] != null
           ? TechStack.fromJson(json['techStack'])
           : null,
-      skillSet: json['skillSet'] != null
-          ? (json['skillSet'] as List).map((e) => SkillSet.fromJson(e)).toList()
+      skillSets: json['skillSets'] != null
+          ? (json['skillSets'] as List).map((e) => SkillSet.fromJson(e)).toList()
           : null,
       educations: json['educations'] != null
           ? (json['educations'] as List)

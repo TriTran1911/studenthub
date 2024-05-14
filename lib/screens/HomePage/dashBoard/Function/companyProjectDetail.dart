@@ -233,18 +233,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                             )
                         ],
 
-                        if (student.languages!.isNotEmpty) ...[
-                          const SizedBox(height: 16),
-                          buildText(
-                              'Languages:', 20, FontWeight.bold, Colors.blue),
-                          for (var lang in student.languages!)
-                            buildText(
-                              '${lang.languageName} - ${lang.level}',
-                              18,
-                              FontWeight.normal,
-                            )
-                        ],
-
                         const SizedBox(height: 16),
                         buildText(
                             'Cover Letter:', 20, FontWeight.bold, Colors.blue),
