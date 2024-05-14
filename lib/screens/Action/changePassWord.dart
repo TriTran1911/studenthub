@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import 'package:studenthub/connection/server.dart'; // May be needed if using REST API
 
 class ChangePasswordPage extends StatefulWidget {
@@ -58,13 +60,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   obscureText: _obscureTextCurrent,
                   decoration: InputDecoration(
                     labelText: 'Current Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureTextCurrent
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                    suffixIcon: Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => IconButton(
+                        icon: Icon(
+                          _obscureTextCurrent
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: themeProvider.getIconColor(context),
+                        ),
+                        onPressed: _togglePasswordVisibilityCurrent,
                       ),
-                      onPressed: _togglePasswordVisibilityCurrent,
                     ),
                   ),
                   validator: (value) {
@@ -79,13 +84,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   obscureText: _obscureTextNew,
                   decoration: InputDecoration(
                     labelText: 'New Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureTextNew
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                    suffixIcon: Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => IconButton(
+                        icon: Icon(
+                          _obscureTextNew
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: themeProvider.getIconColor(context),
+                        ),
+                        onPressed: _togglePasswordVisibilityNew,
                       ),
-                      onPressed: _togglePasswordVisibilityNew,
                     ),
                   ),
                 ),
@@ -94,13 +102,16 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   obscureText: _obscureTextConfirm,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureTextConfirm
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                    suffixIcon: Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => IconButton(
+                        icon: Icon(
+                          _obscureTextConfirm
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: themeProvider.getIconColor(context),
+                        ),
+                        onPressed: _togglePasswordVisibilityConfirm,
                       ),
-                      onPressed: _togglePasswordVisibilityConfirm,
                     ),
                   ),
                 ),

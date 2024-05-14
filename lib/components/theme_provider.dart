@@ -18,6 +18,8 @@ class ThemeProvider extends ChangeNotifier {
         color: Colors.grey, // Màu của hintText trong theme sáng
       ),
     ),
+    iconTheme:
+        IconThemeData(color: Colors.black), // Thay đổi màu của biểu tượng
   );
 
   ThemeData _darkTheme = ThemeData(
@@ -33,6 +35,8 @@ class ThemeProvider extends ChangeNotifier {
             255, 245, 242, 242), // Màu của hintText trong theme tối
       ),
     ),
+    iconTheme:
+        IconThemeData(color: Colors.white), // Thay đổi màu của biểu tượng
   );
 
   ThemeType _themeType = ThemeType.Light;
@@ -49,5 +53,10 @@ class ThemeProvider extends ChangeNotifier {
     _themeType =
         _themeType == ThemeType.Light ? ThemeType.Dark : ThemeType.Light;
     notifyListeners();
+  }
+
+  Color getIconColor(BuildContext context) {
+    final ThemeData currentTheme = Theme.of(context);
+    return currentTheme.iconTheme.color ?? Colors.black;
   }
 }

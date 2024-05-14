@@ -5,7 +5,7 @@
     "appbar_text4": "Có",
     
     "home_button1": "Công ty",
-    "home_button2":"Học sinh",
+    "home_button2":"Sinh viên",
 
     "home_title1": "Xây dựng sản phẩm với nhân lực chất lượng",
     "home_title2": "StudentHub là thị trường để kết nối sinh viên có tay nghề cao và công ty trong một dự án trong thực tế",
@@ -73,5 +73,10 @@
 
     "account_text1": "Hồ sơ",
     "account_text2": "Cài đặt",
-    "account_text3": "Đăng xuất"
+    "account_text3": "Đăng xuất",
+
+    "tab_text1":"Projects",
+    "tab_text2":"Dashboard",
+    "tab_text3":"Message",
+    "tab_text4":"Alerts"
 }

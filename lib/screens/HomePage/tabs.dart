@@ -27,7 +27,10 @@ class _TabsPageState extends State<TabsPage> {
   }
 
   final List<TabInfo> _tabs = [
-    TabInfo(page: ProjectsPage(role: modelController.user.roles[0]), label: 'Projects', icon: Icons.list_alt),
+    TabInfo(
+        page: ProjectsPage(role: modelController.user.roles[0]),
+        label: 'Projects',
+        icon: Icons.list_alt),
     TabInfo(
         page: modelController.user.roles[0] == 1
             ? const CompanyDashboardPage()

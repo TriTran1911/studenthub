@@ -74,6 +74,10 @@
 
     "account_text1": "Profiles",
     "account_text2": "Settings",
-    "account_text3": "Logout"
+    "account_text3": "Logout",
 
+    "tab_text1":"Projects",
+    "tab_text2":"Dashboard",
+    "tab_text3":"Message",
+    "tab_text4":"Alerts"
 }

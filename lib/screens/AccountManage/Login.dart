@@ -4,8 +4,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/loading.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
@@ -23,7 +25,6 @@ class _LoginState extends State<Login> {
   bool _obscureText = true;
 
   final TextEditingController _usernameController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -99,28 +100,34 @@ class _LoginState extends State<Login> {
     );
   }
 
-  TextField _buildTextField(TextEditingController controller, String label,
+  Widget _buildTextField(TextEditingController controller, String label,
       {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        suffixIcon: label.toLowerCase() == "login_password".tr()
-            ? IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-              )
-            : null,
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, _) {
+        return TextField(
+          controller: controller,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: Theme.of(context).textTheme.bodyText1,
+            border: const OutlineInputBorder(),
+            suffixIcon:
+                label.toLowerCase() == "login_password".tr().toLowerCase()
+                    ? IconButton(
+                        icon: Icon(
+                          obscureText ? Icons.visibility_off : Icons.visibility,
+                          color: themeProvider.getIconColor(context),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                      )
+                    : null,
+          ),
+        );
+      },
     );
   }
 

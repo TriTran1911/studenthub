@@ -17,6 +17,11 @@ class Home extends StatelessWidget {
   }
 
   Padding _buildBody(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final lottieAsset = isDarkMode
+        ? 'assets/animation/Lottie_black.json'
+        : 'assets/animation/Lottie_white.json';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -28,7 +33,7 @@ class Home extends StatelessWidget {
           Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Lottie.asset(
-              'assets/animation/home.json',
+              lottieAsset,
               height: 300,
               repeat: true,
               reverse: true,
