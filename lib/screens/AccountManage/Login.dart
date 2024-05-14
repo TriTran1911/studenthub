@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/loading.dart';
+import 'package:studenthub/screens/Profile/CprofileInput.dart';
 import 'signUp1.dart';
 import '../../components/appbar.dart';
 import '/screens/HomePage/tabs.dart';
@@ -107,7 +108,7 @@ class _LoginState extends State<Login> {
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        suffixIcon: label.toLowerCase() == "login_password".tr()
+        suffixIcon: label == "login_password".tr()
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
@@ -181,12 +182,16 @@ class _LoginState extends State<Login> {
 
         Navigator.of(context).pop();
         print('Sign in successful');
+        prefs.setInt('companyId', 0);
+        prefs.setInt('studentId', 0);
 
         if (authorizationDecoded['result']['company'] != null) {
           prefs.setInt(
               'companyId', authorizationDecoded['result']['company']['id']);
           modelController.user.id =
               authorizationDecoded['result']['company']['userId'];
+        } else {
+          moveToPage(CWithoutProfile(), context);
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(
@@ -196,6 +201,7 @@ class _LoginState extends State<Login> {
         }
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
+        print('12344');
         modelController.user.fullname =
             authorizationDecoded['result']['fullname'];
         print("login_text3".tr());

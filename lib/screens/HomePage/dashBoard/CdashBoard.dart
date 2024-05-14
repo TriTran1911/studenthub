@@ -32,6 +32,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
   Future<List<Project>> getProjects() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? companyId = prefs.getInt('companyId');
+    print('Company ID: $companyId');
 
     try {
       var response =

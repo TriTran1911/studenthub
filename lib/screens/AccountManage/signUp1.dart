@@ -39,6 +39,7 @@ class _SignUpState1 extends State<SignUp1> {
           () {
             setState(() {
               _isCompany = !_isCompany;
+              _isStudent = false;
             });
           },
         ),
@@ -50,6 +51,7 @@ class _SignUpState1 extends State<SignUp1> {
           () {
             setState(() {
               _isStudent = !_isStudent;
+              _isCompany = false;
             });
           },
         ),
@@ -148,10 +150,10 @@ class _SignUpState1 extends State<SignUp1> {
     modelController.user.roles = [];
     if (_isCompany || _isStudent) {
       if (_isCompany) {
-        modelController.user.roles.add(1);
+        modelController.user.roles[0] = 1;
       }
       if (_isStudent) {
-        modelController.user.roles.add(0);
+        modelController.user.roles[0] = 0;
       }
       moveToPage(SignUp2(), context);
     } else {

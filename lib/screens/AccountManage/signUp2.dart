@@ -179,6 +179,9 @@ class _Signup2State extends State<SignUp2> {
         ),
         GestureDetector(
           onTap: () {
+            modelController.user.roles[0] == 1
+                ? modelController.user.roles[0] = 0
+                : modelController.user.roles[0] = 1;
             moveToPage(SignUp2(), context);
           },
           child: Text(
@@ -207,7 +210,7 @@ class _Signup2State extends State<SignUp2> {
       'fullname': _userNameController.text,
       'email': _emailController.text,
       'password': _passwordController.text,
-      'role': modelController.user.roles[0].toString(),
+      'role': modelController.user.roles[0],
     };
 
     String url = '/api/auth/sign-up';
@@ -218,7 +221,6 @@ class _Signup2State extends State<SignUp2> {
       print(responseDecoded);
       if (responseDecoded['result'] != null) {
         print("signup_noti1".tr());
-        print(modelController.user.roles[0]);
         moveToPage(Login(), context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
