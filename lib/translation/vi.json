@@ -11,6 +11,8 @@
     "home_title2": "StudentHub là thị trường để kết nối sinh viên có tay nghề cao và công ty trong một dự án trong thực tế",
     "home_title3": "Build your product with high-skilled student",
     "home_title4": "Build your product with high-skilled student",
+    "home_title5": "Vuốt để nhập với tư cách sinh viên" ,
+    "home_title6": "Vuốt để nhập với tư cách công ty" ,
     
     "login_title1": "Đăng nhập StudentHub",
     "login_password": "Mật khẩu",
@@ -75,8 +77,8 @@
     "account_text2": "Cài đặt",
     "account_text3": "Đăng xuất",
 
-    "tab_text1":"Projects",
-    "tab_text2":"Dashboard",
-    "tab_text3":"Message",
-    "tab_text4":"Alerts"
+    "tab_text1": "Dự án",
+    "tab_text2": "Trang chính",
+    "tab_text3": "Tin nhắn",
+    "tab_text4": "Thông báo"
 }

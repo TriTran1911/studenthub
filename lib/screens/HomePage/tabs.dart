@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'dashBoard/SdashBoard.dart';
 import 'dashBoard/CDashBoard.dart';
@@ -29,16 +30,17 @@ class _TabsPageState extends State<TabsPage> {
   final List<TabInfo> _tabs = [
     TabInfo(
         page: ProjectsPage(role: modelController.user.roles[0]),
-        label: 'Projects',
+        label: tr('tab_text1'),
         icon: Icons.list_alt),
     TabInfo(
         page: modelController.user.roles[0] == 1
             ? const CompanyDashboardPage()
             : const StudentDashboardPage(),
-        label: 'Dashboard',
+        label: tr('tab_text2'),
         icon: Icons.dashboard),
-    TabInfo(page: MessagePage(), label: 'Message', icon: Icons.chat),
-    TabInfo(page: AlertsPage(), label: 'Alerts', icon: Icons.notifications),
+    TabInfo(page: MessagePage(), label: tr('tab_text3'), icon: Icons.chat),
+    TabInfo(
+        page: AlertsPage(), label: tr('tab_text4'), icon: Icons.notifications),
   ];
 
   void _onItemTapped(int index) {
