@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/components/appbar.dart';
@@ -87,12 +88,12 @@ class _ProjectPost4State extends State<ProjectPost4> {
                   _Text('Project scope', 16),
                   Text(
                     widget.selectedDuration == 0
-                        ? 'Less than 1 month'
+                        ? tr("project_text2")
                         : widget.selectedDuration == 1
-                            ? '1 to 3 months'
+                            ? tr("project_text3")
                             : widget.selectedDuration == 2
-                                ? '3 to 6 months'
-                                : 'More than 6 months',
+                                ? tr("project_text4")
+                                : tr("project_text5"),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],
@@ -120,7 +121,8 @@ class _ProjectPost4State extends State<ProjectPost4> {
           Container(
             alignment: Alignment.centerRight,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               decoration: BoxDecoration(
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(20.0),

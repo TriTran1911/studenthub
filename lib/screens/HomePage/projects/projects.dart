@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/decoration.dart';
@@ -23,6 +24,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
   List<String> filteredNames = [];
   List<Project> allProjects = [];
   List<Project> projectList = [];
+
+  int? selectedScopeFlag;
+  int? selectedStudentCount;
 
   @override
   void initState() {
@@ -70,8 +74,31 @@ class _ProjectsPageState extends State<ProjectsPage> {
     });
   }
 
+  void _applyFilters() {
+    setState(() {
+      projectList = allProjects.where((project) {
+        bool matchesScope = selectedScopeFlag == null ||
+            project.projectScopeFlag == selectedScopeFlag;
+        bool matchesStudentCount;
+        if (selectedStudentCount == null) {
+          matchesStudentCount = true;
+        } else if (selectedStudentCount == 0) {
+          matchesStudentCount = project.numberOfStudents! < 10;
+        } else if (selectedStudentCount == 1) {
+          matchesStudentCount = project.numberOfStudents! >= 10 &&
+              project.numberOfStudents! <= 20;
+        } else {
+          matchesStudentCount = project.numberOfStudents! > 20;
+        }
+        return matchesScope && matchesStudentCount;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,8 +111,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: 'Search projects...',
-                        prefixIcon: const Icon(Icons.search),
+                        hintText: tr("project_text1"),
+                        prefixIcon: IconTheme(
+                          data: IconThemeData(color: iconColor),
+                          child: const Icon(Icons.search),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -103,7 +133,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             surfaceTintColor: Colors.brown,
-                            title: const Text('Filter Projects',
+                            title: Text(tr("project_text6"),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
@@ -112,12 +142,12 @@ class _ProjectsPageState extends State<ProjectsPage> {
                               children: [
                                 Card(
                                   child: ListTile(
-                                    title: const Text('All Projects'),
+                                    title: Text(tr("project_text7")),
                                     onTap: () {
                                       setState(() {
-                                        projectList = allProjects;
+                                        selectedScopeFlag = null;
+                                        selectedStudentCount = null;
                                       });
-                                      Navigator.pop(context);
                                     },
                                   ),
                                 ),
@@ -125,56 +155,40 @@ class _ProjectsPageState extends State<ProjectsPage> {
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        title: const Text('Less than 1 month'),
+                                        title: Text(tr("project_text2")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.projectScopeFlag ==
-                                                    0)
-                                                .toList();
+                                            selectedScopeFlag = 0;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedScopeFlag == 0,
                                       ),
                                       ListTile(
-                                        title: const Text('1 to 3 months'),
+                                        title: Text(tr("project_text3")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.projectScopeFlag ==
-                                                    1)
-                                                .toList();
+                                            selectedScopeFlag = 1;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedScopeFlag == 1,
                                       ),
                                       ListTile(
-                                        title: const Text('3 to 6 months'),
+                                        title: Text(tr("project_text4")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.projectScopeFlag ==
-                                                    2)
-                                                .toList();
+                                            selectedScopeFlag = 2;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedScopeFlag == 2,
                                       ),
                                       ListTile(
-                                        title: const Text('More than 6 months'),
+                                        title: Text(tr("project_text5")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.projectScopeFlag ==
-                                                    3)
-                                                .toList();
+                                            selectedScopeFlag = 3;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedScopeFlag == 3,
                                       ),
                                     ],
                                   ),
@@ -183,50 +197,42 @@ class _ProjectsPageState extends State<ProjectsPage> {
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        title:
-                                            const Text('Less than 10 students'),
+                                        title: Text(tr("project_text8")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.numberOfStudents! <
-                                                    10)
-                                                .toList();
+                                            selectedStudentCount = 0;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedStudentCount == 0,
                                       ),
                                       ListTile(
-                                        title: const Text('10 to 20 students'),
+                                        title: Text(tr("project_text9")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.numberOfStudents! >=
-                                                        10 &&
-                                                    project.numberOfStudents! <=
-                                                        20)
-                                                .toList();
+                                            selectedStudentCount = 1;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedStudentCount == 1,
                                       ),
                                       ListTile(
-                                        title:
-                                            const Text('More than 20 students'),
+                                        title: Text(tr("project_text10")),
                                         onTap: () {
                                           setState(() {
-                                            projectList = allProjects
-                                                .where((project) =>
-                                                    project.numberOfStudents! >
-                                                    20)
-                                                .toList();
+                                            selectedStudentCount = 2;
                                           });
-                                          Navigator.pop(context);
                                         },
+                                        selected: selectedStudentCount == 2,
                                       ),
                                     ],
                                   ),
+                                ),
+                                SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _applyFilters();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(tr("project_text15")),
                                 ),
                               ],
                             ),
@@ -347,12 +353,12 @@ class _ProjectsPageState extends State<ProjectsPage> {
                         ),
                         buildText(
                             pro.projectScopeFlag == 0
-                                ? 'Less than 1 month'
+                                ? tr("project_text2")
                                 : pro.projectScopeFlag == 1
-                                    ? '1 to 3 months'
+                                    ? tr("project_text3")
                                     : pro.projectScopeFlag == 2
-                                        ? '3 to 6 months'
-                                        : 'More than 6 months',
+                                        ? tr("project_text4")
+                                        : tr("project_text5"),
                             14,
                             FontWeight.normal,
                             Colors.black),
@@ -367,9 +373,12 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           color: Colors.blue,
                         ),
                         buildText(
-                            pro.numberOfStudents == 1
-                                ? '${pro.numberOfStudents} student'
-                                : '${pro.numberOfStudents} students',
+                            pro.numberOfStudents == 1 ||
+                                    pro.numberOfStudents == 0
+                                ? '${pro.numberOfStudents} ' +
+                                    'project_text13'.tr()
+                                : '${pro.numberOfStudents} ' +
+                                    'project_text14'.tr(),
                             14,
                             FontWeight.normal,
                             Colors.black),
@@ -382,9 +391,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           color: Colors.blue,
                         ),
                         buildText(
-                            pro.countProposals == 1
-                                ? '${pro.countProposals.toString()} proposal'
-                                : '${pro.countProposals.toString()} proposals',
+                            pro.countProposals == 1 || pro.countProposals == 0
+                                ? '${pro.countProposals.toString()} ' +
+                                    'project_text11'.tr()
+                                : '${pro.countProposals.toString()} ' +
+                                    'project_text12'.tr(),
                             14,
                             FontWeight.normal,
                             Colors.black),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
@@ -96,8 +97,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        moveToPage(
-                            CoverLetterPage(project: project), context);
+                        moveToPage(CoverLetterPage(project: project), context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -160,12 +160,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                 buildText('Project Scope:', 18, FontWeight.bold, Colors.black),
                 buildText(
                     project.projectScopeFlag == 0
-                        ? 'Less than 1 month'
+                        ? tr("project_text2")
                         : project.projectScopeFlag == 1
-                            ? '1 to 3 months'
+                            ? tr("project_text3")
                             : project.projectScopeFlag == 2
-                                ? '3 to 6 months'
-                                : 'More than 6 months',
+                                ? tr("project_text4")
+                                : tr("project_text5"),
                     16,
                     FontWeight.normal,
                     Colors.black),

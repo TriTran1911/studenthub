@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/chatController.dart';
 
@@ -595,38 +596,38 @@ String timeDif(DateTime? createdAt) {
   final Duration difference = DateTime.now().difference(createdAt!);
 
   if (difference.inSeconds < 60) {
-    return 'Just now';
+    return tr('modelControl_text1');
   } else if (difference.inMinutes < 60) {
     if (difference.inMinutes == 1) {
-      return '${difference.inMinutes} minute ago';
+      return '${difference.inMinutes} ' + tr('modelControl_text2');
     } else {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes} ' + tr('modelControl_text3');
     }
   } else if (difference.inHours < 24) {
     if (difference.inHours == 1) {
-      return '${difference.inHours} hour ago';
+      return '${difference.inHours} ' + tr('modelControl_text4');
     } else {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours} ' + tr('modelControl_text5');
     }
   } else if (difference.inDays < 30) {
     if (difference.inDays == 1) {
-      return '${difference.inDays} day ago';
+      return '${difference.inDays} ' + tr('modelControl_text6');
     } else {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ' + tr('modelControl_text7');
     }
   } else if (difference.inDays < 365) {
     final int months = difference.inDays ~/ 30;
     if (months == 1) {
-      return '$months month ago';
+      return '$months ' + tr('modelControl_text8');
     } else {
-      return '$months months ago';
+      return '$months ' + tr('modelControl_text9');
     }
   } else {
     final int years = difference.inDays ~/ 365;
     if (years == 1) {
-      return '$years year ago';
+      return '$years ' + tr('modelControl_text10');
     } else {
-      return '$years years ago';
+      return '$years ' + tr('modelControl_text11');
     }
   }
 }

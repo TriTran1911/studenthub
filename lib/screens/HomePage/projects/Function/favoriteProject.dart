@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/appbar.dart';
 import 'package:studenthub/components/controller.dart';
@@ -89,12 +90,12 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                           ),
                           buildText(
                               pro.projectScopeFlag == 0
-                                  ? 'Less than 1 month'
+                                  ? tr("project_text2")
                                   : pro.projectScopeFlag == 1
-                                      ? '1 to 3 months'
+                                      ? tr("project_text3")
                                       : pro.projectScopeFlag == 2
-                                          ? '3 to 6 months'
-                                          : 'More than 6 months',
+                                          ? tr("project_text4")
+                                          : tr("project_text5"),
                               14,
                               FontWeight.normal,
                               Colors.black),

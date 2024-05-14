@@ -15,7 +15,7 @@ import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'home.dart';
 import 'package:studenthub/screens/Action/changeLanguage.dart';
-import 'package:studenthub/screens/Action/changeTheme.dart';
+
 import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
 
@@ -121,8 +121,6 @@ class _AccountControllerState extends State<AccountController> {
                               child: PageView(
                                 children: [
                                   ChangePasswordPage(),
-                                  ChangeLanguagePage(),
-                                  const ChangeThemePage(),
                                 ],
                               ),
                             ),

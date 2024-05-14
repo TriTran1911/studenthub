@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
@@ -331,12 +332,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       // add bullet point before each row in description
                       buildText(
                           pro.projectScopeFlag == 0
-                              ? 'Less than 1 month'
+                              ? tr("project_text2")
                               : pro.projectScopeFlag == 1
-                                  ? '1 to 3 months'
+                                  ? tr("project_text3")
                                   : pro.projectScopeFlag == 2
-                                      ? '3 to 6 months'
-                                      : 'More than 6 months',
+                                      ? tr("project_text4")
+                                      : tr("project_text5"),
                           18,
                           FontWeight.normal),
                     ],

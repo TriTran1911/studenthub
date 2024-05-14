@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
@@ -301,12 +302,12 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                           ),
                           buildText(
                               pro.projectScopeFlag == 0
-                                  ? 'Less than 1 month'
+                                  ? tr("project_text2")
                                   : pro.projectScopeFlag == 1
-                                      ? '1 to 3 months'
+                                      ? tr("project_text3")
                                       : pro.projectScopeFlag == 2
-                                          ? '3 to 6 months'
-                                          : 'More than 6 months',
+                                          ? tr("project_text4")
+                                          : tr("project_text5"),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -461,7 +462,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                 Column(
                   children: <Widget>[
                     RadioListTile<int>(
-                      title: const Text('Less than 1 month'),
+                      title: Text(tr("project_text2")),
                       value: 0,
                       groupValue: durationController,
                       onChanged: (int? value) {
@@ -471,7 +472,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                     ),
                     RadioListTile<int>(
-                      title: const Text('1 to 3 months'),
+                      title: Text(tr("project_text3")),
                       value: 1,
                       groupValue: durationController,
                       onChanged: (int? value) {
@@ -481,7 +482,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                     ),
                     RadioListTile<int>(
-                      title: const Text('3 to 6 months'),
+                      title: Text(tr("project_text4")),
                       value: 2,
                       groupValue: durationController,
                       onChanged: (int? value) {
@@ -491,7 +492,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                     ),
                     RadioListTile<int>(
-                      title: const Text('More than 6 months'),
+                      title: Text(tr("project_text5")),
                       value: 3,
                       groupValue: durationController,
                       onChanged: (int? value) {
