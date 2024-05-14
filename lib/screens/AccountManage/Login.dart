@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,12 +55,12 @@ class _LoginState extends State<Login> {
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () {
-                moveToPage(ForgotPasswordPage(), context);
+                moveToPage(const ForgotPasswordPage(), context);
               },
               child: Text(
                 "login_password1".tr(),
                 textAlign: TextAlign.end,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -195,20 +194,26 @@ class _LoginState extends State<Login> {
         if (authorizationDecoded['result']['company'] != null) {
           prefs.setInt(
               'companyId', authorizationDecoded['result']['company']['id']);
-          modelController.user.id =
+          modelController.user.company.id =
               authorizationDecoded['result']['company']['userId'];
+          modelController.user.company.companyName =
+              authorizationDecoded['result']['company']['fullname'];
+          print('Company id: ${modelController.user.company.companyName}');
         } else {
-          moveToPage(CWithoutProfile(), context);
+          moveToPage(const CWithoutProfile(), context);
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(
               'studentId', authorizationDecoded['result']['student']['id']);
-          modelController.user.id =
+          modelController.user.student.id =
               authorizationDecoded['result']['student']['userId'];
+          modelController.user.student.fullname =
+              authorizationDecoded['result']['student']['fullname'];
+          print('Student id: ${modelController.user.student.fullname}');
         }
+        modelController.user.id = authorizationDecoded['result']['id'];
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
-        print('12344');
         modelController.user.fullname =
             authorizationDecoded['result']['fullname'];
         print("login_text3".tr());

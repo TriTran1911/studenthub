@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
+import '../Profile/SinputProfile2.dart';
 import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/components/modelController.dart';
@@ -49,8 +50,8 @@ class _AccountControllerState extends State<AccountController> {
           const Divider(height: 17, color: Colors.grey),
           _buildListView(_handleCompanySelection),
           const Divider(height: 17, color: Colors.grey),
-          _buildElevatedButton(Icons.account_circle_outlined, "account_text1".tr(),
-              _handleProfilesButtonPress),
+          _buildElevatedButton(Icons.account_circle_outlined,
+              "account_text1".tr(), _handleProfilesButtonPress),
           const Divider(height: 17, color: Colors.grey),
           _buildElevatedButton(
               Icons.settings, "account_text2".tr(), _handleSettingsButtonPress),
@@ -78,17 +79,15 @@ class _AccountControllerState extends State<AccountController> {
       var result = data['result'];
       modelController.user.roles = List<int>.from(
           result['roles'].map((item) => int.parse(item.toString())));
-      if (result['roles'].length == 1) {
-        if (result['roles'][0] == 1) {
-          result['company'] == null
-              ? moveToPage(const CWithoutProfile(), context)
-              : moveToPage(const CompanyProfile(), context);
-        } else {
-          result['student'] == null
-              ? moveToPage(const StudentInputProfile1(), context)
-              : moveToPage(const StudentProfilePage(), context);
-        }
-      } else {}
+      if (result['roles'][0] == 1) {
+        result['company'] == null
+            ? moveToPage(const CWithoutProfile(), context)
+            : moveToPage(const CompanyProfile(), context);
+      } else {
+        result['student'] == null
+            ? moveToPage(const StudentInputProfile1(), context)
+            : moveToPage(const StudentProfilePage(), context);
+      }
       print(result);
     }
   }
@@ -193,7 +192,11 @@ class _AccountControllerState extends State<AccountController> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      moveToPage(modelController.user.roles[0] == 1 ? StudentInputProfile1() : CWithoutProfile(), context);
+                      moveToPage(
+                          modelController.user.roles[0] == 1
+                              ? StudentInputProfile1()
+                              : CWithoutProfile(),
+                          context);
                     },
                     style: ButtonStyle(
                       backgroundColor:

@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
 import 'package:studenthub/screens/HomePage/message/widgets/RecentChatsByProject.dart';
-import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
 import '../../../../components/appbar.dart';
 import '../../../../components/decoration.dart';
@@ -23,12 +22,10 @@ class ProjectDetailPage extends StatefulWidget {
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   List<Proposal> proposalsList = [];
   Future<List<Proposal>>? _projectsFuture;
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    String searchText = _searchController.text.toLowerCase();
     _projectsFuture = getProposalList();
   }
 
@@ -81,15 +78,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     child: Column(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Search for chat...',
-                              prefixIcon: const Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
+                          child: RecentChatsByProject(
+                            project: widget.project,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -157,8 +147,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(
-              backgroundColor: Colors.blue,
-              color: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
           );
         } else {

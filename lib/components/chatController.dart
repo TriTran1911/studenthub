@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studenthub/components/modelController.dart';
 
 // define constants keys
 const AppID = 2034044448;

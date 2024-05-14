@@ -10,13 +10,15 @@ class ChatSentScheduleBox extends StatefulWidget {
   final bool isSender;
   final int idInterview;
   final int disableFlag;
+  final int meetingRoomId;
 
   const ChatSentScheduleBox(
       {Key? key,
       required this.content,
       required this.isSender,
       required this.idInterview,
-      required this.disableFlag})
+      required this.disableFlag,
+      required this.meetingRoomId})
       : super(key: key);
 
   @override
@@ -120,7 +122,8 @@ class _ChatSentScheduleBoxState extends State<ChatSentScheduleBox> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VideoCallPage(),
+                            builder: (context) =>
+                                VideoCallPage(meetingId: widget.meetingRoomId),
                           ),
                         );
                       },

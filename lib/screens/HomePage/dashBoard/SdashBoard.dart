@@ -136,8 +136,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                             ConnectionState.waiting) {
                           return const Center(
                             child: CircularProgressIndicator(
-                              backgroundColor: Colors.blue,
-                              color: Colors.white,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.blue),
                             ),
                           );
                         } else if (snapshot.hasError) {

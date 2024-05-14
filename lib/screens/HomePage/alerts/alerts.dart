@@ -1,22 +1,118 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '/components/notifications.dart';
+import 'package:studenthub/components/controller.dart';
+import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/connection/server.dart';
+import 'package:studenthub/components/modelController.dart' as modelCtrl;
+import 'package:studenthub/connection/socket.dart';
+import 'package:studenthub/screens/HomePage/message/pages/VideoCallPage.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-// string list of notifications
 class AlertsPage extends StatefulWidget {
   @override
   _AlertsPageState createState() => _AlertsPageState();
 }
 
 class _AlertsPageState extends State<AlertsPage> {
-  void addNotification(String type, IconData icon, DateTime date) {
-    setState(() {
-      notifications.add({
-        'type': type,
-        'icon': icon,
-        'date': DateFormat('dd/MM/yyyy').format(date)
+  List<modelCtrl.Notification> notifications = [];
+  late modelCtrl.Notification notification;
+  late Future<List<modelCtrl.Notification>> listNotification;
+  late List<int> listMeetingId;
+  late IO.Socket socket;
+
+  Future<List<modelCtrl.Notification>> getNotifications() async {
+    var response = await Connection.getRequest(
+        '/api/notification/getByReceiverId/${modelController.user.id}', {});
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded['result'] != null) {
+      print('Success to load notification');
+      for (var notification in responseDecoded['result']) {
+        notifications
+            .add(modelCtrl.Notification.fromNotification(notification));
+        // listMeetingId.add(notification['meetingId']);
+        if (notification['typeNotifyFlag'] == '1') {
+          listMeetingId
+              .add(notification['message']['interview']['meetingRoom']['id']);
+        } else {
+          listMeetingId.add(0);
+        }
+      }
+      notifications.sort((a, b) {
+        return DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!));
+      });
+      return notifications;
+    } else {
+      throw Exception('Failed to load notification');
+    }
+  }
+
+  void connect() {
+    socket = SocketService().connectSocket();
+
+    // socket.io.options?['query'] = {'project_id': widget.projectId};
+    socket.connect();
+
+    socket.onConnect((data) => {
+          print('Connected'),
+        });
+
+    socket.onConnectError((data) => print('$data'));
+    socket.onError((data) => print(data));
+
+    socket.on('RECEIVE_MESSAGE', (data) {
+      print("Chat detail: $data");
+      notification =
+          modelCtrl.Notification.fromNotification(data['notification']);
+      if (mounted) {
+        setState(() {
+          notifications.add(notification);
+        });
+        listMeetingId.add(notification.message?.interview!.meetingRoomId ?? 0);
+      }
+      print('Message Receive: ${notifications}');
+    });
+
+    socket.on('RECEIVE_INTERVIEW', (data) {
+      print("Interview: $data");
+      notification =
+          modelCtrl.Notification.fromNotification(data['notification']);
+      if (mounted) {
+        setState(() {
+          setState(() {
+            notifications.add(notification);
+          });
+        });
+        listMeetingId.add(notification.message?.interview!.meetingRoomId ?? 0);
+      }
+      print('Hanlde receive interview');
+    });
+
+    socket.on('ERROR', (data) {
+      print(data);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    listMeetingId = [];
+    listNotification = getNotifications();
+    listNotification.then((value) {
+      setState(() {
+        notifications = value;
       });
     });
+    print('Big user id: ${modelController.user.id}');
+
+    connect();
+  }
+
+  @override
+  void dispose() {
+    socket.disconnect();
+    super.dispose();
   }
 
   @override
@@ -29,21 +125,6 @@ class _AlertsPageState extends State<AlertsPage> {
   Column _buildColumn() {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () =>
-                  addNotification(noti[1], Icons.settings, DateTime.now()),
-              child: Text('Interview Notification'),
-            ),
-            ElevatedButton(
-              onPressed: () =>
-                  addNotification(noti[3], Icons.chat_bubble, DateTime.now()),
-              child: Text('Message Notification'),
-            ),
-          ],
-        ),
         Expanded(
           child: ListView.separated(
             itemCount: notifications.length,
@@ -57,13 +138,14 @@ class _AlertsPageState extends State<AlertsPage> {
                     color: Colors.blue.withOpacity(0.2),
                   ),
                   child: Icon(
-                    notifications[index]['icon'] as IconData,
+                    _handleIconNotification(
+                        notifications[index].typeNotifyFlag!),
                     size: 30.0,
                     color: Colors.blue,
                   ),
                 ),
                 title: Text(
-                  notifications[index]['type'],
+                  notifications[index].title!,
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -74,24 +156,34 @@ class _AlertsPageState extends State<AlertsPage> {
                   children: [
                     SizedBox(height: 10),
                     Text(
-                      notifications[index]['date'],
+                      timeDif(DateTime.parse(notifications[index].createdAt!)),
                       style: TextStyle(
                         fontSize: 12.0,
                       ),
                     ),
                     SizedBox(height: 10),
-                    if (notifications[index]['type'] == noti[1] ||
-                        notifications[index]['type'] == noti[2])
+                    if (notifications[index].typeNotifyFlag == '0' ||
+                        notifications[index].typeNotifyFlag == '1')
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Handle button press action here (optional)
+                              if (notifications[index].typeNotifyFlag == '0') {
+                                // moveToPage(
+                                //     OfferDetailPage(
+                                //         notifications[index].message!),
+                                //     context);
+                              } else {
+                                moveToPage(
+                                    VideoCallPage(
+                                        meetingId: listMeetingId[index]),
+                                    context);
+                              }
                             },
-                            child: (notifications[index]['type'] == noti[1])
-                                ? Text('John')
-                                : Text('View offer'),
+                            child: (notifications[index].typeNotifyFlag == '0')
+                                ? Text('View offer')
+                                : Text('John'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,
@@ -114,5 +206,22 @@ class _AlertsPageState extends State<AlertsPage> {
         ),
       ],
     );
+  }
+}
+
+IconData? _handleIconNotification(String s) {
+  switch (s) {
+    case '0':
+      return Icons.handshake;
+    case '1':
+      return Icons.calendar_today;
+    case '2':
+      return Icons.check;
+    case '3':
+      return Icons.chat_bubble;
+    case '4':
+      return Icons.notifications_active;
+    default:
+      return Icons.notifications;
   }
 }

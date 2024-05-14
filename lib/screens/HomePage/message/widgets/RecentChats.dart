@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -21,6 +20,7 @@ class _RecentChatsState extends State<RecentChats> {
   late IO.Socket socket;
   late MessageNotification messageNotification;
   Timer? timer;
+  // final controllerUserId = modelController.user.id;
 
   Future<List<Message>> getRecentChats() async {
     var response = await Connection.getRequest('/api/message', {});
@@ -31,6 +31,10 @@ class _RecentChatsState extends State<RecentChats> {
       for (var message in responseDecoded['result']) {
         messages.add(Message.fromJson(message));
       }
+      messages.sort((a, b) {
+        return DateTime.parse(b.createdAt!)
+            .compareTo(DateTime.parse(a.createdAt!));
+      });
       return messages;
     } else {
       throw Exception('Failed to load message');

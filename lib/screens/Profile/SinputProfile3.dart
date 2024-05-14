@@ -35,7 +35,7 @@ class _StudentInputProfile3State extends State<StudentInputProfile3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const CustomAppBar(backWard: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -56,19 +56,25 @@ class _StudentInputProfile3State extends State<StudentInputProfile3> {
             const SizedBox(height: 16),
             buildFilePickerContainer('transcript', transcript),
             const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    moveToPage(
+                        const TabsPage(
+                          index: 0,
+                        ),
+                        context);
+                  },
+                  style: buildButtonStyle(Colors.blue[400]!),
+                  child: buildText('Next', 16, FontWeight.bold, Colors.white),
+                ),
+              ],
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          moveToPage(TabsPage(index: 0), context);
-        },
-        backgroundColor: Colors.blue[300],
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: buildText('Next', 16, FontWeight.bold),
       ),
     );
   }
@@ -90,7 +96,9 @@ class _StudentInputProfile3State extends State<StudentInputProfile3> {
                 children: <Widget>[
                   Expanded(
                     child: buildCenterText(
-                        file != null ? file.files.single.name : 'No file chosen',
+                        file != null
+                            ? file.files.single.name
+                            : 'No file chosen',
                         16,
                         FontWeight.normal),
                   ),

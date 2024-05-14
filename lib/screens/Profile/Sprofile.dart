@@ -17,6 +17,7 @@ class StudentProfilePage extends StatefulWidget {
 
 class _StudentProfilePageState extends State<StudentProfilePage> {
   Student student = Student();
+  bool isEditting = false;
 
   @override
   void initState() {
@@ -59,9 +60,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
                 child: CircularProgressIndicator(
-              backgroundColor: Colors.blue,
-              color: Colors.white,
-            ));
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)));
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -119,9 +118,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     ),
                     const SizedBox(height: 16),
                     if (student.languages!.isNotEmpty) ...[
-                      student.languages!.length == 1
-                          ? buildText('Language: ', 20, FontWeight.bold)
-                          : buildText('Languages: ', 20, FontWeight.bold),
+                      buildText('Language: ', 20, FontWeight.bold),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(8.0),
@@ -133,30 +130,48 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           ),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            for (var language in student.languages!) ...[
-                              buildText(
-                                language.languageName!,
-                                20,
-                                FontWeight.normal,
-                              ),
-                              buildText(
-                                language.level!,
-                                20,
-                                FontWeight.normal,
-                              ),
-                            ],
-                          ],
+                        child: Column(
+                          children: student.languages!.map((language) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[100],
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: buildText(
+                                    language.languageName!,
+                                    20,
+                                    FontWeight.normal,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    // switch the color denpend on the 4 level
+                                    color: language.level == 'Beginner'
+                                        ? Colors.green[100]
+                                        : language.level == 'Intermediate'
+                                            ? Colors.yellow[100]
+                                            : language.level == 'Advanced'
+                                                ? Colors.orange[100]
+                                                : Colors.red[100],
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: buildText(language.level!, 20,
+                                      FontWeight.normal, Colors.black),
+                                ),
+                              ],
+                            );
+                          }).toList(),
                         ),
                       ),
                     ],
                     const SizedBox(height: 16),
                     if (student.educations!.isNotEmpty) ...[
-                      student.educations!.length == 1
-                          ? buildText('Education: ', 20, FontWeight.bold)
-                          : buildText('Educations: ', 20, FontWeight.bold),
+                      buildText('Education: ', 20, FontWeight.bold),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(8.0),
@@ -181,9 +196,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     ],
                     const SizedBox(height: 16),
                     if (student.experiences!.isNotEmpty) ...[
-                      student.experiences!.length == 1
-                          ? buildText('Experience: ', 20, FontWeight.bold)
-                          : buildText('Experiences: ', 20, FontWeight.bold),
+                      buildText('Experience: ', 20, FontWeight.bold),
                       // return experience as a card
                       const SizedBox(height: 16),
                       for (var experience in student.experiences!) ...[
@@ -198,16 +211,43 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               buildText(
-                                '${experience.title} as ${experience.description} from ${experience.startMonth} to ${experience.endMonth}',
+                                'Project name: ${experience.title!}',
                                 20,
-                                FontWeight.normal,
+                                FontWeight.bold,
                               ),
                               buildText(
-                                experience.description!,
+                                'Duration: ${experience.startMonth!} - ${experience.endMonth}',
                                 20,
                                 FontWeight.normal,
+                                Colors.grey[400],
+                              ),
+                              buildText(
+                                'Description: ${experience.description!}',
+                                20,
+                                FontWeight.normal,
+                                Colors.grey[700],
+                              ),
+                              Row(
+                                children: [
+                                  buildText('Skillset:', 20, FontWeight.bold),
+                                  const SizedBox(width: 8),
+                                  for (var skill in student.skillSets!) ...[
+                                    Container(
+                                      padding: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue[100],
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: buildText(skill.name!, 20,
+                                          FontWeight.normal, Colors.blueAccent),
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                ],
                               ),
                             ],
                           ),
@@ -221,6 +261,16 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          setState(() {
+            isEditting = !isEditting;
+          });
+        },
+        child: const Icon(Icons.edit),
       ),
     );
   }
