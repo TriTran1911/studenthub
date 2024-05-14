@@ -573,7 +573,7 @@ class Experience {
       endMonth: json['endMonth'],
       description: json['description'],
       skillSets: json['skillSets'] != null
-          ? (json['skillSest'] as List)
+          ? (json['skillSets'] as List)
               .map((e) => SkillSet.fromJson(e))
               .toList()
           : null,

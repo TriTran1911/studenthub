@@ -10,6 +10,7 @@ import '../../../../components/decoration.dart';
 import '../../../../components/modelController.dart';
 import '../../../../connection/server.dart';
 
+// ignore: must_be_immutable
 class ProjectDetailPage extends StatefulWidget {
   Project project;
 
@@ -129,18 +130,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
   }
 
   FutureBuilder<List<Proposal>> buildProposal() {
-    /*senderId: modelController.user.id,
-                                              receiverId: proposal.student!.id!,
-                                              projectId: widget.project.id!,
-                                              senderName:
-                                                  modelController.user.fullname,
-                                              receiverName:
-                                                  proposal.student!.fullname!,*/
-    print('senderID: ${modelController.user.id}');
-    // print('receiverID: ${proposalsList[0].studentId}');
-    print('projectID: ${widget.project.id}');
-    print('senderName: ${modelController.user.fullname}');
-    // print('receiverName: ${proposalsList[0].student!.fullname}');
     return FutureBuilder(
       future: _projectsFuture,
       builder: (context, snapshot) {
@@ -161,7 +150,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               itemBuilder: (context, index) {
                 Proposal proposal = proposalsList[index];
                 Student student = proposalsList[index].student!;
-                print('receiverID 222: ${proposal.student!.userId}');
                 return Card(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
