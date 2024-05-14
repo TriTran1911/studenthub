@@ -195,9 +195,9 @@ class _LoginState extends State<Login> {
         }
         if (authorizationDecoded['result']['student'] != null) {
           prefs.setInt(
-              'studentId', authorizationDecoded['result']['student']['userId']);
+              'studentId', authorizationDecoded['result']['student']['id']);
           modelController.user.id =
-              authorizationDecoded['result']['student']['id'];
+              authorizationDecoded['result']['student']['userId'];
         }
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);

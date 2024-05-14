@@ -232,6 +232,7 @@ class Student {
   String? updatedAt;
   String? deletedAt;
   String? fullname;
+  int? userId;
   TechStack? techStack;
   List<SkillSet>? skillSet;
   List<dynamic>? proposals;
@@ -247,6 +248,7 @@ class Student {
       this.techStack,
       this.skillSet,
       this.fullname,
+      this.userId,
       this.proposals,
       this.educations,
       this.languages,
@@ -259,6 +261,7 @@ class Student {
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       fullname: json['user']['fullname'],
+      userId: json['userId'],
       techStack: json['techStack'] != null
           ? TechStack.fromJson(json['techStack'])
           : null,
@@ -483,7 +486,7 @@ Widget loadingDialog() {
   );
 }
 
-String monthDif(DateTime? createdAt) {
+String timeDif(DateTime? createdAt) {
   final Duration difference = DateTime.now().difference(createdAt!);
 
   if (difference.inSeconds < 60) {

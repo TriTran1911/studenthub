@@ -214,7 +214,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         ),
                         child: buildText(
                             pro.createdAt != null
-                                ? monthDif(
+                                ? timeDif(
                                     DateTime.parse(pro.createdAt!.toString()))
                                 : '0', // or some default value
                             16,

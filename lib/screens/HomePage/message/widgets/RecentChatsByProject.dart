@@ -9,13 +9,17 @@ import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
 import 'package:studenthub/connection/socket.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
+import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
-class RecentChats extends StatefulWidget {
+class RecentChatsByProject extends StatefulWidget {
+  final Project project;
+
+  RecentChatsByProject({super.key, required this.project});
   @override
-  State<RecentChats> createState() => _RecentChatsState();
+  State<RecentChatsByProject> createState() => _RecentChatsByProjectState();
 }
 
-class _RecentChatsState extends State<RecentChats> {
+class _RecentChatsByProjectState extends State<RecentChatsByProject> {
   List<Message> messages = [];
   late Future<List<Message>> listMessage;
   late IO.Socket socket;
@@ -23,7 +27,8 @@ class _RecentChatsState extends State<RecentChats> {
   Timer? timer;
 
   Future<List<Message>> getRecentChats() async {
-    var response = await Connection.getRequest('/api/message', {});
+    var response =
+        await Connection.getRequest('/api/message/${widget.project.id}', {});
     var responseDecoded = jsonDecode(response);
 
     if (responseDecoded['result'] != null) {
@@ -91,6 +96,7 @@ class _RecentChatsState extends State<RecentChats> {
         this.messages = messages;
       });
     });
+    print('projectID: $listMessage');
 
     connect();
     timer = Timer.periodic(Duration(seconds: 5), (timer) => connect());
@@ -127,7 +133,7 @@ class _RecentChatsState extends State<RecentChats> {
                             messages[i].receiver!.id == modelController.user.id
                                 ? messages[i].sender!.id
                                 : messages[i].receiver!.id,
-                        projectId: messages[i].project!.id!,
+                        projectId: widget.project.id!,
                         senderName: modelController.user.fullname,
                         receiverName:
                             messages[i].receiver!.id == modelController.user.id
@@ -168,14 +174,7 @@ class _RecentChatsState extends State<RecentChats> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(
-                                messages[i].project?.title ?? 'Project Name',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              SizedBox(height: 4),
+                              SizedBox(height: 10),
                               Expanded(
                                 child: Text(
                                   messages[i].sender!.id ==

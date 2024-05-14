@@ -300,7 +300,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                       ),
                       child: buildText(
                           pro.createdAt != null
-                              ? monthDif(
+                              ? timeDif(
                                   DateTime.parse(pro.createdAt!.toString()))
                               : '0', // or some default value
                           16,
