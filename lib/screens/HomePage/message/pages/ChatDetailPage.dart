@@ -167,6 +167,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     print('Sender: ${widget.senderId}');
     print('Receiver: ${widget.receiverId}');
     print('Project: ${widget.projectId}');
+    print('Sender Name: ${widget.senderName}');
+    print('Receiver Name: ${widget.receiverName}');
 
     connect();
     print('Handle receive message');

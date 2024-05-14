@@ -135,7 +135,10 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.blue,
+                              color: Colors.white,
+                            ),
                           );
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
@@ -213,7 +216,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                         ),
                         child: buildText(
                             pro.createdAt != null
-                                ? monthDif(
+                                ? timeDif(
                                     DateTime.parse(pro.createdAt!.toString()))
                                 : '0', // or some default value
                             16,
@@ -230,7 +233,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                   const SizedBox(height: 10),
                   Row(
                     //space between
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Column(
                         children: [
@@ -263,21 +266,6 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                               pro.numberOfStudents == 1
                                   ? '${pro.numberOfStudents} student'
                                   : '${pro.numberOfStudents} students',
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Icon(
-                            Icons.assignment,
-                            color: Colors.blue,
-                          ),
-                          buildText(
-                              pro.countProposals == 1
-                                  ? '${pro.countProposals.toString()} proposal'
-                                  : '${pro.countProposals.toString()} proposals',
                               14,
                               FontWeight.normal,
                               Colors.black),

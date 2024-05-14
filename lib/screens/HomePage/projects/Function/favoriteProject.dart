@@ -160,7 +160,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
           ),
           child: buildText(
               pro.createdAt != null
-                  ? monthDif(DateTime.parse(pro.createdAt!.toString()))
+                  ? timeDif(DateTime.parse(pro.createdAt!.toString()))
                   : '0', // or some default value
               16,
               FontWeight.bold,
@@ -182,45 +182,5 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
         ),
       ],
     );
-  }
-
-  String monthDif(DateTime? createdAt) {
-    final Duration difference = DateTime.now().difference(createdAt!);
-
-    if (difference.inSeconds < 60) {
-      return 'Just now';
-    } else if (difference.inMinutes < 60) {
-      if (difference.inMinutes == 1) {
-        return '${difference.inMinutes} minute ago';
-      } else {
-        return '${difference.inMinutes} minutes ago';
-      }
-    } else if (difference.inHours < 24) {
-      if (difference.inHours == 1) {
-        return '${difference.inHours} hour ago';
-      } else {
-        return '${difference.inHours} hours ago';
-      }
-    } else if (difference.inDays < 30) {
-      if (difference.inDays == 1) {
-        return '${difference.inDays} day ago';
-      } else {
-        return '${difference.inDays} days ago';
-      }
-    } else if (difference.inDays < 365) {
-      final int months = difference.inDays ~/ 30;
-      if (months == 1) {
-        return '$months month ago';
-      } else {
-        return '$months months ago';
-      }
-    } else {
-      final int years = difference.inDays ~/ 365;
-      if (years == 1) {
-        return '$years year ago';
-      } else {
-        return '$years years ago';
-      }
-    }
   }
 }

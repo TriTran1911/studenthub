@@ -36,6 +36,12 @@ class _ChatBubbleWithVisibilityToggleState
   bool _obscureText = true;
 
   @override
+  void initState() {
+    super.initState();
+    print('Role: ' + modelController.user.roles[0].toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
@@ -181,6 +187,9 @@ class _Signup2State extends State<SignUp2> {
         ),
         GestureDetector(
           onTap: () {
+            modelController.user.roles[0] == 1
+                ? modelController.user.roles[0] = 0
+                : modelController.user.roles[0] = 1;
             moveToPage(SignUp2(), context);
           },
           child: Text(

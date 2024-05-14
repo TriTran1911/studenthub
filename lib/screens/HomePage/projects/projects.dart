@@ -253,7 +253,10 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.blue,
+                        color: Colors.white,
+                      ),
                     );
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -300,7 +303,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                       ),
                       child: buildText(
                           pro.createdAt != null
-                              ? monthDif(
+                              ? timeDif(
                                   DateTime.parse(pro.createdAt!.toString()))
                               : '0', // or some default value
                           16,

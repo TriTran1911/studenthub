@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
+import 'package:studenthub/screens/HomePage/message/widgets/RecentChatsByProject.dart';
+import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
 import '../../../../components/appbar.dart';
 import '../../../../components/decoration.dart';
@@ -90,7 +93,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        
                       ],
                     ),
                   ),
@@ -137,12 +139,27 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
   }
 
   FutureBuilder<List<Proposal>> buildProposal() {
+    /*senderId: modelController.user.id,
+                                              receiverId: proposal.student!.id!,
+                                              projectId: widget.project.id!,
+                                              senderName:
+                                                  modelController.user.fullname,
+                                              receiverName:
+                                                  proposal.student!.fullname!,*/
+    print('senderID: ${modelController.user.id}');
+    // print('receiverID: ${proposalsList[0].studentId}');
+    print('projectID: ${widget.project.id}');
+    print('senderName: ${modelController.user.fullname}');
+    // print('receiverName: ${proposalsList[0].student!.fullname}');
     return FutureBuilder(
       future: _projectsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.blue,
+              color: Colors.white,
+            ),
           );
         } else {
           if (snapshot.hasError) {
@@ -155,6 +172,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               itemBuilder: (context, index) {
                 Proposal proposal = proposalsList[index];
                 Student student = proposalsList[index].student!;
+                print('receiverID 222: ${proposal.student!.userId}');
                 return Card(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -176,7 +194,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           ),
                           child: buildText(
                               proposal.createdAt != null
-                                  ? monthDif(DateTime.parse(
+                                  ? timeDif(DateTime.parse(
                                       proposal.createdAt!.toString()))
                                   : '0', // or some default value
                               16,
@@ -215,6 +233,18 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                             )
                         ],
 
+                        if (student.languages!.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          buildText(
+                              'Languages:', 20, FontWeight.bold, Colors.blue),
+                          for (var lang in student.languages!)
+                            buildText(
+                              '${lang.languageName} - ${lang.level}',
+                              18,
+                              FontWeight.normal,
+                            )
+                        ],
+
                         const SizedBox(height: 16),
                         buildText(
                             'Cover Letter:', 20, FontWeight.bold, Colors.blue),
@@ -239,6 +269,20 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                                 ),
                                 onPressed: () {
                                   // send message to student
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ChatDetailPage(
+                                              senderId: modelController.user.id,
+                                              receiverId:
+                                                  proposal.student!.userId!,
+                                              projectId: widget.project.id!,
+                                              senderName:
+                                                  modelController.user.fullname,
+                                              receiverName:
+                                                  proposal.student!.fullname!,
+                                            )),
+                                  );
                                 },
                                 child: buildText('Message', 18, FontWeight.bold,
                                     Colors.black),
