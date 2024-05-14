@@ -118,19 +118,19 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       tabs: [
         Tab(
           child: Text('Proposal',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         Tab(
           child: Text('Detail',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         Tab(
           child: Text('Message',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
         Tab(
           child: Text('Hired',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         ),
       ],
     );
@@ -187,7 +187,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.person, size: 80),
+                            const Icon(Icons.person_outlined, size: 80),
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(

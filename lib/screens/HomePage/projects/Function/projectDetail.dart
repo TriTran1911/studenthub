@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/tabs.dart';
-import '../../../components/appbar.dart';
-import '../../../components/decoration.dart';
-import '../../../connection/server.dart';
+import '../../../../components/appbar.dart';
+import '../../../../components/decoration.dart';
+import '../../../../connection/server.dart';
 import 'proposalSubmit.dart';
 
 class ProjectDetailPage extends StatefulWidget {

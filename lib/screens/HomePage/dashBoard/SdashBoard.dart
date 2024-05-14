@@ -33,12 +33,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
       for (Proposal proposal in proposalList) {
         if (proposal.statusFlag == 0) {
           submittedProposalList.add(proposal);
-        } else if (proposal.statusFlag == 1) {
-          activeProposalList.add(proposal);
-        } else if (proposal.statusFlag == 2) {
-          workingProposalList.add(proposal);
         } else {
-          achievedProposalList.add(proposal);
+          activeProposalList.add(proposal);
         }
       }
     });
@@ -181,8 +177,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         children: [
           const SizedBox(height: 20),
           Center(
-            child: buildText(
-                'No project found\n', 16, FontWeight.bold),
+            child: buildText('No project found\n', 16, FontWeight.bold),
           ),
         ],
       );

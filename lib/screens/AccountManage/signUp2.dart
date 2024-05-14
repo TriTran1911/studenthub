@@ -51,6 +51,7 @@ class _ChatBubbleWithVisibilityToggleState
             obscureText: widget.isPassword && _obscureText,
             decoration: InputDecoration(
               labelText: widget.label,
+              labelStyle: Theme.of(context).textTheme.bodyText1,
               border: OutlineInputBorder(),
               suffixIcon: widget.isPassword
                   ? IconButton(
@@ -299,6 +300,7 @@ class ChatBubble extends StatelessWidget {
             obscureText: isPassword,
             decoration: InputDecoration(
               labelText: label,
+              labelStyle: Theme.of(context).textTheme.bodyText1,
               border: const OutlineInputBorder(),
             ),
           ),
