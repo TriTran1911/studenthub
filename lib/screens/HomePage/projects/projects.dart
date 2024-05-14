@@ -253,7 +253,10 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.blue,
+                        color: Colors.white,
+                      ),
                     );
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

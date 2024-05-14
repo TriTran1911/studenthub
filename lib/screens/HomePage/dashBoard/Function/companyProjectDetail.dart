@@ -80,7 +80,23 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
+<<<<<<< Updated upstream
                         RecentChatsByProject(project: pro),
+=======
+                        Expanded(
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search for chat...',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+>>>>>>> Stashed changes
                       ],
                     ),
                   ),
@@ -144,7 +160,10 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.blue,
+              color: Colors.white,
+            ),
           );
         } else {
           if (snapshot.hasError) {
@@ -213,6 +232,18 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                           for (var edu in student.educations!)
                             buildText(
                               '${edu.schoolName} - ${edu.startYear} - ${edu.endYear}',
+                              18,
+                              FontWeight.normal,
+                            )
+                        ],
+
+                        if (student.languages!.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          buildText(
+                              'Languages:', 20, FontWeight.bold, Colors.blue),
+                          for (var lang in student.languages!)
+                            buildText(
+                              '${lang.languageName} - ${lang.level}',
                               18,
                               FontWeight.normal,
                             )
