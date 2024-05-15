@@ -84,5 +84,3 @@ class _TabsPageState extends State<TabsPage> {
     );
   }
 }
-
-

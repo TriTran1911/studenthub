@@ -48,6 +48,16 @@ class _AlertsPageState extends State<AlertsPage> {
     }
   }
 
+  void acceptOffer(int proposalId, int statusFlag, int disableFlag) async {
+    try {
+      var response = await Connection.patchRequest('/api/proposal/$proposalId',
+          {"statusFlag": statusFlag, "disableFlag": disableFlag});
+      jsonDecode(response);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void connect() {
     socket = SocketService().connectSocket();
 
@@ -174,35 +184,101 @@ class _AlertsPageState extends State<AlertsPage> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (notifications[index].typeNotifyFlag == '0') {
-                                // moveToPage(
-                                //     OfferDetailPage(
-                                //         notifications[index].message!),
-                                //     context);
-                              } else {
-                                moveToPage(
-                                    VideoCallPage(
-                                        meetingId: listMeetingId[index]),
-                                    context);
-                              }
-                            },
-                            child: (notifications[index].typeNotifyFlag == '0')
-                                ? Text('View offer')
-                                : Text('John'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                              textStyle: TextStyle(
+                          if (notifications[index].proposal!.statusFlag != 3 &&
+                              notifications[index].proposal!.disableFlag !=
+                                  1) ...[
+                            ElevatedButton(
+                              onPressed: () {
+                                if (notifications[index].typeNotifyFlag ==
+                                    '0') {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text('Accept offer'),
+                                          content: Text(
+                                              'Do you want to accept the offer from ${notifications[index].sender?.fullname}?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                acceptOffer(
+                                                    notifications[index]
+                                                        .proposal!
+                                                        .id!,
+                                                    2,
+                                                    1);
+                                                setState(() {
+                                                  notifications[index]
+                                                      .proposal!
+                                                      .disableFlag = 1;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Decline'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                acceptOffer(
+                                                    notifications[index]
+                                                        .proposal!
+                                                        .id!,
+                                                    3,
+                                                    0);
+                                                setState(() {
+                                                  notifications[index]
+                                                      .proposal!
+                                                      .statusFlag = 3;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Accept'),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                } else {
+                                  moveToPage(
+                                      VideoCallPage(
+                                          meetingId: listMeetingId[index]),
+                                      context);
+                                }
+                              },
+                              child:
+                                  (notifications[index].typeNotifyFlag == '1')
+                                      ? Text('John')
+                                      : Text('View offer'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            )
+                          ] else if (notifications[index]
+                                  .proposal!
+                                  .statusFlag ==
+                              3) ...[
+                            Text(
+                              'You have accepted the offer',
+                              style: TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ] else ...[
+                            Text(
+                              'You have declined the offer',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+                          ]
                         ],
                       ),
                   ],
