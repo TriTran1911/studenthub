@@ -290,8 +290,6 @@ class Student {
   List<Language>? languages;
   List<Experience>? experiences;
   int? techStackId;
-  String? resume;
-  String? transcript;
 
   Student(
       {this.id,
@@ -309,9 +307,7 @@ class Student {
       this.educations,
       this.languages,
       this.experiences,
-      this.techStackId,
-      this.resume,
-      this.transcript});
+      this.techStackId,});
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
