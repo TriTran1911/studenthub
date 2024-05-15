@@ -51,7 +51,6 @@ class _AlertsPageState extends State<AlertsPage> {
   void connect() {
     socket = SocketService().connectSocket();
 
-    // socket.io.options?['query'] = {'project_id': widget.projectId};
     socket.connect();
 
     socket.onConnect((data) => {
@@ -126,9 +125,9 @@ class _AlertsPageState extends State<AlertsPage> {
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
+          child: ListView.separated(
             itemCount: notifications.length,
-            // separatorBuilder: (context, index) => Divider(),
+            separatorBuilder: (context, index) => Divider(),
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Container(

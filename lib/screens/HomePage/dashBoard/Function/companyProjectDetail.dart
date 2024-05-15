@@ -24,6 +24,7 @@ class ProjectDetailPage extends StatefulWidget {
 class _ProjectDetailPageState extends State<ProjectDetailPage> {
   List<Proposal> proposalsList = [];
   Future<List<Proposal>>? _projectsFuture;
+  bool isOfferSent = false;
 
   @override
   void initState() {
@@ -51,6 +52,17 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  void sendOffer(int proposalId) async {
+    try {
+      var response = await Connection.patchRequest(
+          '/api/proposal/${proposalId}', {"statusFlag": 2});
+      var responseDecode = jsonDecode(response);
+      print('S: ' + responseDecode);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -88,12 +100,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       ],
                     ),
                   ),
-                  // Tab 4
-                  Column(
-                    children: [
-                      // Nội dung tab 4
-                    ],
-                  ),
+                  // buildHired(),
                 ],
               ),
             ),
@@ -264,11 +271,21 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                                   ),
                                   side: const BorderSide(color: Colors.black),
                                 ),
-                                onPressed: () {
-                                  // hire student
-                                },
+                                onPressed: proposal.statusFlag == 0
+                                    ? () {
+                                        sendOffer(proposal.id!);
+                                      }
+                                    : null,
                                 child: buildText(
-                                    'Hire', 18, FontWeight.bold, Colors.black),
+                                  proposal.statusFlag == 0
+                                      ? 'Hire'
+                                      : proposal.statusFlag == 2
+                                          ? 'Sent Offer'
+                                          : 'Hired',
+                                  18,
+                                  FontWeight.bold,
+                                  Colors.black,
+                                ),
                               ),
                             ),
                           ],

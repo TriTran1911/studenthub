@@ -21,6 +21,19 @@ class Schedule extends ChangeNotifier {
   }
 }
 
+class DisableFlagNotifier extends ChangeNotifier {
+  int _disableFlag;
+
+  DisableFlagNotifier(this._disableFlag);
+
+  int get disableFlag => _disableFlag;
+
+  set disableFlag(int value) {
+    _disableFlag = value;
+    notifyListeners();
+  }
+}
+
 // Define a message type enumeration
 enum MessageType {
   send,
