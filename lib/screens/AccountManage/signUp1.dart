@@ -150,10 +150,10 @@ class _SignUpState1 extends State<SignUp1> {
     modelController.user.roles = [];
     if (_isCompany || _isStudent) {
       if (_isCompany) {
-        modelController.user.roles[0] = 1;
+        modelController.user.roles.add(1);
       }
       if (_isStudent) {
-        modelController.user.roles[0] = 0;
+        modelController.user.roles.add(0);
       }
       moveToPage(SignUp2(), context);
     } else {
