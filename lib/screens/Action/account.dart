@@ -157,7 +157,7 @@ class _AccountControllerState extends State<AccountController> {
       print('Logout failed');
     }
 
-    moveToPage(Login(), context);
+    moveToPage(Home(), context);
   }
 
   void _handleAddRole(BuildContext context) {

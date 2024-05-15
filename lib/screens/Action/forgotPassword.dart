@@ -18,7 +18,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const SimpleAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildBody(context),
     );
