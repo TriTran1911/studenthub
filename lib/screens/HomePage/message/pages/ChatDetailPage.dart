@@ -145,9 +145,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       print('Hanlde receive interview');
     });
 
-    socket.on('NOTI_${widget.senderId}', (data) {
-      print('Notification 123: $data');
-    });
+    // socket.on('NOTI_${widget.senderId}', (data) {
+    //   print('Notification 123: $data');
+    // });
     socket.on('ERROR', (data) {
       print(data);
     });
@@ -180,7 +180,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   void dispose() {
-    socket.disconnect();
+    // socket.disconnect();
     super.dispose();
   }
 

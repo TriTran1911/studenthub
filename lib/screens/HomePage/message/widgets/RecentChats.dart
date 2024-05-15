@@ -104,7 +104,6 @@ class _RecentChatsState extends State<RecentChats> {
 
   @override
   void dispose() {
-    socket.disconnect();
     super.dispose();
   }
 

@@ -61,32 +61,30 @@ class _AlertsPageState extends State<AlertsPage> {
     socket.onConnectError((data) => print('$data'));
     socket.onError((data) => print(data));
 
-    socket.on('RECEIVE_MESSAGE', (data) {
-      print("Chat detail: $data");
-      notification =
-          modelCtrl.Notification.fromNotification(data['notification']);
+    socket.on('NOTI_${modelController.user.id}', (data) {
       if (mounted) {
         setState(() {
-          notifications.add(notification);
+          notifications.add(
+              modelCtrl.Notification.fromNotification(data['notification']));
+          print('Add noti success');
         });
-        listMeetingId.add(notification.message?.interview!.meetingRoomId ?? 0);
-      }
-      print('Message Receive: ${notifications}');
-    });
+        notifications.sort((a, b) {
+          return DateTime.parse(b.createdAt!)
+              .compareTo(DateTime.parse(a.createdAt!));
+        });
 
-    socket.on('RECEIVE_INTERVIEW', (data) {
-      print("Interview: $data");
-      notification =
-          modelCtrl.Notification.fromNotification(data['notification']);
-      if (mounted) {
-        setState(() {
-          setState(() {
-            notifications.add(notification);
-          });
-        });
-        listMeetingId.add(notification.message?.interview!.meetingRoomId ?? 0);
+        print('Notification TEST: ${data['notification']}');
+        if (data['notification'] != null &&
+            data['notification']['message'] != null &&
+            data['notification']['message']['interview'] != null) {
+          listMeetingId.add(data['notification']['message']['interview']
+                  ['meetingRoomId'] ??
+              0);
+        } else {
+          listMeetingId.add(0);
+        }
       }
-      print('Hanlde receive interview');
+      print('Notification 777: $data');
     });
 
     socket.on('ERROR', (data) {
@@ -104,14 +102,16 @@ class _AlertsPageState extends State<AlertsPage> {
         notifications = value;
       });
     });
+
     print('Big user id: ${modelController.user.id}');
 
     connect();
+    print('Handle notification');
   }
 
   @override
   void dispose() {
-    socket.disconnect();
+    // socket.disconnect();
     super.dispose();
   }
 
@@ -126,9 +126,9 @@ class _AlertsPageState extends State<AlertsPage> {
     return Column(
       children: [
         Expanded(
-          child: ListView.separated(
+          child: ListView.builder(
             itemCount: notifications.length,
-            separatorBuilder: (context, index) => Divider(),
+            // separatorBuilder: (context, index) => Divider(),
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Container(
@@ -145,7 +145,9 @@ class _AlertsPageState extends State<AlertsPage> {
                   ),
                 ),
                 title: Text(
-                  notifications[index].title!,
+                  notifications[index].typeNotifyFlag == '1'
+                      ? notifications[index].content!
+                      : notifications[index].title!,
                   style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -163,7 +165,13 @@ class _AlertsPageState extends State<AlertsPage> {
                     ),
                     SizedBox(height: 10),
                     if (notifications[index].typeNotifyFlag == '0' ||
-                        notifications[index].typeNotifyFlag == '1')
+                        (notifications[index].typeNotifyFlag == '1' &&
+                            notifications[index]
+                                    .message!
+                                    .interview!
+                                    .disableFlag
+                                    .toString() ==
+                                '0'))
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

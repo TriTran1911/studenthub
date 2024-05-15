@@ -10,7 +10,7 @@ import '../../../../connection/server.dart';
 // ignore: must_be_immutable
 class CoverLetterPage extends StatefulWidget {
   Project project;
-  
+
   CoverLetterPage({super.key, required this.project});
 
   @override
@@ -42,36 +42,40 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
     return Scaffold(
       appBar: const CustomAppBar(backWard: true),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildText('Cover letter', 24, FontWeight.bold, Colors.blueAccent),
-            const SizedBox(height: 16),
-            buildText('Describe why do you fit this project', 16, FontWeight.normal),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: buildDecoration('Enter your cover letter...'),
-              controller: coverLetterController,
-              maxLines: 10,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    submitProposal();
-                    moveToPage(TabsPage(index: 0), context);
-                  },
-                  style: buildButtonStyle(Colors.blue),
-                  child: buildText('Submit', 16, FontWeight.bold, Colors.white),
+                buildText(
+                    'Cover letter', 24, FontWeight.bold, Colors.blueAccent),
+                const SizedBox(height: 16),
+                buildText('Describe why do you fit this project', 16,
+                    FontWeight.normal),
+                const SizedBox(height: 16),
+                TextFormField(
+                  decoration: buildDecoration('Enter your cover letter...'),
+                  controller: coverLetterController,
+                  maxLines: 10,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        submitProposal();
+                        moveToPage(TabsPage(index: 0), context);
+                      },
+                      style: buildButtonStyle(Colors.blue),
+                      child: buildText(
+                          'Submit', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

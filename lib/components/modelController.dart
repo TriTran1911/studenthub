@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/chatController.dart';
 
@@ -42,8 +43,8 @@ class User {
 
   User.fromNotification(Map<String, dynamic> json)
       : id = json['id'],
-        fullname = '',
-        email = '',
+        fullname = json['fullname'],
+        email = json['email'],
         password = '',
         roles = [],
         company = Company(),
@@ -131,7 +132,11 @@ class Proposal {
       coverLetter: json['coverLetter'],
       statusFlag: json['statusFlag'],
       disableFlag: json['disableFlag'],
-      project: Project.formProject(json['project']),
+      project:
+          json['project'] != null ? Project.formProject(json['project']) : null,
+      student: json['student'] != null
+          ? Student.fromNotification(json['student'])
+          : null,
     );
   }
 
@@ -259,6 +264,9 @@ class Student {
   List<Education>? educations;
   List<Language>? languages;
   List<Experience>? experiences;
+  int? techStackId;
+  String? resume;
+  String? transcript;
 
   Student(
       {this.id,
@@ -273,7 +281,10 @@ class Student {
       this.proposals,
       this.educations,
       this.languages,
-      this.experiences});
+      this.experiences,
+      this.techStackId,
+      this.resume,
+      this.transcript});
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
@@ -326,6 +337,22 @@ class Student {
           ? (json['experiences'] as List)
               .map((e) => Experience.fromJson(e))
               .toList()
+          : null,
+    );
+  }
+
+  factory Student.fromNotification(Map<String, dynamic> json) {
+    return Student(
+      id: json['id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      userId: json['userId'],
+      techStackId: json['techStackId'],
+      resume: json['resume'],
+      transcript: json['transcript'],
+      techStack: json['techStack'] != null
+          ? TechStack.fromJson(json['techStack'])
           : null,
     );
   }
@@ -694,12 +721,14 @@ class Message {
       senderId: json['senderId'],
       receiverId: json['receiverId'],
       projectId: json['projectId'],
+      interviewId: json['interviewId'],
       interview: json['interview'] != null
           ? Interview.fromJson(json['interview'])
           : null,
       content: json['content'],
       messageFlag: json['messageFlag'],
-      interviewId: json['interviewId'],
+      project:
+          json['project'] != null ? Project.formProject(json['project']) : null,
     );
   }
 }
