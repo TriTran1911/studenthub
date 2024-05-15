@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/HomePage/tabs.dart';
 import '/components/theme_provider.dart'; // Import ThemeProvider
 import '/screens/action/account.dart';
 import '/components/controller.dart';
@@ -134,7 +135,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       onPressed: () {
                         appBarIcon.isSelected = false;
-                        Navigator.pop(context);
+                        Navigator.popUntil(
+                          context,
+                          ModalRoute.withName(Navigator.defaultRouteName),
+                        );
+                        moveToPage(const TabsPage(index: 0), context);
                       },
                     ),
             ],
@@ -147,45 +152,3 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-class CustomAppBar1 extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final bool showBackButton;
-  final Gradient gradient;
-
-  const CustomAppBar1({
-    Key? key,
-    required this.title,
-    this.showBackButton = false,
-    required this.gradient,
-  }) : preferredSize = const Size.fromHeight(60.0), super(key: key);
-
-  @override
-  final Size preferredSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: showBackButton
-          ? IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            )
-          : null,
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 24.0,
-          color: Colors.white,
-        ),
-      ),
-      centerTitle: true,
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-        ),
-      ),
-    );
-  }
-}
-

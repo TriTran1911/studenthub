@@ -45,7 +45,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
         return Student();
       }
     } catch (e) {
-      print('Failed to load student profile');
+      print('Failed to load student profile $e');
       return Student();
     }
   }
@@ -65,6 +65,11 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             return Text('Error: ${snapshot.error}');
           } else {
             student = snapshot.data!;
+            if (student.fullname == null) {
+              return const Center(
+                child: Text('No data found'),
+              );
+            } else {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -197,7 +202,6 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                     const SizedBox(height: 16),
                     if (student.experiences!.isNotEmpty) ...[
                       buildText('Experience: ', 20, FontWeight.bold),
-                      // return experience as a card
                       const SizedBox(height: 16),
                       for (var experience in student.experiences!) ...[
                         Container(
@@ -222,7 +226,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                 'Duration: ${experience.startMonth!} - ${experience.endMonth}',
                                 20,
                                 FontWeight.normal,
-                                Colors.grey[400],
+                                Colors.grey[600],
                               ),
                               buildText(
                                 'Description: ${experience.description!}',
@@ -258,7 +262,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                   ],
                 ),
               ),
-            );
+            );}
           }
         },
       ),

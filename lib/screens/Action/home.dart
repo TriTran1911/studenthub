@@ -4,9 +4,10 @@ import 'package:liquid_swipe/liquid_swipe.dart';
 import '/screens/AccountManage/Login.dart';
 import '/components/controller.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -14,13 +15,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentPage = 0;
 
-  final Gradient gradient1 = LinearGradient(
+  final Gradient gradient1 = const LinearGradient(
     colors: [Colors.blueAccent, Colors.lightBlueAccent],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
-  final Gradient gradient2 = LinearGradient(
+  final Gradient gradient2 = const LinearGradient(
     colors: [Colors.purpleAccent, Colors.deepPurpleAccent],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -33,8 +34,10 @@ class _HomeState extends State<Home> {
         children: [
           LiquidSwipe(
             pages: [
-              _buildPage(context, gradient1, tr('home_button1'), tr('home_title5')),
-              _buildPage(context, gradient2, tr('home_button2'), tr('home_title6')),
+              _buildPage(
+                  context, gradient1, tr('home_button1'), tr('home_title5')),
+              _buildPage(
+                  context, gradient2, tr('home_button2'), tr('home_title6')),
             ],
             fullTransitionValue: 600,
             enableLoop: true,
@@ -46,17 +49,17 @@ class _HomeState extends State<Home> {
               });
             },
           ),
-          Positioned(
+          const Positioned(
             top: 70, 
             left: 16,
             child: Row(
               children: [
                 Icon(
-                  Icons.school, 
+                  Icons.school,
                   color: Colors.white,
                   size: 28,
                 ),
-                SizedBox(width: 8), 
+                SizedBox(width: 8),
                 Text(
                   'StudentHub',
                   style: TextStyle(
@@ -73,7 +76,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPage(BuildContext context, Gradient gradient, String buttonText, String swipeText) {
+  Widget _buildPage(BuildContext context, Gradient gradient, String buttonText,
+      String swipeText) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final lottieAsset = isDarkMode
         ? 'assets/animation/Lottie_black.json'
@@ -89,13 +93,13 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             _buildTextColumn(
               title: tr('home_title1'),
               subtitle: tr('home_title2'),
               textColor: Colors.white,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               child: Lottie.asset(
                 lottieAsset,
@@ -104,18 +108,18 @@ class _HomeState extends State<Home> {
                 reverse: true,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildElevatedButton(
               buttonText,
               () {
                 moveToPage(Login(), context);
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               swipeText,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 16.0,
               ),
@@ -126,7 +130,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Column _buildTextColumn({required String title, required String subtitle, required Color textColor}) {
+  Column _buildTextColumn(
+      {required String title,
+      required String subtitle,
+      required Color textColor}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -139,7 +146,7 @@ class _HomeState extends State<Home> {
             color: textColor,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           subtitle,
           textAlign: TextAlign.center,
@@ -165,7 +172,7 @@ class _HomeState extends State<Home> {
       onPressed: onPressed,
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16.0,
         ),

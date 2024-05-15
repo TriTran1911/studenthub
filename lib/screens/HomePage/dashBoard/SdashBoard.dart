@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../components/decoration.dart';
@@ -80,27 +81,27 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buildText('Your Projects', 20, FontWeight.bold),
+                  buildText("project_text21".tr(), 20, FontWeight.bold),
                 ],
               ),
             ),
-            bottom: const TabBar(
+            bottom: TabBar(
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
               indicatorColor: Colors.blue,
               tabs: [
                 Tab(
-                  child: Text('All Projects',
+                  child: Text("project_text7".tr(),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
                 Tab(
-                  child: Text('Working',
+                  child: Text("project_text19".tr(),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
                 Tab(
-                  child: Text('Achieved',
+                  child: Text("project_text20".tr(),
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
@@ -122,8 +123,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                     ),
                     backgroundColor: Colors.blueAccent[200],
                     collapsedBackgroundColor: Colors.blueAccent[400],
-                    title: buildText(
-                        'Active proposal', 20, FontWeight.bold, Colors.white),
+                    title: buildText("project_text28".tr(), 20, FontWeight.bold,
+                        Colors.white),
                     children: <Widget>[
                       buildCards(activeProposalList),
                     ],
@@ -153,7 +154,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                             ),
                             backgroundColor: Colors.blueAccent[200],
                             collapsedBackgroundColor: Colors.blueAccent[400],
-                            title: buildText('Submitted proposal', 20,
+                            title: buildText("project_text29".tr(), 20,
                                 FontWeight.bold, Colors.white),
                             children: <Widget>[
                               buildCards(submittedProposalList),
@@ -180,7 +181,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
         children: [
           const SizedBox(height: 20),
           Center(
-            child: buildText('No project found\n', 16, FontWeight.bold),
+            child: buildText("project_text23".tr() + "\n", 16, FontWeight.bold),
           ),
         ],
       );
@@ -243,12 +244,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                           ),
                           buildText(
                               pro.projectScopeFlag == 0
-                                  ? 'Less than 1 month'
+                                  ? tr("project_text2")
                                   : pro.projectScopeFlag == 1
-                                      ? '1 to 3 months'
+                                      ? tr("project_text3")
                                       : pro.projectScopeFlag == 2
-                                          ? '3 to 6 months'
-                                          : 'More than 6 months',
+                                          ? tr("project_text4")
+                                          : tr("project_text5"),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -263,9 +264,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.numberOfStudents == 1
-                                  ? '${pro.numberOfStudents} student'
-                                  : '${pro.numberOfStudents} students',
+                              pro.numberOfStudents == 1 ||
+                                      pro.numberOfStudents == 0
+                                  ? '${pro.numberOfStudents} ' +
+                                      tr('project_text13')
+                                  : '${pro.numberOfStudents} ' +
+                                      tr('project_text14'),
                               14,
                               FontWeight.normal,
                               Colors.black),

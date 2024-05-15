@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/controller.dart';
 import '../../../connection/server.dart';
 import 'Function/companyProjectDetail.dart';
@@ -137,7 +139,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildText('Your Projects', 20, FontWeight.bold),
+              buildText("project_text21".tr(), 20, FontWeight.bold),
               ElevatedButton(
                 onPressed: () {
                   moveToPage(const ProjectPost1(), context);
@@ -148,27 +150,27 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child:
-                    buildText('Post a job', 20, FontWeight.bold, Colors.white),
+                child: buildText(
+                    "project_text22".tr(), 20, FontWeight.bold, Colors.white),
               )
             ],
           ),
         ),
-        bottom: const TabBar(
+        bottom: TabBar(
           labelColor: Colors.blue,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.blue,
           tabs: [
             Tab(
-              child: Text('All Projects',
+              child: Text("project_text7".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             Tab(
-              child: Text('Working',
+              child: Text("project_text19".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             Tab(
-              child: Text('Achieved',
+              child: Text("project_text20".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ],
@@ -183,7 +185,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         children: [
           const SizedBox(height: 20),
           Center(
-            child: buildText('No project found', 16, FontWeight.bold),
+            child: buildText("project_text23".tr(), 16, FontWeight.bold),
           ),
         ],
       );
@@ -248,7 +250,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                   children: [
                                     buildBottomSheetItem(
                                         context,
-                                        "View project detail",
+                                        "project_text24".tr(),
                                         Colors.black, () {
                                       Navigator.pop(context);
                                       moveToPage(
@@ -256,21 +258,19 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                           context);
                                     }),
                                     buildBottomSheetItem(
-                                        context, "Edit posting", Colors.black,
-                                        () {
+                                        context,
+                                        "project_text25".tr(),
+                                        Colors.black, () {
                                       Navigator.pop(context);
                                       showEditDialog(context, pro);
                                     }),
-                                    buildBottomSheetItem(
-                                        context, "Remove posting", Colors.red,
-                                        () {
+                                    buildBottomSheetItem(context,
+                                        "project_text26".tr(), Colors.red, () {
                                       Navigator.pop(context);
                                       showDeleteDialog(context, pro);
                                     }),
-                                    buildBottomSheetItem(
-                                        context,
-                                        "Start working on this project",
-                                        Colors.blue, () {
+                                    buildBottomSheetItem(context,
+                                        "project_text27".tr(), Colors.blue, () {
                                       Navigator.pop(context);
                                       showConfirmationDialog(context, pro);
                                     }),
@@ -301,12 +301,12 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                           ),
                           buildText(
                               pro.projectScopeFlag == 0
-                                  ? 'Less than 1 month'
+                                  ? tr("project_text2")
                                   : pro.projectScopeFlag == 1
-                                      ? '1 to 3 months'
+                                      ? tr("project_text3")
                                       : pro.projectScopeFlag == 2
-                                          ? '3 to 6 months'
-                                          : 'More than 6 months',
+                                          ? tr("project_text4")
+                                          : tr("project_text5"),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -442,105 +442,108 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
               ),
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                buildText('Edit project', 20, FontWeight.bold, Colors.blue),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: titleController,
-                  decoration: buildDecoration('Title'),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: descriptionController,
-                  decoration: buildDecoration('Description'),
-                  maxLines: 5,
-                ),
-                const SizedBox(height: 10),
-                Column(
-                  children: <Widget>[
-                    RadioListTile<int>(
-                      title: const Text('Less than 1 month'),
-                      value: 0,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('1 to 3 months'),
-                      value: 1,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('3 to 6 months'),
-                      value: 2,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                    RadioListTile<int>(
-                      title: const Text('More than 6 months'),
-                      value: 3,
-                      groupValue: durationController,
-                      onChanged: (int? value) {
-                        setState(() {
-                          durationController = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: studentController,
-                  decoration: buildDecoration('Number of students'),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: buildButtonStyle(Colors.grey[400]!),
-                      child: buildText(
-                          'Cancel', 16, FontWeight.bold, Colors.white),
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          project.title = titleController.text;
-                          project.description = descriptionController.text;
-                          project.projectScopeFlag = durationController;
-                          project.numberOfStudents =
-                              int.parse(studentController.text);
-                          project.typeFlag = typeFlag;
-                          editProject(project);
-                        });
-                        Navigator.of(context).pop();
-                      },
-                      style: buildButtonStyle(Colors.blue[400]!),
-                      child:
-                          buildText('Save', 16, FontWeight.bold, Colors.white),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setStateDialog) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildText('Edit project', 20, FontWeight.bold, Colors.blue),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: titleController,
+                    decoration: buildDecoration('Title'),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: descriptionController,
+                    decoration: buildDecoration('Description'),
+                    maxLines: 5,
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: <Widget>[
+                      RadioListTile<int>(
+                        title: Text(tr("project_text2")),
+                        value: 0,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text3")),
+                        value: 1,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text4")),
+                        value: 2,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<int>(
+                        title: Text(tr("project_text5")),
+                        value: 3,
+                        groupValue: durationController,
+                        onChanged: (int? value) {
+                          setStateDialog(() {
+                            durationController = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: studentController,
+                    decoration: buildDecoration('Number of students'),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: buildButtonStyle(Colors.grey[400]!),
+                        child: buildText(
+                            'Cancel', 16, FontWeight.bold, Colors.white),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            project.title = titleController.text;
+                            project.description = descriptionController.text;
+                            project.projectScopeFlag = durationController;
+                            project.numberOfStudents =
+                                int.parse(studentController.text);
+                            project.typeFlag = typeFlag;
+                            editProject(project);
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        style: buildButtonStyle(Colors.blue[400]!),
+                        child: buildText(
+                            'Save', 16, FontWeight.bold, Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
           ),
         );
       },

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
 import '/components/appbar.dart';
@@ -51,7 +52,7 @@ class _ProjectPost2State extends State<ProjectPost2> {
           Text('How long will your project take?',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           RadioListTile(
-            title: Text('Less than 1 month'),
+            title: Text(tr("project_text2")),
             value: 0,
             groupValue: selectedDuration,
             onChanged: (value) {
@@ -61,7 +62,7 @@ class _ProjectPost2State extends State<ProjectPost2> {
             },
           ),
           RadioListTile(
-            title: Text('1 to 3 months'),
+            title: Text(tr("project_text3")),
             value: 1,
             groupValue: selectedDuration,
             onChanged: (value) {
@@ -71,7 +72,7 @@ class _ProjectPost2State extends State<ProjectPost2> {
             },
           ),
           RadioListTile(
-            title: Text('3 to 6 months'),
+            title: Text(tr("project_text4")),
             value: 2,
             groupValue: selectedDuration,
             onChanged: (value) {

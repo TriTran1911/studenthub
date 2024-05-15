@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
-import 'package:studenthub/main.dart'; // Thay thế đường dẫn với main.dart thực tế của bạn
 
-// Tạo một Provider để lưu trữ thông tin về ngôn ngữ được chọn
 class LanguageProvider extends ChangeNotifier {
   Locale _locale = Locale('en');
 

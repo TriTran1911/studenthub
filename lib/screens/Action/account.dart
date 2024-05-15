@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
+import '../AccountManage/Login.dart';
 import '../Profile/SinputProfile2.dart';
 import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
@@ -15,7 +16,7 @@ import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'home.dart';
 import 'package:studenthub/screens/Action/changeLanguage.dart';
-import 'package:studenthub/screens/Action/changeTheme.dart';
+
 import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
 
@@ -121,8 +122,6 @@ class _AccountControllerState extends State<AccountController> {
                               child: PageView(
                                 children: [
                                   ChangePasswordPage(),
-                                  ChangeLanguagePage(),
-                                  const ChangeThemePage(),
                                 ],
                               ),
                             ),
@@ -156,7 +155,7 @@ class _AccountControllerState extends State<AccountController> {
       print('Logout failed');
     }
 
-    moveToPage(Home(), context);
+    moveToPage(Login(), context);
   }
 
   void _handleAddRole(BuildContext context) {

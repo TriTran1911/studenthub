@@ -137,7 +137,8 @@ class Project {
     return list.map((map) => Project.fromMap(map)).toList();
   }
 
-  static List<Project> fromListMapByCompanyId(List<dynamic> list, String companyId) {
+  static List<Project> fromListMapByCompanyId(
+      List<dynamic> list, String companyId) {
     List<Project> result = list
         .where((map) => map['companyId'] == companyId)
         .map((map) => Project.fromMap(map))
@@ -145,7 +146,6 @@ class Project {
     print(result.length);
     return result;
   }
-
 
   static Future<List<Project>> getAllProjectsData() async {
     print('Get All Projects Data');
@@ -183,7 +183,8 @@ class Project {
 
   static Future<List<Project>> getProjectsByCompanyId(String companyId) async {
     try {
-      var response = await Connection.getRequest('/api/project/company/$companyId', {});
+      var response =
+          await Connection.getRequest('/api/project/company/$companyId', {});
       var responseDecode = jsonDecode(response);
       if (responseDecode['result'] != null) {
         List<Project> projectList =
@@ -208,7 +209,6 @@ class Project {
       print('Error fetching projects by company id: $e');
     }
   }
-  
 }
 
 // initial submitted projects

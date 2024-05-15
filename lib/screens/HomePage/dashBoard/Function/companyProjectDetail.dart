@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/screens/HomePage/message/pages/ChatDetailPage.dart';
@@ -10,6 +11,7 @@ import '../../../../components/decoration.dart';
 import '../../../../components/modelController.dart';
 import '../../../../connection/server.dart';
 
+// ignore: must_be_immutable
 class ProjectDetailPage extends StatefulWidget {
   Project project;
 
@@ -129,18 +131,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
   }
 
   FutureBuilder<List<Proposal>> buildProposal() {
-    /*senderId: modelController.user.id,
-                                              receiverId: proposal.student!.id!,
-                                              projectId: widget.project.id!,
-                                              senderName:
-                                                  modelController.user.fullname,
-                                              receiverName:
-                                                  proposal.student!.fullname!,*/
-    print('senderID: ${modelController.user.id}');
-    // print('receiverID: ${proposalsList[0].studentId}');
-    print('projectID: ${widget.project.id}');
-    print('senderName: ${modelController.user.fullname}');
-    // print('receiverName: ${proposalsList[0].student!.fullname}');
     return FutureBuilder(
       future: _projectsFuture,
       builder: (context, snapshot) {
@@ -161,7 +151,6 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               itemBuilder: (context, index) {
                 Proposal proposal = proposalsList[index];
                 Student student = proposalsList[index].student!;
-                print('receiverID 222: ${proposal.student!.userId}');
                 return Card(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -331,12 +320,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       // add bullet point before each row in description
                       buildText(
                           pro.projectScopeFlag == 0
-                              ? 'Less than 1 month'
+                              ? tr("project_text2")
                               : pro.projectScopeFlag == 1
-                                  ? '1 to 3 months'
+                                  ? tr("project_text3")
                                   : pro.projectScopeFlag == 2
-                                      ? '3 to 6 months'
-                                      : 'More than 6 months',
+                                      ? tr("project_text4")
+                                      : tr("project_text5"),
                           18,
                           FontWeight.normal),
                     ],

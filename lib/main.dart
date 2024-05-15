@@ -9,13 +9,6 @@ import '/screens/action/home.dart';
 import 'package:provider/provider.dart';
 import 'package:studenthub/components/chatController.dart';
 
-
-final ThemeData customTheme = ThemeData(
-  primaryColor: Colors.grey[300], // Màu chính
-  scaffoldBackgroundColor: Colors.grey[200], // Màu nền của scaffold
-  // Thêm các thuộc tính màu khác nếu cần
-);
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -40,7 +33,6 @@ void main() async {
       ),
     ),
   );
-
 }
 
 class MyApp extends StatelessWidget {
