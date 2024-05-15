@@ -139,7 +139,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              buildText('Your Projects', 20, FontWeight.bold),
+              buildText("project_text21".tr(), 20, FontWeight.bold),
               ElevatedButton(
                 onPressed: () {
                   moveToPage(const ProjectPost1(), context);
@@ -150,27 +150,27 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child:
-                    buildText('Post a job', 20, FontWeight.bold, Colors.white),
+                child: buildText(
+                    "project_text22".tr(), 20, FontWeight.bold, Colors.white),
               )
             ],
           ),
         ),
-        bottom: const TabBar(
+        bottom: TabBar(
           labelColor: Colors.blue,
           unselectedLabelColor: Colors.grey,
           indicatorColor: Colors.blue,
           tabs: [
             Tab(
-              child: Text('All Projects',
+              child: Text("project_text7".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             Tab(
-              child: Text('Working',
+              child: Text("project_text19".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             Tab(
-              child: Text('Achieved',
+              child: Text("project_text20".tr(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ],
@@ -185,7 +185,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         children: [
           const SizedBox(height: 20),
           Center(
-            child: buildText('No project found', 16, FontWeight.bold),
+            child: buildText("project_text23".tr(), 16, FontWeight.bold),
           ),
         ],
       );
@@ -250,7 +250,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                   children: [
                                     buildBottomSheetItem(
                                         context,
-                                        "View project detail",
+                                        "project_text24".tr(),
                                         Colors.black, () {
                                       Navigator.pop(context);
                                       moveToPage(
@@ -258,21 +258,19 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                                           context);
                                     }),
                                     buildBottomSheetItem(
-                                        context, "Edit posting", Colors.black,
-                                        () {
+                                        context,
+                                        "project_text25".tr(),
+                                        Colors.black, () {
                                       Navigator.pop(context);
                                       showEditDialog(context, pro);
                                     }),
-                                    buildBottomSheetItem(
-                                        context, "Remove posting", Colors.red,
-                                        () {
+                                    buildBottomSheetItem(context,
+                                        "project_text26".tr(), Colors.red, () {
                                       Navigator.pop(context);
                                       showDeleteDialog(context, pro);
                                     }),
-                                    buildBottomSheetItem(
-                                        context,
-                                        "Start working on this project",
-                                        Colors.blue, () {
+                                    buildBottomSheetItem(context,
+                                        "project_text27".tr(), Colors.blue, () {
                                       Navigator.pop(context);
                                       showConfirmationDialog(context, pro);
                                     }),
