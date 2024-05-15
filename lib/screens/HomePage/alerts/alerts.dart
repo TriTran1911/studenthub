@@ -278,9 +278,6 @@ class _AlertsPageState extends State<AlertsPage> {
                                       meetingId: listMeetingId[index]),
                                   context);
                             },
-                            child: (notifications[index].typeNotifyFlag == '0')
-                                ? Text(tr('alerts_text1'))
-                                : Text(tr('alerts_text2')),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,

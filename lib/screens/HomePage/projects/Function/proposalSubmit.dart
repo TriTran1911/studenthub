@@ -49,13 +49,13 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                    'Cover letter', 24, FontWeight.bold, Colors.blueAccent),
+                    tr('letter_text1'), 24, FontWeight.bold, Colors.blueAccent),
                 const SizedBox(height: 16),
-                buildText('Describe why do you fit this project', 16,
+                buildText(tr('letter_text2'), 16,
                     FontWeight.normal),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: buildDecoration('Enter your cover letter...'),
+                  decoration: buildDecoration(tr('letter_text3')),
                   controller: coverLetterController,
                   maxLines: 10,
                 ),
@@ -70,7 +70,7 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
                       },
                       style: buildButtonStyle(Colors.blue),
                       child: buildText(
-                          'Submit', 16, FontWeight.bold, Colors.white),
+                          tr('letter_text4'), 16, FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),

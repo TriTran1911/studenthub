@@ -354,12 +354,6 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             FontWeight.normal,
                             Colors.black,
                           ),
-                              pro.numberOfStudents == 1 || pro.numberOfStudents == 0
-                                  ? '${pro.numberOfStudents} ' + tr('project_text13')
-                                  : '${pro.numberOfStudents} ' + tr('project_text14'),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
                         ],
                       ),
                       Column(
@@ -376,12 +370,6 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             FontWeight.normal,
                             Colors.black,
                           ),
-                              pro.countProposals == 1 || pro.countProposals == 0
-                                  ? '${pro.countProposals.toString()} ' + tr('project_text11')
-                                  : '${pro.countProposals.toString()} ' + tr('project_text12'),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
                         ],
                       ),
                     ],
