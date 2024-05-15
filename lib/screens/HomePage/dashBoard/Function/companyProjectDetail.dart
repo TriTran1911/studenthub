@@ -1,5 +1,5 @@
+// ignore: file_names
 import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +58,8 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
   void sendOffer(int proposalId) async {
     try {
       var response = await Connection.patchRequest(
-          '/api/proposal/${proposalId}', {"statusFlag": 2});
-      var responseDecode = jsonDecode(response);
-      print('S: ' + responseDecode);
+          '/api/proposal/$proposalId', {"statusFlag": 2});
+      jsonDecode(response);
     } catch (e) {
       print(e);
     }
@@ -100,7 +99,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                       ],
                     ),
                   ),
-                  // buildHired(),
+                  buildHired(),
                 ],
               ),
             ),
@@ -157,7 +156,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               itemCount: proposalsList.length,
               itemBuilder: (context, index) {
                 Proposal proposal = proposalsList[index];
+                if (proposal.statusFlag == 3) {
+                  return const SizedBox
+                      .shrink(); // Do not display card if statusFlag is 3
+                }
                 Student student = proposalsList[index].student!;
+                print('Flag: ${proposal.statusFlag}');
                 return Card(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -274,14 +278,17 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                                 onPressed: proposal.statusFlag == 0
                                     ? () {
                                         sendOffer(proposal.id!);
+                                        setState(() {
+                                          proposal.statusFlag =
+                                              2; // assuming 2 is the status for 'Sent Offer'
+                                        });
                                       }
                                     : null,
                                 child: buildText(
-                                  proposal.statusFlag == 0
+                                  (proposal.statusFlag == 0 ||
+                                          proposal.statusFlag == 1)
                                       ? 'Hire'
-                                      : proposal.statusFlag == 2
-                                          ? 'Sent Offer'
-                                          : 'Hired',
+                                      : 'Sent Offer',
                                   18,
                                   FontWeight.bold,
                                   Colors.black,
@@ -294,6 +301,179 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                     ),
                   ),
                 );
+              },
+            );
+          }
+        }
+      },
+    );
+  }
+
+  FutureBuilder<List<Proposal>> buildHired() {
+    return FutureBuilder(
+      future: _projectsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          );
+        } else {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: proposalsList.length,
+              itemBuilder: (context, index) {
+                Proposal proposal = proposalsList[index];
+                Student student = proposalsList[index].student!;
+                return proposal.statusFlag == 3
+                    ? Card(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 3,
+                        surfaceTintColor: Colors.blue,
+                        margin: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+                        shadowColor: Colors.blue,
+                        child: ListTile(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[100],
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: buildText(
+                                    proposal.createdAt != null
+                                        ? timeDif(DateTime.parse(
+                                            proposal.createdAt!.toString()))
+                                        : '0', // or some default value
+                                    16,
+                                    FontWeight.bold,
+                                    Colors.blue[800]),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.person_outlined, size: 80),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        buildText(student.fullname!, 20,
+                                            FontWeight.bold),
+                                        buildText(student.techStack!.name!, 20,
+                                            FontWeight.normal),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+
+                              if (student.educations!.isNotEmpty) ...[
+                                buildText('Education:', 20, FontWeight.bold,
+                                    Colors.blue),
+                                for (var edu in student.educations!)
+                                  buildText(
+                                    '${edu.schoolName} - ${edu.startYear} - ${edu.endYear}',
+                                    18,
+                                    FontWeight.normal,
+                                  )
+                              ],
+
+                              const SizedBox(height: 16),
+                              buildText('Cover Letter:', 20, FontWeight.bold,
+                                  Colors.blue),
+                              buildText(
+                                addBulletPoints(proposal.coverLetter!),
+                                18,
+                                FontWeight.normal,
+                              ),
+                              const SizedBox(height: 16),
+                              // two buttons message and hire
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Colors.greenAccent[100],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        side: const BorderSide(
+                                            color: Colors.black),
+                                      ),
+                                      onPressed: () {
+                                        // send message to student
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatDetailPage(
+                                                    senderId:
+                                                        modelController.user.id,
+                                                    receiverId: proposal
+                                                        .student!.userId!,
+                                                    projectId:
+                                                        widget.project.id!,
+                                                    senderName: modelController
+                                                        .user.fullname,
+                                                    receiverName: proposal
+                                                        .student!.fullname!,
+                                                  )),
+                                        );
+                                      },
+                                      child: buildText('Message', 18,
+                                          FontWeight.bold, Colors.black),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blueAccent[100],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        side: const BorderSide(
+                                            color: Colors.black),
+                                      ),
+                                      onPressed: proposal.statusFlag == 0
+                                          ? () {
+                                              sendOffer(proposal.id!);
+                                            }
+                                          : null,
+                                      child: buildText(
+                                        'Hired',
+                                        18,
+                                        FontWeight.bold,
+                                        Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : null;
               },
             );
           }

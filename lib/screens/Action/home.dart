@@ -13,8 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentPage = 0;
-
   final Gradient gradient1 = const LinearGradient(
     colors: [Colors.blueAccent, Colors.lightBlueAccent],
     begin: Alignment.topLeft,
@@ -44,13 +42,11 @@ class _HomeState extends State<Home> {
             waveType: WaveType.liquidReveal,
             positionSlideIcon: 0.5,
             onPageChangeCallback: (page) {
-              setState(() {
-                _currentPage = page;
-              });
+              setState(() {});
             },
           ),
           const Positioned(
-            top: 70, 
+            top: 70,
             left: 16,
             child: Row(
               children: [

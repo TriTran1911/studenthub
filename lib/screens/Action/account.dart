@@ -9,14 +9,10 @@ import 'package:studenthub/screens/Action/changePassWord.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
 import '../AccountManage/Login.dart';
-import '../Profile/SinputProfile2.dart';
 import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/components/modelController.dart';
 import '/components/controller.dart';
-import 'home.dart';
-import 'package:studenthub/screens/Action/changeLanguage.dart';
-
 import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
 

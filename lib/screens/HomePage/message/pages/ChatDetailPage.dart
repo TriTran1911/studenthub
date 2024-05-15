@@ -287,6 +287,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       disableFlag: listDisableFlag[index],
                       meetingRoomId: listMeetingId[index]);
                 }
+                return null;
               },
             ),
           ),
