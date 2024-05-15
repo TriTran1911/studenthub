@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/decoration.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import '/components/modelController.dart';
 import '/connection/server.dart';
 import 'Function/favoriteProject.dart';
@@ -584,66 +586,66 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   ListView buildCards() {
-    if (projectList.isEmpty) {
-      return ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Card(
-            color: Colors.yellow[100],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 3,
-            surfaceTintColor: Colors.blue,
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-            shadowColor: Colors.blue,
-            child: ListTile(
-              title: buildCenterText(
-                  tr("project_text18"), 20, FontWeight.bold, Colors.black),
-            ),
+  if (projectList.isEmpty) {
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        Card(
+          color: Colors.yellow[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-        ],
-      );
-    } else {
-      return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: projectList.length,
-        itemBuilder: (context, index) {
-          Project pro = projectList[index];
-          return Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 3,
-            surfaceTintColor: Colors.blue,
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-            shadowColor: Colors.blue,
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: buildText(
-                            pro.createdAt != null
-                                ? timeDif(
-                                    DateTime.parse(pro.createdAt!.toString()))
-                                : '0', // or some default value
-                            16,
-                            FontWeight.bold,
-                            Colors.blue[800]),
+          elevation: 3,
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          child: ListTile(
+            title: buildCenterText(
+                tr("project_text18"), 20, FontWeight.bold, Colors.black),
+          ),
+        ),
+      ],
+    );
+  } else {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: projectList.length,
+      itemBuilder: (context, index) {
+        Project pro = projectList[index];
+        final themeProvider =
+            Provider.of<ThemeProvider>(context, listen: false);
+
+        return Card(
+          color: themeProvider.getTheme().scaffoldBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 3,
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+          shadowColor: themeProvider.getTheme().primaryColor,
+          child: ListTile(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: themeProvider.getTheme().primaryColorLight,
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      widget.role == 0
+                      child: buildText(
+                        pro.createdAt != null
+                            ? timeDif(DateTime.parse(pro.createdAt!.toString()))
+                            : '0',
+                        16,
+                        FontWeight.bold,
+                        themeProvider.getTheme().primaryColorDark,
+                      ),
+                    ),
+                    widget.role == 0
                           ? IconButton(
                               icon: Icon(
                                 pro.isFavorite!
@@ -661,87 +663,97 @@ class _ProjectsPageState extends State<ProjectsPage> {
                               },
                             )
                           : const SizedBox(width: 0),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
-                  const SizedBox(height: 10),
-                  buildText(
-                      pro.description!, 16, FontWeight.normal, Colors.black),
-                  const SizedBox(height: 10),
-                  Row(
-                    //space between
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          const Icon(
-                            Icons.access_time_outlined,
-                            color: Colors.blue,
-                          ),
-                          buildText(
-                              pro.projectScopeFlag == 0
-                                  ? tr("project_text2")
-                                  : pro.projectScopeFlag == 1
-                                      ? tr("project_text3")
-                                      : pro.projectScopeFlag == 2
-                                          ? tr("project_text4")
-                                          : tr("project_text5"),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Icon(
-                            pro.numberOfStudents == 1
-                                ? Icons.person_outlined
-                                : Icons.people_outlined,
-                            color: Colors.blue,
-                          ),
-                          buildText(
-                              pro.numberOfStudents == 1 ||
-                                      pro.numberOfStudents == 0
-                                  ? '${pro.numberOfStudents} ' +
-                                      tr("project_text13")
-                                  : '${pro.numberOfStudents} ' +
-                                      tr("project_text14"),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Icon(
-                            Icons.assignment,
-                            color: Colors.blue,
-                          ),
-                          buildText(
-                              pro.countProposals == 1 || pro.countProposals == 0
-                                  ? '${pro.countProposals.toString()} ' +
-                                      tr("project_text11")
-                                  : '${pro.countProposals.toString()} ' +
-                                      tr("project_text12"),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              onTap: widget.role == 0
-                  ? () {
-                      moveToPage(ProjectDetailPage(project: pro), context);
-                    }
-                  : () {},
+                  ],
+                ),
+                const SizedBox(height: 16),
+                buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 10),
+                buildText(
+                  pro.description!,
+                  16,
+                  FontWeight.normal,
+                  themeProvider.getTheme().textTheme.bodyText1!.color!,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.access_time_outlined,
+                          color: themeProvider.getIconColor(
+                              context),
+                        ),
+                        buildText(
+                          pro.projectScopeFlag == 0
+                              ? tr("project_text2")
+                              : pro.projectScopeFlag == 1
+                                  ? tr("project_text3")
+                                  : pro.projectScopeFlag == 2
+                                      ? tr("project_text4")
+                                      : tr("project_text5"),
+                          14,
+                          FontWeight.normal,
+                          themeProvider.getTheme().textTheme.bodyText1!.color!,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          pro.numberOfStudents == 1
+                              ? Icons.person_outlined
+                              : Icons.people_outlined,
+                          color: themeProvider.getIconColor(
+                              context),
+                        ),
+                        buildText(
+                          pro.numberOfStudents == 1 ||
+                                  pro.numberOfStudents == 0
+                              ? '${pro.numberOfStudents} ' +
+                                  tr("project_text13")
+                              : '${pro.numberOfStudents} ' +
+                                  tr("project_text14"),
+                          14,
+                          FontWeight.normal,
+                          themeProvider.getTheme().textTheme.bodyText1!.color!,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.assignment,
+                          color: themeProvider.getIconColor(
+                              context),
+                        ),
+                        buildText(
+                          pro.countProposals == 1 || pro.countProposals == 0
+                              ? '${pro.countProposals.toString()} ' +
+                                  tr("project_text11")
+                              : '${pro.countProposals.toString()} ' +
+                                  tr("project_text12"),
+                          14,
+                          FontWeight.normal,
+                          themeProvider.getTheme().textTheme.bodyText1!.color!,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
             ),
-          );
-        },
-      );
-    }
+            onTap: widget.role == 0
+                ? () {
+                    moveToPage(ProjectDetailPage(project: pro), context);
+                  }
+                : () {},
+          ),
+        );
+      },
+    );
   }
+}
+
 }
