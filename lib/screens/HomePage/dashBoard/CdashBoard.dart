@@ -76,6 +76,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         'projectScopeFlag': project.projectScopeFlag,
         'numberOfStudents': project.numberOfStudents,
         'typeFlag': project.typeFlag,
+        'status': project.status,
       };
 
       var response =
@@ -104,14 +105,14 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
           children: [
             buildTabBarView(newProjectList),
             buildTabBarView(workingProjectList),
-            buildTabBarView(achievedProjectList),
+            buildTabBarView(achievedProjectList, true),
           ],
         ),
       ),
     );
   }
 
-  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList) {
+  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList, [bool isAchieved = false]) {
     return FutureBuilder<List<Project>>(
       future: _projectsFuture,
       builder: (context, snapshot) {
@@ -124,7 +125,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return buildCards(ProjectList);
+          return buildCards(ProjectList, isAchieved);
         }
       },
     );
@@ -177,7 +178,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
         ));
   }
 
-  ListView buildCards(List<Project> projectList) {
+  ListView buildCards(List<Project> projectList, [bool isAchieved = false]) {
     if (projectList.isEmpty) {
       return ListView(
         shrinkWrap: true,
@@ -200,9 +201,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
               borderRadius: BorderRadius.circular(20),
             ),
             elevation: 3,
-            surfaceTintColor: Colors.blue,
             margin: const EdgeInsets.all(12),
-            shadowColor: Colors.blue,
             child: ListTile(
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,80 +216,108 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: buildText(
-                            pro.createdAt != null
-                                ? timeDif(
-                                    DateTime.parse(pro.createdAt!.toString()))
-                                : '0', // or some default value
-                            16,
-                            FontWeight.bold,
-                            Colors.blue[800]),
-                      ),
-                      // icon selection
-                      IconButton(
-                        icon: const Icon(
-                          Icons.more_vert,
-                          color: Colors.blue,
+                          pro.createdAt != null
+                              ? timeDif(
+                                  DateTime.parse(pro.createdAt!.toString()))
+                              : '0', // or some default value
+                          16,
+                          FontWeight.bold,
+                          Colors.blue[800],
                         ),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 10, 20, 30),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    buildBottomSheetItem(
-                                        context,
-                                        "project_text24".tr(),
-                                        Colors.black, () {
-                                      Navigator.pop(context);
-                                      moveToPage(
-                                          ProjectDetailPage(project: pro),
-                                          context);
-                                    }),
-                                    buildBottomSheetItem(
-                                        context,
-                                        "project_text25".tr(),
-                                        Colors.black, () {
-                                      Navigator.pop(context);
-                                      showEditDialog(context, pro);
-                                    }),
-                                    buildBottomSheetItem(context,
-                                        "project_text26".tr(), Colors.red, () {
-                                      Navigator.pop(context);
-                                      showDeleteDialog(context, pro);
-                                    }),
-                                    buildBottomSheetItem(context,
-                                        "project_text27".tr(), Colors.blue, () {
-                                      Navigator.pop(context);
-                                      showConfirmationDialog(context, pro);
-                                    }),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
                       ),
+                      isAchieved
+                          ? _buildStatusIcon(pro.status)
+                          : IconButton(
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: Colors.blue,
+                              ),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 10, 20, 30),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          buildBottomSheetItem(
+                                            context,
+                                            "project_text24".tr(),
+                                            Colors.black,
+                                            () {
+                                              Navigator.pop(context);
+                                              moveToPage(
+                                                ProjectDetailPage(project: pro),
+                                                context,
+                                              );
+                                            },
+                                          ),
+                                          buildBottomSheetItem(
+                                            context,
+                                            "project_text25".tr(),
+                                            Colors.black,
+                                            () {
+                                              Navigator.pop(context);
+                                              showEditDialog(context, pro);
+                                            },
+                                          ),
+                                          buildBottomSheetItem(
+                                            context,
+                                            "project_text26".tr(),
+                                            Colors.red,
+                                            () {
+                                              Navigator.pop(context);
+                                              showDeleteDialog(context, pro);
+                                            },
+                                          ),
+                                          buildBottomSheetItem(
+                                            context,
+                                            "project_text27".tr(),
+                                            Colors.blue,
+                                            () {
+                                              Navigator.pop(context);
+                                              showConfirmationDialog(
+                                                  context, pro);
+                                            },
+                                          ),
+                                          buildBottomSheetItem(
+                                            context,
+                                            "project_text30".tr(),
+                                            Colors.yellow,
+                                            () {
+                                              Navigator.pop(context);
+                                              showClosedDialog(context, pro);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   buildText(pro.title!, 20, FontWeight.bold, Colors.blue),
                   const SizedBox(height: 10),
                   buildText(
-                      pro.description!, 16, FontWeight.normal, Colors.black),
+                    pro.description!,
+                    16,
+                    FontWeight.normal,
+                    Colors.black,
+                  ),
                   const SizedBox(height: 10),
                   Row(
-                    //space between
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Column(
@@ -300,16 +327,17 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.projectScopeFlag == 0
-                                  ? tr("project_text2")
-                                  : pro.projectScopeFlag == 1
-                                      ? tr("project_text3")
-                                      : pro.projectScopeFlag == 2
-                                          ? tr("project_text4")
-                                          : tr("project_text5"),
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
+                            pro.projectScopeFlag == 0
+                                ? tr("project_text2")
+                                : pro.projectScopeFlag == 1
+                                    ? tr("project_text3")
+                                    : pro.projectScopeFlag == 2
+                                        ? tr("project_text4")
+                                        : tr("project_text5"),
+                            14,
+                            FontWeight.normal,
+                            Colors.black,
+                          ),
                         ],
                       ),
                       Column(
@@ -321,12 +349,13 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.numberOfStudents == 1
-                                  ? '${pro.numberOfStudents} student'
-                                  : '${pro.numberOfStudents} students',
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
+                            pro.numberOfStudents == 1
+                                ? '${pro.numberOfStudents} student'
+                                : '${pro.numberOfStudents} students',
+                            14,
+                            FontWeight.normal,
+                            Colors.black,
+                          ),
                         ],
                       ),
                       Column(
@@ -336,12 +365,13 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.countProposals == 1
-                                  ? '${pro.countProposals.toString()} proposal'
-                                  : '${pro.countProposals.toString()} proposals',
-                              14,
-                              FontWeight.normal,
-                              Colors.black),
+                            pro.countProposals == 1
+                                ? '${pro.countProposals.toString()} proposal'
+                                : '${pro.countProposals.toString()} proposals',
+                            14,
+                            FontWeight.normal,
+                            Colors.black,
+                          ),
                         ],
                       ),
                     ],
@@ -352,6 +382,19 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
           );
         },
       );
+    }
+  }
+
+  Widget _buildStatusIcon(int? status) {
+    switch (status) {
+      case 1:
+        return const Icon(Icons.check_circle,
+            color: Colors.green); // Biểu tượng cho trạng thái hoàn thành
+      case 2:
+        return const Icon(Icons.cancel,
+            color: Colors.red); // Biểu tượng cho trạng thái không hoàn thành
+      default:
+        return SizedBox(); // Trường hợp mặc định, không hiển thị biểu tượng nào
     }
   }
 
@@ -544,6 +587,72 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                 ],
               );
             }),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showClosedDialog(BuildContext context, Project project) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                buildText(
+                    'Close this project', 20, FontWeight.bold, Colors.blue),
+                const SizedBox(height: 20),
+                buildText('Are you sure you want to close on this project?', 16,
+                    FontWeight.normal, Colors.black),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.grey[400]!),
+                      child: buildText(
+                          'Cancel', 16, FontWeight.bold, Colors.white),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          if (project.typeFlag == 0) {
+                            project.status = 2;
+                            newProjectList.remove(project);
+                          } else if (project.typeFlag == 1) {
+                            project.status = 1;
+                            workingProjectList.remove(project);
+                          }
+                          project.typeFlag = 2;
+                          achievedProjectList.add(project);
+                          editProject(project);
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: buildButtonStyle(Colors.blue[400]!),
+                      child:
+                          buildText('Close', 16, FontWeight.bold, Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

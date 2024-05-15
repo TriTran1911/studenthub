@@ -101,7 +101,7 @@
     "project_text17": "Hãy chọn ít nhất một bộ lọc",
     "project_text18": "Không có dự án",
     "project_text19": "Đang thực hiện",
-    "project_text20": "Thành tựu",
+    "project_text20": "Đã lưu",
     "project_text21": "Dự án của bạn",
     "project_text22": "Đăng việc làm",
     "project_text23": "Không tìm thấy dự án nào",
@@ -111,6 +111,7 @@
     "project_text27": "Bắt đầu thực hiện dự án này",
     "project_text28": "Đề xuất đã kích hoạt",
     "project_text29": "Dự án đã nộp",
+    "project_text30": "Đóng dự án",
 
     "modelControl_text1": "Ngay bây giờ",
     "modelControl_text2": "phút trước",

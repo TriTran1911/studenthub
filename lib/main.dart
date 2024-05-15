@@ -21,7 +21,7 @@ void main() async {
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('vi')],
       path: 'lib/translation',
-      fallbackLocale: Locale('vi'),
+      fallbackLocale: Locale('en'),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => Schedule()),
