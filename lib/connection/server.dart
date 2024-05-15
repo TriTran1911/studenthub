@@ -68,6 +68,29 @@ class Connection {
     }
   }
 
+  static Future<dynamic> putFile(String api, String filename) async {
+    var url = Uri.parse(url_b + api);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    };
+    var request = http.MultipartRequest('PUT', url);
+    request.headers.addAll(headers);
+    request.files.add(await http.MultipartFile.fromPath('file', filename));
+    var streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode == 200) {
+      print("Put file successful");
+      return response;
+    } else {
+      print("Put file failed with status: ${response.statusCode}");
+      return response;
+      //throw exception and catch it in UI
+    }
+  }
+
   static Future<dynamic> patchRequest(String api, dynamic object) async {
     var url = Uri.parse(url_b + api);
     var jsonBody = json.encode(object);

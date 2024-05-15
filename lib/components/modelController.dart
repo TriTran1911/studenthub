@@ -85,13 +85,36 @@ ModelController modelController = ModelController();
 
 class Company {
   int? id;
+  int? userId;
+  String? email;
   String? companyName;
-  int? size;
   String? website;
   String? description;
+  String? fullname;
+  int? size;
 
   Company(
-      {this.id, this.companyName, this.size, this.website, this.description});
+      {this.id,
+      this.userId,
+      this.email,
+      this.companyName,
+      this.website,
+      this.description,
+      this.fullname,
+      this.size});
+
+  factory Company.fromJson(Map<String, dynamic> json) {
+    return Company(
+      id: json['id'],
+      userId: json['userId'],
+      email: json['email'],
+      companyName: json['companyName'],
+      fullname: json['fullname'],
+      website: json['website'],
+      description: json['description'],
+      size: json['size'],
+    );
+  }
 }
 
 class Proposal {
@@ -253,6 +276,8 @@ class Student {
   String? email;
   String? fullname;
   int? userId;
+  String? resume;
+  String? transcript;
   TechStack? techStack;
   List<SkillSet>? skillSets;
   List<dynamic>? proposals;
@@ -267,6 +292,8 @@ class Student {
       this.deletedAt,
       this.techStack,
       this.email,
+      this.resume,
+      this.transcript,
       this.skillSets,
       this.fullname,
       this.userId,

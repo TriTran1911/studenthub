@@ -36,7 +36,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
   }
 
   Future<void> _fectchData() async {
-    // show loading dialog until the data is fetched
     _SkillSetList = await getSkillSet();
     _TechStackList = await getTechStack();
     setState(() {});
@@ -46,7 +45,6 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
     var response =
         await Connection.getRequest('/api/techstack/getAllTechStack', {});
     var responseDecoded = jsonDecode(response);
-    // init a temp list to store the techstack
     List<TechStack> list = [];
 
     if (responseDecoded['result'] != null) {
@@ -94,7 +92,7 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
           .toList(),
     };
     var datae = {
-      "educations": educationList
+      "education": educationList
           .map((education) => {
                 "id": null,
                 "schoolName": education.schoolName,
@@ -103,25 +101,29 @@ class _StudentInputProfile1State extends State<StudentInputProfile1> {
               })
           .toList(),
     };
+
+    for (var language in languageList) {
+      print(language.languageName);
+      print(language.level);
+    }
+
+    for (var education in educationList) {
+      print(education.schoolName);
+      print(education.startYear);
+      print(education.endYear);
+    }
+
     try {
-      var response =
-          await Connection.postRequest('/api/profile/student', datats);
-      var responseDecoded = jsonDecode(response);
-      print(responseDecoded);
-      if (responseDecoded['result'] != null) {
-        print('Post profile successful');
-        await Connection.putRequest(
-            '/api/language/updateByStudentID/$studentId', datal);
-        await Connection.putRequest(
-            '/api/education/updateByStudentID/$studentId', datae);
-      } else {
-        print("sinputprofile_text3".tr());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responseDecoded['errorDetails']),
-          ),
-        );
-      }
+      await Connection.postRequest('/api/profile/student', datats);
+      languageList.isNotEmpty
+          ? await Connection.putRequest(
+              '/api/language/updateByStudentId/$studentId', datal)
+          : null;
+      educationList.isNotEmpty
+          ? await Connection.putRequest(
+              '/api/education/updateByStudentId/$studentId', datae)
+          : null;
+          
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

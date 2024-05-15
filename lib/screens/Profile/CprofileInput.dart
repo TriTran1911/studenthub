@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../components/appbar.dart';
+import '../../components/decoration.dart';
+import '../../components/modelController.dart';
 import '/screens/action/welcome.dart';
 import '/connection/server.dart';
 
@@ -27,58 +29,47 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
   // ignore: non_constant_identifier_names
   Scaffold _BuildScaffold(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const CustomAppBar(backWard: true),
       resizeToAvoidBottomInset: true,
-      body: _buidSingleChildScrollView(),
-    );
-  }
-
-  SingleChildScrollView _buidSingleChildScrollView() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
-            const SizedBox(height: 15),
-            buildText("cprofileinput_text1".tr(), 16),
-            const SizedBox(height: 15),
-            buildText("cprofileinput_text2".tr(), 16),
-            buildRadioListTile("cprofileinput_text3".tr(), 'Just me'),
-            buildRadioListTile("cprofileinput_text4".tr(), '2-9 employees'),
-            buildRadioListTile("cprofileinput_text5".tr(), '10-99 employees'),
-            buildRadioListTile(
-                "cprofileinput_text6".tr(), '100-1000 employees'),
-            buildRadioListTile(
-                "cprofileinput_text7".tr(), 'More than 1000 employees'),
-            const SizedBox(height: 15),
-            buildTextField(_companyNameController, "cprofileinput_input1".tr()),
-            const SizedBox(height: 15),
-            buildTextField(_websiteController, "cprofileinput_input2".tr()),
-            const SizedBox(height: 15),
-            buildTextField(_descriptionController, "cprofileinput_input3".tr()),
-            const SizedBox(height: 15),
-            buildContinueButton(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildCenterText("proifle_title1".tr(), 24, FontWeight.bold),
+              const SizedBox(height: 16),
+              buildText("cprofileinput_text1".tr(), 16, FontWeight.bold),
+              const SizedBox(height: 16),
+              buildText("cprofileinput_text2".tr(), 16, FontWeight.bold),
+              buildRadioListTile("cprofileinput_text3".tr(), 'Just me'),
+              buildRadioListTile("cprofileinput_text4".tr(), '2-9 employees'),
+              buildRadioListTile("cprofileinput_text5".tr(), '10-99 employees'),
+              buildRadioListTile(
+                  "cprofileinput_text6".tr(), '100-1000 employees'),
+              buildRadioListTile(
+                  "cprofileinput_text7".tr(), 'More than 1000 employees'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _companyNameController,
+                decoration: buildDecoration("cprofileinput_input1".tr()),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _websiteController,
+                decoration: buildDecoration("cprofileinput_input2".tr()),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                maxLines: 5,
+                controller: _descriptionController,
+                decoration: buildDecoration("cprofileinput_input3".tr()),
+              ),
+              buildContinueButton(),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget buildCenterText(String text, double fontSize, FontWeight fontWeight) {
-    return Center(
-      child: Text(
-        text,
-        style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
-      ),
-    );
-  }
-
-  Widget buildText(String text, double fontSize) {
-    return Text(
-      text,
-      style: TextStyle(fontSize: fontSize),
     );
   }
 
@@ -92,16 +83,6 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
           _selectedCompanySize = value!;
         });
       },
-    );
-  }
-
-  Widget buildTextField(TextEditingController controller, String labelText) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: const OutlineInputBorder(),
-      ),
     );
   }
 
@@ -130,6 +111,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
       child: ElevatedButton(
         onPressed: () {
           if (_isInputValid()) {
+            modelController.user.roles.add(1);
             int nstaff = _selectedCompanySize == "cprofileinput_text3".tr()
                 ? 0
                 : (_selectedCompanySize == "cprofileinput_text4".tr())
@@ -165,7 +147,7 @@ class _CWithoutProfileState extends State<CWithoutProfile> {
         ),
         child: Text(
           "cprofileinput_button1".tr(),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16.0,
           ),

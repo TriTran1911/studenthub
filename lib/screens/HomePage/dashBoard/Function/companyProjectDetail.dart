@@ -363,10 +363,4 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
       ],
     );
   }
-
-  String addBulletPoints(String input) {
-    List<String> lines = input.split('\n');
-    List<String> bulletPoints = lines.map((line) => '• $line').toList();
-    return bulletPoints.join('\n');
-  }
 }

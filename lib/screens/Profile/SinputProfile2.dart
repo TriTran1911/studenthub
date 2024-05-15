@@ -45,13 +45,20 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
           .toList(),
     };
 
-    try
-    {
-      await Connection.putRequest('/api/experience/updateByStudentId/$studentId', data);
-      print('Experience posted');
-    } catch (e) {
-      print(e);
+    for (var experience in experiences) {
+      print(experience.title);
+      print(experience.startMonth);
+      print(experience.endMonth);
+      print(experience.description);
+      for (var skill in experience.skillSets!) {
+        print(skill.id);
+      }
     }
+
+    experiences.isNotEmpty
+        ? await Connection.putRequest(
+            '/api/experience/updateByStudentId/$studentId', data)
+        : null;
   }
 
   @override
@@ -83,7 +90,7 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        // postExperience();
+                        postExperience();
                         moveToPage(const StudentInputProfile3(), context);
                       },
                       style: buildButtonStyle(Colors.blue[400]!),
@@ -273,36 +280,41 @@ class _StudentInputProfile2State extends State<StudentInputProfile2> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (titleController.text.isEmpty ||
-                              startMonthController.text.isEmpty ||
-                              endMonthController.text.isEmpty ||
-                              descriptionController.text.isEmpty ||
-                              _selectedSkillSet.isEmpty) {
-                            _showValidationError(
-                                context, 'You must fill all fields');
-                          } else {
-                            setState(() {
-                              experience.title = titleController.text;
-                              experience.startMonth = startMonthController.text;
-                              experience.endMonth = endMonthController.text;
-                              experience.description =
-                                  descriptionController.text;
-                              experience.skillSets =
-                                  List.from(_selectedSkillSet);
-                            });
-                            titleController.clear();
-                            startMonthController.clear();
-                            endMonthController.clear();
-                            descriptionController.clear();
-                            _selectedSkillSet.clear();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        style: buildButtonStyle(Colors.blue[400]!),
-                        child: buildText(
-                            'Edit', 16, FontWeight.bold, Colors.white),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              if (titleController.text.isEmpty ||
+                                  startMonthController.text.isEmpty ||
+                                  endMonthController.text.isEmpty ||
+                                  descriptionController.text.isEmpty ||
+                                  _selectedSkillSet.isEmpty) {
+                                _showValidationError(
+                                    context, 'You must fill all fields');
+                              } else {
+                                setState(() {
+                                  experience.title = titleController.text;
+                                  experience.startMonth = startMonthController.text;
+                                  experience.endMonth = endMonthController.text;
+                                  experience.description =
+                                      descriptionController.text;
+                                  experience.skillSets =
+                                      List.from(_selectedSkillSet);
+                                });
+                                titleController.clear();
+                                startMonthController.clear();
+                                endMonthController.clear();
+                                descriptionController.clear();
+                                _selectedSkillSet.clear();
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            style: buildButtonStyle(Colors.blue[400]!),
+                            child: buildText(
+                                'Edit', 16, FontWeight.bold, Colors.white),
+                          ),
+                        ],
                       ),
                     ],
                   ),

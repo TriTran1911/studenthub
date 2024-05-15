@@ -10,7 +10,7 @@ import '../../../../connection/server.dart';
 
 // ignore: must_be_immutable
 class FavoriteProjectsPage extends StatefulWidget {
-  List<Project> projects = [];
+  List<Project> projects;
 
   FavoriteProjectsPage({super.key, required this.projects});
 
@@ -42,7 +42,18 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              buildCards()
+              widget.projects.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No project found',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    )
+                  : buildCards(),
             ],
           ),
         ),
@@ -111,8 +122,8 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                           ),
                           buildText(
                               pro.numberOfStudents == 1
-                                  ? '${pro.numberOfStudents} ' + tr('project_text13')
-                                  : '${pro.numberOfStudents} ' + tr('project_text14'),
+                                  ? '${pro.numberOfStudents} ${tr('project_text13')}'
+                                  : '${pro.numberOfStudents} ${tr('project_text14')}',
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -126,8 +137,8 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                           ),
                           buildText(
                               pro.countProposals == 1
-                                  ? '${pro.countProposals.toString()} ' + tr('project_text11')
-                                  : '${pro.countProposals.toString()} ' + tr('project_text12'),
+                                  ? '${pro.countProposals.toString()} ${tr('project_text11')}'
+                                  : '${pro.countProposals.toString()} ${tr('project_text12')}',
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -175,6 +186,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
           ),
           onPressed: () {
             setState(() {
+              
               pro.isFavorite = !pro.isFavorite!;
               Connection()
                   .setFavorite(pro.id!, pro.isFavorite! ? 0 : 1, context);

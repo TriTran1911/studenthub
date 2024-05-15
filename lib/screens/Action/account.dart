@@ -6,18 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/theme_provider.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
-import '../AccountManage/Login.dart';
-import '../Profile/SinputProfile2.dart';
 import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/components/modelController.dart';
 import '/components/controller.dart';
 import 'home.dart';
-import 'package:studenthub/screens/Action/changeLanguage.dart';
 
 import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
@@ -80,17 +79,28 @@ class _AccountControllerState extends State<AccountController> {
 
     if (data['result'] != null) {
       var result = data['result'];
-      modelController.user.roles = List<int>.from(
-          result['roles'].map((item) => int.parse(item.toString())));
-      if (result['roles'][0] == 1) {
-        result['company'] == null
-            ? moveToPage(const CWithoutProfile(), context)
-            : moveToPage(const CompanyProfile(), context);
+      if (modelController.user.roles.length == 1) {
+        if (result['roles'][0] == 1) {
+          result['company'] == null
+              ? moveToPage(const CWithoutProfile(), context)
+              : moveToPage(const CompanyProfile(), context);
+        } else {
+          result['student'] == null
+              ? moveToPage(const StudentInputProfile1(), context)
+              : moveToPage(const StudentProfilePage(), context);
+        }
       } else {
-        result['student'] == null
-            ? moveToPage(const StudentInputProfile1(), context)
-            : moveToPage(const StudentProfilePage(), context);
+        if (modelController.user.roles[0] == 1) {
+          result['company'] == null
+              ? moveToPage(const CWithoutProfile(), context)
+              : moveToPage(const CompanyProfile(), context);
+        } else {
+          result['student'] == null
+              ? moveToPage(const StudentInputProfile1(), context)
+              : moveToPage(const StudentProfilePage(), context);
+        }
       }
+
       print(result);
     }
   }
@@ -161,219 +171,225 @@ class _AccountControllerState extends State<AccountController> {
   }
 
   void _handleAddRole(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Consumer<ThemeProvider>(
-          builder: (context, themeProvider, _) => Text(
-            tr('home_button3'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: themeProvider.getTheme().textTheme.bodyText1!.color, // Sử dụng màu văn bản từ chủ đề
-            ),
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Do you want to add a role as a ${modelController.user.roles[0] == 1 ? 'Student' : 'Company'}?',
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    tr('home_button4'),
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.button!.color, // Sử dụng màu văn bản từ chủ đề
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    moveToPage(
-                      modelController.user.roles[0] == 1
-                          ? StudentInputProfile1()
-                          : CWithoutProfile(),
-                      context,
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    tr('home_button5'),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
-}
-
-
-  Widget _buildListView(
-  void Function(String? selectedCompany, IconData companyIcon) handleCompanySelection,
-) {
-  return ExpansionTile(
-    leading: Consumer<ThemeProvider>(
-      builder: (context, themeProvider, _) => Icon(
-        selectedAccountIcon,
-        color: themeProvider.getIconColor(context),
-      ),
-    ),
-    title: Text(
-      selectedAccount ?? modelController.user.fullname,
-      style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-    ),
-    children: [
-      ListView(
-        shrinkWrap: true,
-        children: [
-          ListTile(
-            leading: Consumer<ThemeProvider>(
-              builder: (context, themeProvider, _) => Icon(
-                modelController.user.roles[0] == 1
-                    ? Icons.business
-                    : Icons.school,
-                color: themeProvider.getIconColor(context),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Consumer<ThemeProvider>(
+            builder: (context, themeProvider, _) => Text(
+              tr('home_button3'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: themeProvider
+                    .getTheme()
+                    .textTheme
+                    .bodyText1!
+                    .color, // Sử dụng màu văn bản từ chủ đề
               ),
             ),
-            title: Text(
-              modelController.user.fullname,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              modelController.user.roles[0] == 1 ? tr('home_button1') : tr('home_button2'),
-            ),
-            onTap: () {
-              handleCompanySelection(
-                modelController.user.fullname,
-                modelController.user.roles[0] == 1
-                    ? Icons.business
-                    : Icons.school,
-              );
-              Navigator.of(context).pop();
-            },
           ),
-          ListTile(
-            leading: modelController.user.roles.length == 1
-                ? Icon(Icons.add)
-                : Consumer<ThemeProvider>(
-                    builder: (context, themeProvider, _) => Icon(
-                      modelController.user.roles[1] == 1
-                          ? Icons.business
-                          : Icons.school,
-                      color: themeProvider.getIconColor(context),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Do you want to add a role as a ${modelController.user.roles[0] == 1 ? 'Student' : 'Company'}?',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: buildButtonStyle(Colors.grey[400]!),
+                    child: buildText(
+                      tr('home_button4'),
+                      16,
+                      FontWeight.bold,
+                      Colors.white,
                     ),
                   ),
-            title: Text(
-              modelController.user.roles.length == 1
-                  ? tr('home_button3')
-                  : modelController.user.roles[1] == 1
-                      ? modelController.user.fullname
-                      : modelController.user.fullname,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-            subtitle: modelController.user.roles.length == 1
-                ? null
-                : Text(
-                    modelController.user.roles[1] == 1
-                        ? tr('home_button1')
-                        : tr('home_button2'),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      moveToPage(
+                        modelController.user.roles[0] == 1
+                            ? StudentInputProfile1()
+                            : CWithoutProfile(),
+                        context,
+                      );
+                    },
+                    style: buildButtonStyle(Colors.blue[400]!),
+                    child: buildText(
+                      tr('home_button5'),
+                      16,
+                      FontWeight.bold,
+                      Colors.white,
+                    ),
                   ),
-            onTap: () {
-              if (modelController.user.roles.length == 1) {
-                _handleAddRole(context);
-              } else {
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildListView(
+    void Function(String? selectedCompany, IconData companyIcon)
+        handleCompanySelection,
+  ) {
+    return ExpansionTile(
+      leading: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) => Icon(
+          selectedAccountIcon,
+          color: themeProvider.getIconColor(context),
+        ),
+      ),
+      title: Text(
+        selectedAccount ?? modelController.user.fullname,
+        style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
+      children: [
+        ListView(
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              leading: Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Icon(
+                  modelController.user.roles[0] == 1
+                      ? Icons.business
+                      : Icons.school,
+                  color: themeProvider.getIconColor(context),
+                ),
+              ),
+              title: Text(
+                modelController.user.fullname,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                modelController.user.roles[0] == 1
+                    ? tr('home_button1')
+                    : tr('home_button2'),
+              ),
+              onTap: () {
                 handleCompanySelection(
                   modelController.user.fullname,
-                  modelController.user.roles[1] == 1
+                  modelController.user.roles[0] == 1
                       ? Icons.business
                       : Icons.school,
                 );
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Change role successfully."),
-                  ),
-                );
-                // swap roles
-                modelController.user.roles = [
-                  modelController.user.roles[1],
-                  modelController.user.roles[0],
-                ];
-                print(modelController.user.roles[0]);
-              }
-            },
-          ),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buildElevatedButton(IconData icon, String text, Function onPressed) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      ElevatedButton(
-        onPressed: () => onPressed(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        ),
-        child: Row(
-          children: [
-            // Wrap the icon with Consumer<ThemeProvider>
-            Consumer<ThemeProvider>(
-              builder: (context, themeProvider, _) => Icon(
-                icon,
-                color: themeProvider.getIconColor(context),
-              ),
+              },
             ),
-            const SizedBox(width: 8),
-            // Wrap the text with Consumer<ThemeProvider>
-            Consumer<ThemeProvider>(
-              builder: (context, themeProvider, _) => Text(
-                text,
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: themeProvider.getTheme().textTheme.bodyText1!.color, // Sử dụng màu văn bản từ chủ đề
-                ),
+            ListTile(
+              leading: modelController.user.roles.length == 1
+                  ? Icon(Icons.add)
+                  : Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => Icon(
+                        modelController.user.roles[1] == 1
+                            ? Icons.business
+                            : Icons.school,
+                        color: themeProvider.getIconColor(context),
+                      ),
+                    ),
+              title: Text(
+                modelController.user.roles.length == 1
+                    ? tr('home_button3')
+                    : modelController.user.roles[1] == 1
+                        ? modelController.user.fullname
+                        : modelController.user.fullname,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
+              subtitle: modelController.user.roles.length == 1
+                  ? null
+                  : Text(
+                      modelController.user.roles[1] == 1
+                          ? tr('home_button1')
+                          : tr('home_button2'),
+                    ),
+              onTap: () {
+                if (modelController.user.roles.length == 1) {
+                  _handleAddRole(context);
+                } else {
+                  handleCompanySelection(
+                    modelController.user.fullname,
+                    modelController.user.roles[1] == 1
+                        ? Icons.business
+                        : Icons.school,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Change role successfully."),
+                    ),
+                  );
+                  // swap roles
+                  modelController.user.roles = [
+                    modelController.user.roles[1],
+                    modelController.user.roles[0],
+                  ];
+                  appBarIcon.isSelected = !appBarIcon.isSelected;
+                  moveToPage(const TabsPage(index: 0), context);
+                  print(modelController.user.roles[0]);
+                  print(modelController.user.roles[1]);
+                }
+              },
             ),
           ],
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
+  Widget _buildElevatedButton(IconData icon, String text, Function onPressed) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ElevatedButton(
+          onPressed: () => onPressed(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+          child: Row(
+            children: [
+              // Wrap the icon with Consumer<ThemeProvider>
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Icon(
+                  icon,
+                  color: themeProvider.getIconColor(context),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Wrap the text with Consumer<ThemeProvider>
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: themeProvider
+                        .getTheme()
+                        .textTheme
+                        .bodyText1!
+                        .color, // Sử dụng màu văn bản từ chủ đề
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
