@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:studenthub/components/chatController.dart';
+import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/connection/server.dart';
 import 'package:studenthub/connection/socket.dart';
@@ -112,103 +113,106 @@ class _RecentChatsByProjectState extends State<RecentChatsByProject> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-      child: Column(
-        children: [
-          for (int i = 0; i < messages.length; i++)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatDetailPage(
-                        senderId:
-                            messages[i].sender!.id == modelController.user.id
-                                ? messages[i].sender!.id
-                                : messages[i].receiver!.id,
-                        receiverId:
-                            messages[i].receiver!.id == modelController.user.id
-                                ? messages[i].sender!.id
-                                : messages[i].receiver!.id,
-                        projectId: widget.project.id!,
-                        senderName: modelController.user.fullname,
-                        receiverName:
-                            messages[i].receiver!.id == modelController.user.id
-                                ? messages[i].sender!.fullname
-                                : messages[i].receiver!.fullname,
+      child: messages.length == 0
+          ? buildCenterText('No message', 20, FontWeight.bold, Colors.black)
+          : Column(
+              children: [
+                for (int i = 0; i < messages.length; i++)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatDetailPage(
+                              senderId: messages[i].sender!.id ==
+                                      modelController.user.id
+                                  ? messages[i].sender!.id
+                                  : messages[i].receiver!.id,
+                              receiverId: messages[i].receiver!.id ==
+                                      modelController.user.id
+                                  ? messages[i].sender!.id
+                                  : messages[i].receiver!.id,
+                              projectId: widget.project.id!,
+                              senderName: modelController.user.fullname,
+                              receiverName: messages[i].receiver!.id ==
+                                      modelController.user.id
+                                  ? messages[i].sender!.fullname
+                                  : messages[i].receiver!.fullname,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 65,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(35),
+                                child: Image.asset(
+                                  'images/siu.jpg',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      messages[i].sender!.id ==
+                                              modelController.user.id
+                                          ? messages[i].receiver!.fullname
+                                          : messages[i].sender!.fullname,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Expanded(
+                                      child: Text(
+                                        messages[i].sender!.id ==
+                                                modelController.user.id
+                                            ? 'You: ' +
+                                                (messages[i].content ?? '')
+                                            : (messages[i].content ?? ''),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            // Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Text(
+                                timeDif(DateTime.parse(messages[i].createdAt!)),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                },
-                child: Container(
-                  height: 65,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(35),
-                          child: Image.asset(
-                            'images/siu.jpg',
-                            width: 55,
-                            height: 55,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                messages[i].sender!.id ==
-                                        modelController.user.id
-                                    ? messages[i].receiver!.fullname
-                                    : messages[i].sender!.fullname,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Expanded(
-                                child: Text(
-                                  messages[i].sender!.id ==
-                                          modelController.user.id
-                                      ? 'You: ' + (messages[i].content ?? '')
-                                      : (messages[i].content ?? ''),
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.black,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Text(
-                          timeDif(DateTime.parse(messages[i].createdAt!)),
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            )
-        ],
-      ),
+                  )
+              ],
+            ),
     );
   }
 }

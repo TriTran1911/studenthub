@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(backWard: false),
+      appBar: const SimpleAppBar(backWard: false),
       resizeToAvoidBottomInset: true,
       body: _buildBody(context),
     );
