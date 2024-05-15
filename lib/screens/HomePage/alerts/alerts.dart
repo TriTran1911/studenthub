@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:studenthub/components/controller.dart';
 import 'package:studenthub/components/modelController.dart';
@@ -182,8 +183,8 @@ class _AlertsPageState extends State<AlertsPage> {
                               }
                             },
                             child: (notifications[index].typeNotifyFlag == '0')
-                                ? Text('View offer')
-                                : Text('John'),
+                                ? Text(tr('alerts_text1'))
+                                : Text(tr('alerts_text2')),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,

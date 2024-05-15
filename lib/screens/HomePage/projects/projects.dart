@@ -126,7 +126,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   widget.role == 0
                       ? IconButton(
                           icon:
-                              const Icon(Icons.bookmarks, color: Colors.black),
+                              Icon(Icons.bookmarks, color: Theme.of(context).iconTheme.color),
                           onPressed: () {
                             moveToPage(
                                 FavoriteProjectsPage(projects: projectList),

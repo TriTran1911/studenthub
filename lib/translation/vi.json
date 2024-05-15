@@ -5,7 +5,10 @@
     "appbar_text4": "Có",
     
     "home_button1": "Công ty",
-    "home_button2":"Sinh viên",
+    "home_button2": "Sinh viên",
+    "home_button3": "Thêm vai trò",
+    "home_button4": "Không",
+    "home_button5": "Có",
 
     "home_title1": "Xây dựng sản phẩm với nhân lực chất lượng",
     "home_title2": "StudentHub là thị trường để kết nối sinh viên có tay nghề cao và công ty trong một dự án trong thực tế",
@@ -52,6 +55,7 @@
     "signup_noti7": "Đã xảy ra lỗi: ",
 
     "proifle_title1": "Chào mừng đến với Student Hub",
+
     "cprofileinput_text1": "Hãy cho chúng tôi biết về công ty của bạn và bạn sẽ kết nối với các sinh viên có kỹ năng cao",
     "cprofileinput_text2": "Có bao nhiêu người trong công ty của bạn?",
     "cprofileinput_text3": "Một mình tôi",
@@ -66,6 +70,7 @@
 
     "cprofile_button1": "Chỉnh sửa",
     "cprofile_button2": "Huỷ",
+    "cprofile_button3": "Xoá",
 
     "sinputprofile_text1": "Đăng hồ sơ thành công",
     "sinputprofile_text2": "Hồ sợ đã được đăng",
@@ -111,7 +116,32 @@
     "project_text27": "Bắt đầu thực hiện dự án này",
     "project_text28": "Đề xuất hiện hoạt",
     "project_text29": "Đề xuất đã gửi",
+    "project_text30": "Xóa dự án",
+    "project_text31": "Bạn có chắc chắn muốn xóa dự án này không?",
+    "project_text32": "Chỉnh sửa dự án",
+    "project_text33": "Tiêu đề",
+    "project_text34": "Số lượng sinh viên",
+    "project_text35": "Lưu",
+    "project_text36": "Bắt đầu thực hiện dự án này",
+    "project_text37": "Bạn có chắc chắn muốn bắt đầu thực hiện dự án này không?",
+    "project_text38": "Bắt đầu",
 
+    "projectDetail_text1": "Chi tiết dự án",
+    "projectDetail_text2": "Tên dự án:",
+    "projectDetail_text3": "Lưu dự án",
+    "projectDetail_text4": "Hủy lưu dự án",
+    "projectDetail_text5": "Đăng ký",
+    "projectDetail_text6": "Số lượng sinh viên: ",
+    "projectDetail_text7": "Phạm vi dự án: ",
+    "projectDetail_text8": "Yêu cầu sinh viên: ",
+
+    "favProject_text1": "Dự án yêu thích",
+
+    "letter_text1": "Thư xin việc:",
+    "letter_text2": "Mô tả lý do tại sao bạn phù hợp với dự án này",
+    "letter_text3": "Nhập thư xin việc của bạn...",
+    "letter_text4": "Gửi",
+    
     "modelControl_text1": "Bây giờ",
     "modelControl_text2": "phút trước",
     "modelControl_text3": "phút trước",
@@ -122,5 +152,8 @@
     "modelControl_text8": "tháng trước",
     "modelControl_text9": "tháng trước",
     "modelControl_text10": "năm trước",
-    "modelControl_text11": "năm trước"
+    "modelControl_text11": "năm trước",
+
+    "alerts_text1": "Xem đề nghị",
+    "alerts_text2": "Tham gia"
 }

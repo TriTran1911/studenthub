@@ -4,8 +4,11 @@
     "appbar_text3": "No",
     "appbar_text4": "Yes",
     
-    "home_button1":"Company",
-    "home_button2":"Student",
+    "home_button1": "Company",
+    "home_button2": "Student",
+    "home_button3": "Add Role",
+    "home_button4": "No",
+    "home_button5": "Yes",
 
     "home_title1": "Build your product with high-skilled student",
     "home_title2": "StudentHub is university marketplace to connect high-skilled student and company on a real-world project",
@@ -67,6 +70,7 @@
 
     "cprofile_button1": "Edit",
     "cprofile_button2": "Cancel",
+    "cprofile_button3": "Delete",
 
     "sinputprofile_text1": "Post profile successful",
     "sinputprofile_text2": "Profile posted successfully",
@@ -112,6 +116,31 @@
     "project_text27": "Start working on this project",
     "project_text28": "Active proposal",
     "project_text29": "Submitted proposal",
+    "project_text30": "Delete project",
+    "project_text31": "Are you sure you want to delete this project?",
+    "project_text32": "Edit project",
+    "project_text33": "Title",
+    "project_text34": "Number of students",
+    "project_text35": "Save",
+    "project_text36": "Start working on this project",
+    "project_text37": "Are you sure you want to start working on this project?",
+    "project_text38": "Start",
+
+    "projectDetail_text1": "Project Detail",
+    "projectDetail_text2": "Project Title:",
+    "projectDetail_text3": "Save project",
+    "projectDetail_text4": "Unsave project",
+    "projectDetail_text5": "Apply now",
+    "projectDetail_text6": "Number of Students: ",
+    "projectDetail_text7": "Project Scope: ",
+    "projectDetail_text8": "Student are looking for: ",
+
+    "favProject_text1": "Favorite Projects",
+
+    "letter_text1": "Cover Letter:",
+    "letter_text2": "Describe why do you fit this project",
+    "letter_text3": "Enter your cover letter...",
+    "letter_text4": "Submit",
 
     "modelControl_text1": "Just now",
     "modelControl_text2": "minute ago",
@@ -123,5 +152,8 @@
     "modelControl_text8": "month ago",
     "modelControl_text9": "months ago",
     "modelControl_text10": "year ago",
-    "modelControl_text11": "years ago"
+    "modelControl_text11": "years ago",
+
+    "alerts_text1": "View offer",
+    "alerts_text2": "Join"
 }

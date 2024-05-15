@@ -37,7 +37,7 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                       moveToPage(const TabsPage(index: 0), context);
                     },
                   ),
-                  buildCenterText('Favorite Projects', 24, FontWeight.bold,
+                  buildCenterText(tr('favProject_text1'), 24, FontWeight.bold,
                       Colors.blueAccent),
                 ],
               ),
@@ -111,8 +111,8 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                           ),
                           buildText(
                               pro.numberOfStudents == 1
-                                  ? '${pro.numberOfStudents} student'
-                                  : '${pro.numberOfStudents} students',
+                                  ? '${pro.numberOfStudents} ' + tr('project_text13')
+                                  : '${pro.numberOfStudents} ' + tr('project_text14'),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -126,8 +126,8 @@ class _FavoriteProjectsPageState extends State<FavoriteProjectsPage> {
                           ),
                           buildText(
                               pro.countProposals == 1
-                                  ? '${pro.countProposals.toString()} proposal'
-                                  : '${pro.countProposals.toString()} proposals',
+                                  ? '${pro.countProposals.toString()} ' + tr('project_text11')
+                                  : '${pro.countProposals.toString()} ' + tr('project_text12'),
                               14,
                               FontWeight.normal,
                               Colors.black),

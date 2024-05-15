@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/controller.dart';
@@ -46,12 +47,12 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildText('Cover letter', 24, FontWeight.bold, Colors.blueAccent),
+            buildText(tr('letter_text1'), 24, FontWeight.bold, Colors.blueAccent),
             const SizedBox(height: 16),
-            buildText('Describe why do you fit this project', 16, FontWeight.normal),
+            buildText(tr('letter_text2'), 16, FontWeight.normal),
             const SizedBox(height: 16),
             TextFormField(
-              decoration: buildDecoration('Enter your cover letter...'),
+              decoration: buildDecoration(tr('letter_text3')),
               controller: coverLetterController,
               maxLines: 10,
             ),
@@ -65,7 +66,7 @@ class _CoverLetterPageState extends State<CoverLetterPage> {
                     moveToPage(TabsPage(index: 0), context);
                   },
                   style: buildButtonStyle(Colors.blue),
-                  child: buildText('Submit', 16, FontWeight.bold, Colors.white),
+                  child: buildText(tr('letter_text4'), 16, FontWeight.bold, Colors.white),
                 ),
               ],
             ),

@@ -58,9 +58,9 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                buildText('Project Detail', 24, FontWeight.bold, Colors.blue),
+                buildText(tr('projectDetail_text1'), 24, FontWeight.bold, Colors.blue),
                 const SizedBox(height: 16),
-                buildText('Project Title: ${project.title}', 20,
+                buildText(tr('projectDetail_text2') + ' ${project.title}', 20,
                     FontWeight.bold, Colors.black),
                 const SizedBox(height: 16),
                 buildDescription(project),
@@ -90,9 +90,9 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         ),
                       ),
                       child: project.isFavorite == false
-                          ? buildText('Save project', 16, FontWeight.bold,
+                          ? buildText(tr('projectDetail_text3'), 16, FontWeight.bold,
                               Colors.blueAccent)
-                          : buildText('Unsave project', 16, FontWeight.bold,
+                          : buildText(tr('projectDetail_text4'), 16, FontWeight.bold,
                               Colors.blueAccent),
                     ),
                     ElevatedButton(
@@ -106,7 +106,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                         ),
                       ),
                       child: buildText(
-                          'Apply now', 16, FontWeight.bold, Colors.white),
+                          tr('projectDetail_text5'), 16, FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),
@@ -130,11 +130,11 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                    'Number of Students:', 18, FontWeight.bold, Colors.black),
+                    tr('projectDetail_text6'), 18, FontWeight.bold, Colors.black),
                 buildText(
                     project.numberOfStudents == 1
-                        ? '${project.numberOfStudents} student'
-                        : '${project.numberOfStudents} students',
+                        ? '${project.numberOfStudents} ' + tr('project_text13')
+                        : '${project.numberOfStudents} ' + tr('project_text14'),
                     16,
                     FontWeight.normal,
                     Colors.black),
@@ -157,7 +157,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildText('Project Scope:', 18, FontWeight.bold, Colors.black),
+                buildText(tr('projectDetail_text7'), 18, FontWeight.bold, Colors.black),
                 buildText(
                     project.projectScopeFlag == 0
                         ? tr("project_text2")
@@ -188,7 +188,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildText('Student are looking for:', 18, FontWeight.bold,
+                buildText(tr('projectDetail_text8'), 18, FontWeight.bold,
                     Colors.black),
                 for (String item in project.description!.split('\n'))
                   buildText('• $item', 16, FontWeight.normal, Colors.black),

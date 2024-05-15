@@ -321,9 +321,9 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.numberOfStudents == 1
-                                  ? '${pro.numberOfStudents} student'
-                                  : '${pro.numberOfStudents} students',
+                              pro.numberOfStudents == 1 || pro.numberOfStudents == 0
+                                  ? '${pro.numberOfStudents} ' + tr('project_text13')
+                                  : '${pro.numberOfStudents} ' + tr('project_text14'),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -336,9 +336,9 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                             color: Colors.blue,
                           ),
                           buildText(
-                              pro.countProposals == 1
-                                  ? '${pro.countProposals.toString()} proposal'
-                                  : '${pro.countProposals.toString()} proposals',
+                              pro.countProposals == 1 || pro.countProposals == 0
+                                  ? '${pro.countProposals.toString()} ' + tr('project_text11')
+                                  : '${pro.countProposals.toString()} ' + tr('project_text12'),
                               14,
                               FontWeight.normal,
                               Colors.black),
@@ -374,9 +374,9 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildText('Delete project', 20, FontWeight.bold, Colors.red),
+                buildText(tr('project_text30'), 20, FontWeight.bold, Colors.red),
                 const SizedBox(height: 20),
-                buildText('Are you sure you want to delete this project?', 16,
+                buildText(tr('project_text31'), 16,
                     FontWeight.normal, Colors.black),
                 const SizedBox(height: 20),
                 Row(
@@ -388,7 +388,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                       style: buildButtonStyle(Colors.grey[400]!),
                       child: buildText(
-                          'Cancel', 16, FontWeight.bold, Colors.white),
+                          tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
@@ -405,7 +405,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                       style: buildButtonStyle(Colors.red[400]!),
                       child: buildText(
-                          'Delete', 16, FontWeight.bold, Colors.white),
+                          tr('cprofile_button3'), 16, FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),
@@ -447,16 +447,16 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildText('Edit project', 20, FontWeight.bold, Colors.blue),
+                  buildText(tr('project_text32'), 20, FontWeight.bold, Colors.blue),
                   const SizedBox(height: 20),
                   TextField(
                     controller: titleController,
-                    decoration: buildDecoration('Title'),
+                    decoration: buildDecoration(tr('project_text33')),
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: descriptionController,
-                    decoration: buildDecoration('Description'),
+                    decoration: buildDecoration(tr('cprofileinput_input3')),
                     maxLines: 5,
                   ),
                   const SizedBox(height: 10),
@@ -507,7 +507,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: studentController,
-                    decoration: buildDecoration('Number of students'),
+                    decoration: buildDecoration(tr('project_text34')),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -519,7 +519,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         },
                         style: buildButtonStyle(Colors.grey[400]!),
                         child: buildText(
-                            'Cancel', 16, FontWeight.bold, Colors.white),
+                            tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
                       ),
                       const SizedBox(width: 10),
                       ElevatedButton(
@@ -537,7 +537,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         },
                         style: buildButtonStyle(Colors.blue[400]!),
                         child: buildText(
-                            'Save', 16, FontWeight.bold, Colors.white),
+                            tr('project_text35'), 16, FontWeight.bold, Colors.white),
                       ),
                     ],
                   ),
@@ -569,11 +569,11 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildText('Start working on this project', 20, FontWeight.bold,
+                buildText(tr('project_text36'), 20, FontWeight.bold,
                     Colors.blue),
                 const SizedBox(height: 20),
                 buildText(
-                    'Are you sure you want to start working on this project?',
+                    tr('project_text37'),
                     16,
                     FontWeight.normal,
                     Colors.black),
@@ -587,7 +587,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                       style: buildButtonStyle(Colors.grey[400]!),
                       child: buildText(
-                          'Cancel', 16, FontWeight.bold, Colors.white),
+                          tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
@@ -602,7 +602,7 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                       },
                       style: buildButtonStyle(Colors.blue[400]!),
                       child:
-                          buildText('Start', 16, FontWeight.bold, Colors.white),
+                          buildText(tr('project_text38'), 16, FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),
