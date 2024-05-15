@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           theme: themeProvider.getTheme(),
           initialRoute: '/',
           routes: {
-            '/': (context) => Home(),
+            '/': (context) => const Home(),
           },
         );
       },

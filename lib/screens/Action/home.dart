@@ -13,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   final Gradient gradient1 = const LinearGradient(
     colors: [Colors.blueAccent, Colors.lightBlueAccent],
     begin: Alignment.topLeft,

@@ -55,3 +55,28 @@ InputDecoration buildDecoration(String text) {
     ),
   );
 }
+
+String addBulletPoints(String input) {
+  List<String> lines = input.split('\n');
+  List<String> bulletPoints = lines.map((line) => '• $line').toList();
+  return bulletPoints.join('\n');
+}
+
+Widget buildTextField(String initialValue, [int maxLines = 1]) {
+  return TextFormField(
+    maxLines: maxLines,
+    initialValue: initialValue,
+    decoration: InputDecoration(
+      contentPadding: const EdgeInsets.all(20),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+  );
+}

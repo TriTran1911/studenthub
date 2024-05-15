@@ -4,15 +4,21 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/decoration.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import 'package:studenthub/screens/Action/changePassWord.dart';
+import 'package:studenthub/screens/HomePage/tabs.dart';
 import 'package:studenthub/screens/Profile/Cprofile.dart';
 import '../../components/appbar.dart';
-import '../AccountManage/Login.dart';
 import '../Profile/Sprofile.dart';
 import '/screens/Profile/CprofileInput.dart';
 import '/components/modelController.dart';
 import '/components/controller.dart';
+import 'home.dart';
+import 'package:studenthub/screens/Action/changeLanguage.dart';
+
 import 'package:studenthub/connection/server.dart';
 import '../../screens/Profile/SinputProfile1.dart';
 
@@ -74,17 +80,28 @@ class _AccountControllerState extends State<AccountController> {
 
     if (data['result'] != null) {
       var result = data['result'];
-      modelController.user.roles = List<int>.from(
-          result['roles'].map((item) => int.parse(item.toString())));
-      if (result['roles'][0] == 1) {
-        result['company'] == null
-            ? moveToPage(const CWithoutProfile(), context)
-            : moveToPage(const CompanyProfile(), context);
+      if (modelController.user.roles.length == 1) {
+        if (result['roles'][0] == 1) {
+          result['company'] == null
+              ? moveToPage(const CWithoutProfile(), context)
+              : moveToPage(const CompanyProfile(), context);
+        } else {
+          result['student'] == null
+              ? moveToPage(const StudentInputProfile1(), context)
+              : moveToPage(const StudentProfilePage(), context);
+        }
       } else {
-        result['student'] == null
-            ? moveToPage(const StudentInputProfile1(), context)
-            : moveToPage(const StudentProfilePage(), context);
+        if (modelController.user.roles[0] == 1) {
+          result['company'] == null
+              ? moveToPage(const CWithoutProfile(), context)
+              : moveToPage(const CompanyProfile(), context);
+        } else {
+          result['student'] == null
+              ? moveToPage(const StudentInputProfile1(), context)
+              : moveToPage(const StudentProfilePage(), context);
+        }
       }
+
       print(result);
     }
   }
@@ -151,7 +168,7 @@ class _AccountControllerState extends State<AccountController> {
       print('Logout failed');
     }
 
-    moveToPage(Login(), context);
+    moveToPage(Home(), context);
   }
 
   void _handleAddRole(BuildContext context) {
@@ -159,28 +176,43 @@ class _AccountControllerState extends State<AccountController> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            'Add Role',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+          title: Consumer<ThemeProvider>(
+            builder: (context, themeProvider, _) => Text(
+              tr('home_button3'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: themeProvider
+                    .getTheme()
+                    .textTheme
+                    .bodyText1!
+                    .color, // Sử dụng màu văn bản từ chủ đề
+              ),
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 'Do you want to add a role as a ${modelController.user.roles[0] == 1 ? 'Student' : 'Company'}?',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
               const SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const SizedBox(width: 16),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text(
-                      'No',
-                      style: TextStyle(color: Colors.blue, fontSize: 16.0),
+                    style: buildButtonStyle(Colors.grey[400]!),
+                    child: buildText(
+                      tr('home_button4'),
+                      16,
+                      FontWeight.bold,
+                      Colors.white,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -188,23 +220,18 @@ class _AccountControllerState extends State<AccountController> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       moveToPage(
-                          modelController.user.roles[0] == 1
-                              ? StudentInputProfile1()
-                              : CWithoutProfile(),
-                          context);
+                        modelController.user.roles[0] == 1
+                            ? StudentInputProfile1()
+                            : CWithoutProfile(),
+                        context,
+                      );
                     },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Yes',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
+                    style: buildButtonStyle(Colors.blue[400]!),
+                    child: buildText(
+                      tr('home_button5'),
+                      16,
+                      FontWeight.bold,
+                      Colors.white,
                     ),
                   ),
                 ],
@@ -217,44 +244,66 @@ class _AccountControllerState extends State<AccountController> {
   }
 
   Widget _buildListView(
-      void Function(String? selectedCompany, IconData companyIcon)
-          handleCompanySelection) {
+    void Function(String? selectedCompany, IconData companyIcon)
+        handleCompanySelection,
+  ) {
     return ExpansionTile(
-      leading: Icon(selectedAccountIcon),
-      title: Text(selectedAccount ?? modelController.user.fullname,
-          style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+      leading: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, _) => Icon(
+          selectedAccountIcon,
+          color: themeProvider.getIconColor(context),
+        ),
+      ),
+      title: Text(
+        selectedAccount ?? modelController.user.fullname,
+        style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
       children: [
         ListView(
           shrinkWrap: true,
           children: [
             ListTile(
-              leading: Icon(modelController.user.roles[0] == 1
-                  ? Icons.business
-                  : Icons.school),
+              leading: Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Icon(
+                  modelController.user.roles[0] == 1
+                      ? Icons.business
+                      : Icons.school,
+                  color: themeProvider.getIconColor(context),
+                ),
+              ),
               title: Text(
                 modelController.user.fullname,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                  modelController.user.roles[0] == 1 ? 'Company' : 'Student'),
+                modelController.user.roles[0] == 1
+                    ? tr('home_button1')
+                    : tr('home_button2'),
+              ),
               onTap: () {
                 handleCompanySelection(
-                    modelController.user.fullname,
-                    modelController.user.roles[0] == 1
-                        ? Icons.business
-                        : Icons.school);
+                  modelController.user.fullname,
+                  modelController.user.roles[0] == 1
+                      ? Icons.business
+                      : Icons.school,
+                );
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
               leading: modelController.user.roles.length == 1
-                  ? const Icon(Icons.add)
-                  : Icon(modelController.user.roles[1] == 1
-                      ? Icons.business
-                      : Icons.school),
+                  ? Icon(Icons.add)
+                  : Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, _) => Icon(
+                        modelController.user.roles[1] == 1
+                            ? Icons.business
+                            : Icons.school,
+                        color: themeProvider.getIconColor(context),
+                      ),
+                    ),
               title: Text(
                 modelController.user.roles.length == 1
-                    ? 'Add Role'
+                    ? tr('home_button3')
                     : modelController.user.roles[1] == 1
                         ? modelController.user.fullname
                         : modelController.user.fullname,
@@ -262,19 +311,21 @@ class _AccountControllerState extends State<AccountController> {
               ),
               subtitle: modelController.user.roles.length == 1
                   ? null
-                  : Text(modelController.user.roles[1] == 1
-                      ? 'Company'
-                      : 'Student'),
+                  : Text(
+                      modelController.user.roles[1] == 1
+                          ? tr('home_button1')
+                          : tr('home_button2'),
+                    ),
               onTap: () {
                 if (modelController.user.roles.length == 1) {
                   _handleAddRole(context);
                 } else {
                   handleCompanySelection(
-                      modelController.user.fullname,
-                      modelController.user.roles[1] == 1
-                          ? Icons.business
-                          : Icons.school);
-                  Navigator.of(context).pop();
+                    modelController.user.fullname,
+                    modelController.user.roles[1] == 1
+                        ? Icons.business
+                        : Icons.school,
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Change role successfully."),
@@ -283,9 +334,12 @@ class _AccountControllerState extends State<AccountController> {
                   // swap roles
                   modelController.user.roles = [
                     modelController.user.roles[1],
-                    modelController.user.roles[0]
+                    modelController.user.roles[0],
                   ];
+                  appBarIcon.isSelected = !appBarIcon.isSelected;
+                  moveToPage(const TabsPage(index: 0), context);
                   print(modelController.user.roles[0]);
+                  print(modelController.user.roles[1]);
                 }
               },
             ),
@@ -310,14 +364,27 @@ class _AccountControllerState extends State<AccountController> {
           ),
           child: Row(
             children: [
-              Icon(icon, color: Colors.black),
+              // Wrap the icon with Consumer<ThemeProvider>
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Icon(
+                  icon,
+                  color: themeProvider.getIconColor(context),
+                ),
+              ),
               const SizedBox(width: 8),
-              Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              // Wrap the text with Consumer<ThemeProvider>
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: themeProvider
+                        .getTheme()
+                        .textTheme
+                        .bodyText1!
+                        .color, // Sử dụng màu văn bản từ chủ đề
+                  ),
                 ),
               ),
             ],

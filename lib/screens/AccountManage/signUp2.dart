@@ -211,7 +211,6 @@ class _Signup2State extends State<SignUp2> {
   void _handleOnPressed() {
     if (_checkSignup()) {
       _handleSignup();
-      appBarIcon.isBlocked = false;
     }
   }
 

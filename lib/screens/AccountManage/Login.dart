@@ -214,6 +214,7 @@ class _LoginState extends State<Login> {
         modelController.user.id = authorizationDecoded['result']['id'];
         modelController.user.roles =
             List<int>.from(authorizationDecoded['result']['roles']);
+        print('Roles: ${modelController.user.roles.length}');
         modelController.user.fullname =
             authorizationDecoded['result']['fullname'];
         print("login_text3".tr());

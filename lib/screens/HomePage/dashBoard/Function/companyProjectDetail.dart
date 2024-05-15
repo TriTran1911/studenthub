@@ -224,7 +224,7 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
 
                         const SizedBox(height: 16),
                         buildText(
-                            'Cover Letter:', 20, FontWeight.bold, Colors.blue),
+                            tr('letter_text1'), 20, FontWeight.bold, Colors.blue),
                         buildText(
                           addBulletPoints(proposal.coverLetter!),
                           18,
@@ -559,11 +559,5 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
         ),
       ],
     );
-  }
-
-  String addBulletPoints(String input) {
-    List<String> lines = input.split('\n');
-    List<String> bulletPoints = lines.map((line) => '• $line').toList();
-    return bulletPoints.join('\n');
   }
 }
