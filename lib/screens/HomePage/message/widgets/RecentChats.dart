@@ -179,7 +179,6 @@ class _RecentChatsState extends State<RecentChats> {
                                   color: Colors.green,
                                 ),
                               ),
-                              SizedBox(height: 4),
                               Expanded(
                                 child: Text(
                                   messages[i].sender!.id ==
@@ -198,7 +197,6 @@ class _RecentChatsState extends State<RecentChats> {
                           ),
                         ),
                       ),
-                      // Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: Text(
