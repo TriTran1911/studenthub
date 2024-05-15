@@ -62,6 +62,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ModalRoute.withName(
                                       Navigator.defaultRouteName),
                                 );
+                                appBarIcon.isSelected = false;
+                                moveToPage(const TabsPage(index: 0), context);
                               },
                               child: Text("appbar_text4".tr()),
                             ),
@@ -144,6 +146,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final bool backWard;
+
+  const SimpleAppBar({Key? key, required this.backWard}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: backWard,
+      backgroundColor: const Color.fromARGB(255, 92, 92, 92),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('StudentHub',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
         ],
       ),
     );
