@@ -35,7 +35,7 @@
     "signup_title4": "Đăng ký với tư cách công ty",
     "signup_title5": "Đăng ký với tư cách là sinh viên",
     "signup_text6": "Tên người dùng",
-    "signup_text7": "Địa chỉ email cơ quan",
+    "signup_text7": "Địa chỉ email",
     "signup_text8": "Mật khẩu (8 ký tự trở lên)",
     "signup_text9": "Có, tôi hiểu và đồng ý với StudentHub",
     "signup_button2": "Tạo tài khoản của tôi",
@@ -112,7 +112,7 @@
     "project_text28": "Đề xuất hiện hoạt",
     "project_text29": "Đề xuất đã gửi",
 
-    "modelControl_text1": "Ngay bây giờ",
+    "modelControl_text1": "Bây giờ",
     "modelControl_text2": "phút trước",
     "modelControl_text3": "phút trước",
     "modelControl_text4": "giờ trước",

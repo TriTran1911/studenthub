@@ -185,22 +185,24 @@ class _Signup2State extends State<SignUp2> {
               : "signup_text11".tr(),
           textAlign: TextAlign.center,
         ),
-        GestureDetector(
-          onTap: () {
-            modelController.user.roles[0] == 1
-                ? modelController.user.roles[0] = 0
-                : modelController.user.roles[0] = 1;
-            moveToPage(SignUp2(), context);
-          },
-          child: Text(
-            modelController.user.roles[0] == 1
-                ? "signup_text12".tr()
-                : "signup_text13".tr(),
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.blue,
-            ),
+        Expanded(
+      child: GestureDetector(
+        onTap: () {
+          modelController.user.roles[0] == 1
+              ? modelController.user.roles[0] = 0
+              : modelController.user.roles[0] = 1;
+          moveToPage(SignUp2(), context);
+        },
+        child: Text(
+          modelController.user.roles[0] == 1
+              ? "signup_text12".tr()
+              : "signup_text13".tr(),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.blue,
           ),
+        ),
+      ),
         ),
       ],
     );
