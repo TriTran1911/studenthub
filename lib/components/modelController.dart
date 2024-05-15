@@ -715,10 +715,12 @@ class Notification {
   int? messageId;
   String? title;
   String? typeNotifyFlag;
+  int? proposalId;
   String? content;
   Message? message;
   User? sender;
   User? receiver;
+  Proposal? proposal;
 
   Notification(
       {this.id,
@@ -731,10 +733,12 @@ class Notification {
       this.messageId,
       this.title,
       this.typeNotifyFlag,
+      this.proposalId,
       this.content,
       this.message,
       this.sender,
-      this.receiver});
+      this.receiver,
+      this.proposal});
 
   factory Notification.fromJson(Map<String, dynamic> json) {
     return Notification(
@@ -755,6 +759,7 @@ class Notification {
       title: json['title'],
       notifyFlag: json['notifyFlag'],
       typeNotifyFlag: json['typeNotifyFlag'],
+      proposalId: json['proposalId'],
       content: json['content'],
       message: json['message'] != null
           ? Message.fromNotification(json['message'])
@@ -763,6 +768,9 @@ class Notification {
           json['sender'] != null ? User.fromNotification(json['sender']) : null,
       receiver: json['receiver'] != null
           ? User.fromNotification(json['receiver'])
+          : null,
+      proposal: json['proposal'] != null
+          ? Proposal.formAllProposal(json['proposal'])
           : null,
     );
   }

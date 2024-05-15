@@ -36,7 +36,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   late Interview interview;
   late List<bool> listSender;
   late List<int> listDisableFlag;
-  late List<int> listMeetingId;
+  List<int> listMeetingId = [];
   List<int> idInterview = [];
   late IO.Socket socket;
 
@@ -167,14 +167,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         _scrollToBottom();
       });
     });
+
+    connect();
+    print('Handle receive message');
+
     print('Sender: ${widget.senderId}');
     print('Receiver: ${widget.receiverId}');
     print('Project: ${widget.projectId}');
     print('Sender Name: ${widget.senderName}');
     print('Receiver Name: ${widget.receiverName}');
-
-    connect();
-    print('Handle receive message');
   }
 
   @override
