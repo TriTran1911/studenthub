@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
-import 'package:studenthub/screens/HomePage/tabs.dart';
 import '../../../components/controller.dart';
 import '../../../connection/server.dart';
 import 'Function/companyProjectDetail.dart';
