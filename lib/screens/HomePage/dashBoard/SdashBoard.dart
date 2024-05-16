@@ -34,10 +34,15 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     proposalList = await fetchProposal();
     setState(() {
       for (Proposal proposal in proposalList) {
-        if (proposal.statusFlag == 0) {
+        if (proposal.project!.typeFlag == 0) if (proposal.statusFlag == 0) {
           submittedProposalList.add(proposal);
         } else {
           activeProposalList.add(proposal);
+        }
+        else if (proposal.project!.typeFlag == 1) {
+          workingProposalList.add(proposal);
+        } else if (proposal.project!.typeFlag == 2) {
+          achievedProposalList.add(proposal);
         }
       }
     });
