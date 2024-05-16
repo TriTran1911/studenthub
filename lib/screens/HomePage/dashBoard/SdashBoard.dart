@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import '../../../components/decoration.dart';
 import '../../../components/modelController.dart';
 import '../../../connection/server.dart';
@@ -70,10 +72,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+            backgroundColor: themeProvider.getTheme().scaffoldBackgroundColor,
             automaticallyImplyLeading: false,
             title: Padding(
               padding: const EdgeInsets.only(
