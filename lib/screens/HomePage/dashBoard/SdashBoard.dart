@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import '../../../components/decoration.dart';
 import '../../../components/modelController.dart';
 import '../../../connection/server.dart';
@@ -32,10 +34,15 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     proposalList = await fetchProposal();
     setState(() {
       for (Proposal proposal in proposalList) {
-        if (proposal.statusFlag == 0) {
+        if (proposal.project!.typeFlag == 0) if (proposal.statusFlag == 0) {
           submittedProposalList.add(proposal);
         } else {
           activeProposalList.add(proposal);
+        }
+        else if (proposal.project!.typeFlag == 1) {
+          workingProposalList.add(proposal);
+        } else if (proposal.project!.typeFlag == 2) {
+          achievedProposalList.add(proposal);
         }
       }
     });
@@ -70,10 +77,14 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final iconColor = Theme.of(context).iconTheme.color;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+            backgroundColor: themeProvider.getTheme().scaffoldBackgroundColor,
             automaticallyImplyLeading: false,
             title: Padding(
               padding: const EdgeInsets.only(
@@ -81,7 +92,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buildText("project_text21".tr(), 20, FontWeight.bold),
+                  buildText("project_text21".tr(), 20, FontWeight.bold, iconColor),
                 ],
               ),
             ),

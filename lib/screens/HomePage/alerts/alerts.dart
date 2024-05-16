@@ -126,6 +126,7 @@ class _AlertsPageState extends State<AlertsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
     return Column(
       children: [
         Expanded(
@@ -151,9 +152,10 @@ class _AlertsPageState extends State<AlertsPage> {
                   notifications[index].typeNotifyFlag == '1'
                       ? notifications[index].content!
                       : notifications[index].title!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
+                    color: iconColor,
                   ),
                 ),
                 subtitle: Column(

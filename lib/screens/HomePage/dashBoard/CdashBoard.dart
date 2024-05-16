@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studenthub/components/decoration.dart';
 import 'package:studenthub/components/modelController.dart';
+import 'package:studenthub/components/theme_provider.dart';
 import 'package:studenthub/screens/HomePage/dashBoard/Function/projectPost1.dart';
 import '../../../components/controller.dart';
 import '../../../connection/server.dart';
@@ -110,7 +112,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
     );
   }
 
-  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList, [bool isAchieved = false]) {
+  FutureBuilder<List<Project>> buildTabBarView(List<Project> ProjectList,
+      [bool isAchieved = false]) {
     return FutureBuilder<List<Project>>(
       future: _projectsFuture,
       builder: (context, snapshot) {
@@ -130,7 +133,9 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
   }
 
   AppBar buildAppBar(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return AppBar(
+        backgroundColor: themeProvider.getTheme().scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         title: Padding(
           padding:
@@ -415,10 +420,11 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildText(tr('project_text30'), 20, FontWeight.bold, Colors.red),
+                buildText(
+                    tr('project_text30'), 20, FontWeight.bold, Colors.red),
                 const SizedBox(height: 20),
-                buildText(tr('project_text31'), 16,
-                    FontWeight.normal, Colors.black),
+                buildText(
+                    tr('project_text31'), 16, FontWeight.normal, Colors.black),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -428,8 +434,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.grey[400]!),
-                      child: buildText(
-                          tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
+                      child: buildText(tr('cprofile_button2'), 16,
+                          FontWeight.bold, Colors.white),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
@@ -445,8 +451,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.red[400]!),
-                      child: buildText(
-                          tr('cprofile_button3'), 16, FontWeight.bold, Colors.white),
+                      child: buildText(tr('cprofile_button3'), 16,
+                          FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),
@@ -488,7 +494,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildText(tr('project_text32'), 20, FontWeight.bold, Colors.blue),
+                  buildText(
+                      tr('project_text32'), 20, FontWeight.bold, Colors.blue),
                   const SizedBox(height: 20),
                   TextField(
                     controller: titleController,
@@ -559,8 +566,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                           Navigator.of(context).pop();
                         },
                         style: buildButtonStyle(Colors.grey[400]!),
-                        child: buildText(
-                            tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
+                        child: buildText(tr('cprofile_button2'), 16,
+                            FontWeight.bold, Colors.white),
                       ),
                       const SizedBox(width: 10),
                       ElevatedButton(
@@ -577,8 +584,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                           Navigator.of(context).pop();
                         },
                         style: buildButtonStyle(Colors.blue[400]!),
-                        child: buildText(
-                            tr('project_text35'), 16, FontWeight.bold, Colors.white),
+                        child: buildText(tr('project_text35'), 16,
+                            FontWeight.bold, Colors.white),
                       ),
                     ],
                   ),
@@ -676,14 +683,11 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                buildText(tr('project_text36'), 20, FontWeight.bold,
-                    Colors.blue),
+                buildText(
+                    tr('project_text36'), 20, FontWeight.bold, Colors.blue),
                 const SizedBox(height: 20),
                 buildText(
-                    tr('project_text37'),
-                    16,
-                    FontWeight.normal,
-                    Colors.black),
+                    tr('project_text37'), 16, FontWeight.normal, Colors.black),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -693,8 +697,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.grey[400]!),
-                      child: buildText(
-                          tr('cprofile_button2'), 16, FontWeight.bold, Colors.white),
+                      child: buildText(tr('cprofile_button2'), 16,
+                          FontWeight.bold, Colors.white),
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
@@ -708,8 +712,8 @@ class _CompanyDashboardPageState extends State<CompanyDashboardPage> {
                         Navigator.of(context).pop();
                       },
                       style: buildButtonStyle(Colors.blue[400]!),
-                      child:
-                          buildText(tr('project_text38'), 16, FontWeight.bold, Colors.white),
+                      child: buildText(tr('project_text38'), 16,
+                          FontWeight.bold, Colors.white),
                     ),
                   ],
                 ),
