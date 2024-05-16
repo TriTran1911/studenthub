@@ -78,6 +78,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final iconColor = Theme.of(context).iconTheme.color;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -90,7 +92,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buildText("project_text21".tr(), 20, FontWeight.bold),
+                  buildText("project_text21".tr(), 20, FontWeight.bold, iconColor),
                 ],
               ),
             ),

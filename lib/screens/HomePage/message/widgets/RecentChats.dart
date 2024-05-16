@@ -110,24 +110,25 @@ class _RecentChatsState extends State<RecentChats> {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
     return Column(children: [
       Align(
           alignment: Alignment.centerLeft,
           child: Container(
             padding: const EdgeInsets.only(left: 10),
-            child: const Text(
+            child: Text(
               'Chats',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: iconColor,
               ),
             ),
           )),
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 25),
         child: messages.isEmpty
-            ? buildCenterText('No message', 20, FontWeight.bold, Colors.black)
+            ? buildCenterText('No message', 20, FontWeight.bold, iconColor)
             : Column(
                 children: [
                   for (int i = 0; i < messages.length; i++)
@@ -204,9 +205,9 @@ class _RecentChatsState extends State<RecentChats> {
                                                   modelController.user.id
                                               ? 'You: ${messages[i].content ?? ''}'
                                               : (messages[i].content ?? ''),
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 15,
-                                            color: Colors.black,
+                                            color: iconColor,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           softWrap: true,
@@ -221,9 +222,9 @@ class _RecentChatsState extends State<RecentChats> {
                                 child: Text(
                                   timeDif(
                                       DateTime.parse(messages[i].createdAt!)),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
-                                    color: Colors.black,
+                                    color: iconColor,
                                   ),
                                 ),
                               )
