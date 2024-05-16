@@ -19,11 +19,17 @@ class StudentProfilePage extends StatefulWidget {
 class _StudentProfilePageState extends State<StudentProfilePage> {
   Student student = Student();
   bool isEditing = false;
+  List<TechStack> techStacks = [];
+  List<SkillSet> skillSets = [];
+  TechStack? selectedTechStack;
+  List<SkillSet> selectedSkillSets = [];
 
   @override
   void initState() {
     super.initState();
     getStudent();
+    getTechStack();
+    getSkillSet();
     getResume().then((value) {
       setState(() {
         resumeUrl = value;
@@ -87,6 +93,37 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     var responseDecode = jsonDecode(response);
 
     return responseDecode['result'];
+  }
+
+  Future<List<TechStack>> getTechStack() async {
+    var response =
+        await Connection.getRequest('/api/techstack/getAllTechStack', {});
+    var responseDecoded = jsonDecode(response);
+    List<TechStack> list = [];
+
+    if (responseDecoded['result'] != null) {
+      for (var tech in responseDecoded['result']) {
+        techStacks.add(TechStack.fromJson(tech));
+      }
+      return techStacks;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<SkillSet>> getSkillSet() async {
+    var response =
+        await Connection.getRequest('/api/skillset/getAllSkillSet', {});
+    var responseDecoded = jsonDecode(response);
+
+    if (responseDecoded['result'] != null) {
+      for (var skill in responseDecoded['result']) {
+        skillSets.add(SkillSet.fromJson(skill));
+      }
+      return skillSets;
+    } else {
+      return [];
+    }
   }
 
   void _launchUrl(Uri uri) async {
@@ -188,48 +225,143 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          buildText('Tectstack: ', 20, FontWeight.bold),
-                          buildText(
-                              student.techStack!.name!, 20, FontWeight.normal),
-                        ],
-                      ),
+                      isEditing
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildText('Tectstack: ', 20, FontWeight.bold),
+                                const SizedBox(height: 16),
+                                DropdownButtonFormField<TechStack>(
+                                  dropdownColor: Colors.white,
+                                  decoration: InputDecoration(
+                                    labelText: "Select a techstack",
+                                    contentPadding: const EdgeInsets.fromLTRB(
+                                        20, 15, 20, 15),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Colors.grey, width: 1.0),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: Colors.blue, width: 2.0),
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                  ),
+                                  isExpanded: true,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                  value: selectedTechStack,
+                                  items: techStacks.map((techStack) {
+                                    return DropdownMenuItem<TechStack>(
+                                      value: techStack,
+                                      child: Text(techStack.name!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (TechStack? value) {
+                                    setState(() {
+                                      selectedTechStack = value;
+                                    });
+                                  },
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                buildText('Tectstack: ', 20, FontWeight.bold),
+                                buildText(student.techStack!.name!, 20,
+                                    FontWeight.normal),
+                              ],
+                            ),
                       const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 8.0, // Space between adjacent children
-                        runSpacing: 8.0, // Space between lines
-                        children: [
-                          Container(
-                            padding:
-                                const EdgeInsets.only(bottom: 8.0, top: 8.0),
-                            child: buildText(
-                              'Skillset:',
-                              20,
-                              FontWeight.bold,
+                      isEditing
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildText('Skillset: ', 20, FontWeight.bold),
+                                const SizedBox(height: 16),
+                                Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Wrap(
+                                        spacing: 10.0,
+                                        runSpacing: 10.0,
+                                        children: skillSets
+                                            .map(
+                                              (SkillSet skillSet) =>
+                                                  buildSkillsetButton(skillSet),
+                                            )
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Wrap(
+                              spacing: 8.0, // Space between adjacent children
+                              runSpacing: 8.0, // Space between lines
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 8.0, top: 8.0),
+                                  child: buildText(
+                                    'Skillset:',
+                                    20,
+                                    FontWeight.bold,
+                                  ),
+                                ),
+                                for (var skill in student.skillSets!) ...[
+                                  Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[100],
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: buildText(
+                                      skill.name!,
+                                      20,
+                                      FontWeight.normal,
+                                      Colors.blueAccent,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
-                          ),
-                          for (var skill in student.skillSets!) ...[
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: buildText(
-                                skill.name!,
-                                20,
-                                FontWeight.normal,
-                                Colors.blueAccent,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
                       const SizedBox(height: 16),
                       if (student.languages!.isNotEmpty) ...[
-                        buildText('Language: ', 20, FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            buildText('Language: ', 20, FontWeight.bold),
+                            if (isEditing)
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    student.experiences!.add(Experience());
+                                  });
+                                },
+                                icon: const Icon(Icons.add_circle_outline),
+                              ),
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(
@@ -357,7 +489,21 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ],
                       const SizedBox(height: 16),
                       if (student.experiences!.isNotEmpty) ...[
-                        buildText('Experience: ', 20, FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            buildText('Experience: ', 20, FontWeight.bold),
+                            if (isEditing)
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    student.experiences!.add(Experience());
+                                  });
+                                },
+                                icon: const Icon(Icons.add_circle_outline),
+                              ),
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         for (var experience in student.experiences!) ...[
                           Container(
@@ -421,7 +567,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                         FontWeight.bold,
                                       ),
                                     ),
-                                    for (var skill in experience.skillSets!) ...[
+                                    for (var skill
+                                        in experience.skillSets!) ...[
                                       Container(
                                         padding: const EdgeInsets.all(8.0),
                                         decoration: BoxDecoration(
@@ -446,36 +593,54 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                       ],
                       const SizedBox(height: 16),
                       Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        if (isEditing)
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (isEditing)
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isEditing = !isEditing;
+                                });
+                              },
+                              style: buildButtonStyle(Colors.grey),
+                              child: buildText(
+                                  'Cancel', 18, FontWeight.bold, Colors.white),
+                            ),
+                          if (isEditing) const SizedBox(width: 16),
                           ElevatedButton(
                             onPressed: () {
+                              // if (isEditing) {
+                              //   selectedSkillSets =
+                              //       selectedSkillSets.toSet().toList();
+
+                              //   SharedPreferences prefs =
+                              //       await SharedPreferences.getInstance();
+                              //   int studentId = prefs.getInt('studentId')!;
+
+                              //   print('Techstack: ${selectedTechStack!.id}');
+                              //   for (var skillSet in selectedSkillSets) {
+                              //     print('Skillset: ${skillSet.id}');
+                              //   }
+
+                              //   var body = {
+                              //     'techStackId': selectedTechStack!.id,
+                              //     'skillSetIds': selectedSkillSets
+                              //         .map((skillSet) => skillSet.id)
+                              //         .toList(),
+                              //   };
+                              //   await Connection.putRequest(
+                              //       '/api/profile/student/$studentId', body);
+                              // }
                               setState(() {
                                 isEditing = !isEditing;
                               });
                             },
-                            style: buildButtonStyle(Colors.grey),
-                            child: buildText(
-                                'Cancel', 18, FontWeight.bold, Colors.white),
+                            style: buildButtonStyle(Colors.blue),
+                            child: buildText(isEditing ? "Save" : "Edit", 18,
+                                FontWeight.bold, Colors.white),
                           ),
-                        if (isEditing) const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () async {
-                            if (isEditing) {
-                              
-
-                            }
-                            setState(() {
-                              isEditing = !isEditing;
-                            });
-                          },
-                          style: buildButtonStyle(Colors.blue),
-                          child: buildText(isEditing ? "Save" : "Edit", 18,
-                              FontWeight.bold, Colors.white),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -484,6 +649,37 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
           }
         },
       ),
+    );
+  }
+
+  TextButton buildSkillsetButton(SkillSet skillSet) {
+    bool isSelected = selectedSkillSets.contains(skillSet);
+    return TextButton(
+      onPressed: () {
+        isSelected = !isSelected;
+        if (isSelected) {
+          selectedSkillSets.add(skillSet);
+        } else {
+          selectedSkillSets.remove(skillSet);
+        }
+      },
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (isSelected) {
+              return Colors.grey[400]!;
+            }
+            return Colors.blue[400]!;
+          },
+        ),
+        shadowColor: MaterialStateProperty.all<Color>(Colors.transparent),
+      ),
+      child: buildText(skillSet.name!, 16, FontWeight.normal, Colors.white),
     );
   }
 }
