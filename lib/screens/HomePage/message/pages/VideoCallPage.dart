@@ -6,7 +6,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 class VideoCallPage extends StatefulWidget {
   final int meetingId;
-  const VideoCallPage({Key? key, required this.meetingId}) : super(key: key);
+  final int senderId;
+  const VideoCallPage(
+      {Key? key, required this.meetingId, required this.senderId})
+      : super(key: key);
 
   @override
   _VideoCallPageState createState() => _VideoCallPageState();
@@ -58,7 +61,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
             child: ZegoUIKitPrebuiltVideoConference(
               appID: AppID,
               appSign: AppSign,
-              userID: '123456',
+              userID: widget.senderId.toString(),
               userName: modelController.user.fullname,
               conferenceID: widget.meetingId.toString(),
               config: ZegoUIKitPrebuiltVideoConferenceConfig(),

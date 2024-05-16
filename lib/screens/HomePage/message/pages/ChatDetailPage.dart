@@ -285,7 +285,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       isSender: listSender[index],
                       idInterview: idInterview[index],
                       disableFlag: listDisableFlag[index],
-                      meetingRoomId: listMeetingId[index]);
+                      meetingRoomId: listMeetingId[index],
+                      senderId: widget.senderId);
                 }
                 return null;
               },

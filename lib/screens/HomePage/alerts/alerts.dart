@@ -274,7 +274,8 @@ class _AlertsPageState extends State<AlertsPage> {
                             onPressed: () {
                               moveToPage(
                                   VideoCallPage(
-                                      meetingId: listMeetingId[index]),
+                                      meetingId: listMeetingId[index],
+                                      senderId: modelController.user.id),
                                   context);
                             },
                             style: ElevatedButton.styleFrom(
